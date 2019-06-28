@@ -1,4 +1,4 @@
-# Prismagram iOS & Android App
+# healthmate App
 
 Screens: 
 - [ ] Home
