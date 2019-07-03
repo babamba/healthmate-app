@@ -3,7 +3,11 @@ import { AsyncStorage } from "react-native";
 
 export const AuthContext = createContext();
 
-export const AuthProvider = ({ isLoggedIn: isLoggedInProp, children }) => {
+export const AuthProvider = ({
+  isLoggedIn: isLoggedInProp,
+  children,
+  client
+}) => {
   const [isLoggedIn, setIsLoggedIn] = useState(isLoggedInProp);
   const logUserIn = async token => {
     try {
@@ -19,6 +23,7 @@ export const AuthProvider = ({ isLoggedIn: isLoggedInProp, children }) => {
     try {
       await AsyncStorage.setItem("isLoggedIn", "false");
       setIsLoggedIn(false);
+      client.resetStore();
     } catch (e) {
       console.log(e);
     }

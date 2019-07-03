@@ -9,6 +9,9 @@ import constants from "../constants";
 import SquarePhoto from "./SquarePhoto";
 import Post from "./Post";
 
+import { useLogOut } from "../AuthContext";
+const Touchable = styled.TouchableOpacity``;
+
 const ProfileHeader = styled.View`
   padding: 20px;
   flex-direction: row;
@@ -60,6 +63,17 @@ const SquareContainer = styled.View`
   flex-wrap: wrap;
 `;
 
+const LogoutButton = styled.TouchableOpacity`
+  width: 100px;
+  height: 100px;
+`;
+
+const LogoutText = styled.Text`
+  margin-top: 5px;
+  font-size: 12px;
+  color: ${styles.darkGreyColor};
+`;
+
 const UserProfile = ({
   avatar,
   postsCount,
@@ -70,7 +84,9 @@ const UserProfile = ({
   posts
 }) => {
   const [isGrid, setIsGrid] = useState(true);
+  const logout = useLogOut();
   const toggleGrid = () => setIsGrid(i => !i);
+
   return (
     <View>
       <ProfileHeader>
@@ -98,6 +114,9 @@ const UserProfile = ({
       <ProfileMeta>
         <Bold>{fullName}</Bold>
         <Bio>{bio}</Bio>
+        <LogoutButton onPress={logout}>
+          <LogoutText>LogOut</LogoutText>
+        </LogoutButton>
       </ProfileMeta>
       <ButtonContainer>
         <TouchableOpacity onPress={toggleGrid}>
