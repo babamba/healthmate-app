@@ -8,6 +8,7 @@ import Main from "../screens/Tabs/Main";
 import Home from "../screens/Tabs/Home";
 import Search from "../screens/Tabs/Search";
 import Notifications from "../screens/Tabs/Notifications";
+import Map from "../screens/Tabs/Map";
 import Profile from "../screens/Tabs/Profile";
 import Detail from "../screens/Detail";
 import MessagesLink from "../components/MessagesLink";
@@ -90,45 +91,61 @@ export default createBottomTabNavigator(
         )
       }
     },
-    Add: {
-      screen: View,
+    // Add: {
+    //   screen: View,
+    //   navigationOptions: {
+    //     tabBarOnPress: ({ navigation }) =>
+    //       navigation.navigate("PhotoNavigation"),
+    //     tabBarIcon: ({ focused }) => (
+    //       <NavIcon
+    //         focused={focused}
+    //         size={32}
+    //         name={
+    //           Platform.OS === "ios"
+    //             ? "ios-add-circle-outline"
+    //             : "md-add-circle-outline"
+    //         }
+    //       />
+    //     )
+    //   }
+    // },
+    Map: {
+      screen: stackFactory(Map, {
+        header: null
+      }),
       navigationOptions: {
-        tabBarOnPress: ({ navigation }) =>
-          navigation.navigate("PhotoNavigation"),
+        // tabBarOnPress: ({ navigation }) =>
+        //   navigation.navigate("PhotoNavigation"),
         tabBarIcon: ({ focused }) => (
           <NavIcon
             focused={focused}
             size={32}
-            name={
-              Platform.OS === "ios"
-                ? "ios-add-circle-outline"
-                : "md-add-circle-outline"
-            }
+            name={Platform.OS === "ios" ? "ios-map" : "md-map"}
           />
         )
       }
     },
-    Notifications: {
-      screen: stackFactory(Notifications, {
-        title: "Notifications"
-      }),
-      navigationOptions: {
-        tabBarIcon: ({ focused }) => (
-          <NavIcon
-            focused={focused}
-            name={
-              Platform.OS === "ios"
-                ? focused
-                  ? "ios-heart"
-                  : "ios-heart-empty"
-                : focused
-                ? "md-heart"
-                : "md-heart-empty"
-            }
-          />
-        )
-      }
-    },
+    // Notifications: {
+    //   screen: stackFactory(Notifications, {
+    //     title: "Notifications"
+    //   }),
+    //   navigationOptions: {
+    //     tabBarIcon: ({ focused }) => (
+    //       <NavIcon
+    //         focused={focused}
+    //         name={
+    //           Platform.OS === "ios"
+    //             ? focused
+    //               ? "ios-heart"
+    //               : "ios-heart-empty"
+    //             : focused
+    //             ? "md-heart"
+    //             : "md-heart-empty"
+    //         }
+    //       />
+    //     )
+    //   }
+    // },
     Profile: {
       screen: stackFactory(Profile, {
         title: "Profile"

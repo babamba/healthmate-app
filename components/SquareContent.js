@@ -23,6 +23,7 @@ const Conatiner = styled.View`
 const TextContainer = styled.View`
   flex: 1;
   margin-top: 10px;
+  flex-direction: row;
 `;
 
 const Image = styled.Image`
@@ -47,15 +48,44 @@ const Introduction = styled.Text`
   font-family: NanumBarunGothic;
 `;
 
+const UserName = styled.Text`
+  color: black;
+  text-align: left;
+  font-weight: 600;
+  font-size: 18px;
+  font-family: NanumBarunGothic;
+`;
+
+const Column = styled.View`
+  flex: 1;
+  flex-direction: column;
+`;
+
+const Row = styled.View`
+  flex: 1;
+  flex-direction: row;
+  justify-content: flex-end;
+`;
+
 const SquareContent = ({ navigation, uri, id, username, intro, title }) => (
   <Conatiner>
     {/* <TouchableOpacity onPress={() => navigation.navigate("Detail", { id })}> */}
-    <TouchableOpacity onLongPress={() => testAlert(id)}>
+    <TouchableOpacity
+      //onLongPress={() => testAlert(id)}
+      onLongPress={() =>
+        navigation.navigate("UserDetail", { username: "babamba88" })
+      }
+    >
       <Image source={{ uri }} />
     </TouchableOpacity>
     <TextContainer>
-      <ContentTItle>{title}</ContentTItle>
-      <Introduction>{intro}</Introduction>
+      <Column>
+        <ContentTItle>{title}</ContentTItle>
+        <Introduction>{intro}</Introduction>
+      </Column>
+      <Row>
+        <UserName>{username}</UserName>
+      </Row>
     </TextContainer>
   </Conatiner>
 );

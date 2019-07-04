@@ -47,7 +47,13 @@ const Introduction = styled.Text`
 const HorizontalUser = ({ navigation, uri, id, username, intro }) => (
   <Conatiner>
     {/* <TouchableOpacity onPress={() => navigation.navigate("Detail", { id })}> */}
-    <TouchableOpacity onLongPress={() => testAlert(id)} activeOpacity={0.3}>
+    <TouchableOpacity
+      //onLongPress={() => testAlert(id)}
+      onLongPress={() =>
+        navigation.navigate("UserDetail", { username: "babamba88" })
+      }
+      activeOpacity={0.3}
+    >
       <Image source={{ uri }} />
     </TouchableOpacity>
     <TextContainer>
