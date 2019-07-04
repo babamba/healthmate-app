@@ -4,6 +4,7 @@ import {
   createBottomTabNavigator,
   createStackNavigator
 } from "react-navigation";
+import Main from "../screens/Tabs/Main";
 import Home from "../screens/Tabs/Home";
 import Search from "../screens/Tabs/Search";
 import Notifications from "../screens/Tabs/Notifications";
@@ -49,6 +50,19 @@ const stackFactory = (initialRoute, customConfig) =>
 
 export default createBottomTabNavigator(
   {
+    Main: {
+      screen: stackFactory(Main, {
+        header: null
+      }),
+      navigationOptions: {
+        tabBarIcon: ({ focused }) => (
+          <NavIcon
+            focused={focused}
+            name={Platform.OS === "ios" ? "ios-home" : "md-home"}
+          />
+        )
+      }
+    },
     Home: {
       screen: stackFactory(Home, {
         headerRight: <MessagesLink />,

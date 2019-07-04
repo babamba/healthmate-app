@@ -22,7 +22,12 @@ export default function App() {
   const preLoad = async () => {
     try {
       await Font.loadAsync({
-        ...Ionicons.font
+        ...Ionicons.font,
+        NanumBarunGothic: require("./assets/Fonts/NanumBarunGothic.otf"),
+        NanumBarunGothicBold: require("./assets/Fonts/NanumBarunGothicBold.otf"),
+        NanumBarunGothicLight: require("./assets/Fonts/NanumBarunGothicLight.otf"),
+        NanumBarunGothicUltraLight: require("./assets/Fonts/NanumBarunGothicUltraLight.otf"),
+        swagger: require("./assets/Fonts/swagger.ttf")
       });
       await Asset.loadAsync([require("./assets/logo.png")]);
       const cache = new InMemoryCache();
