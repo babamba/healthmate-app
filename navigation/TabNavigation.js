@@ -72,7 +72,7 @@ export default createBottomTabNavigator(
         tabBarIcon: ({ focused }) => (
           <NavIcon
             focused={focused}
-            name={Platform.OS === "ios" ? "ios-home" : "md-home"}
+            name={Platform.OS === "ios" ? "ios-archive" : "md-home"}
           />
         )
       }

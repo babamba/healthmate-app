@@ -1,39 +1,70 @@
-export const ENTRIES_USER = [
+export const ENTRIES_NEAR = [
   (data = {
     id: "cjxfok3i9c2az0b42un73vfnf",
-    username: "testUser",
+    username: "권담비",
     intro: "테스트1",
-    uri:
-      "https://images.unsplash.com/photo-1461800919507-79b16743b257?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=668&q=80"
+    uri: "http://www.xhift.co.kr/wp-content/uploads/2018/09/team_12.jpg"
   }),
   (data = {
     id: "cjxfok3i9c2az0b42un73vfnf",
-    username: "testUser",
+    username: "김웅찬",
     intro: "테스트2",
-    uri: "https://i.imgur.com/UPrs1EWl.jpg"
+    uri: "http://www.xhift.co.kr/wp-content/uploads/2018/09/team_07.png"
   }),
   (data = {
     id: "cjxfok3i9c2az0b42un73vfnf",
-    username: "testUser",
+    username: "박보영",
     intro: "테스트2",
-    uri: "https://i.imgur.com/MABUbpDl.jpg"
+    uri: "http://www.xhift.co.kr/wp-content/uploads/2018/09/team_08.png"
   }),
   (data = {
     id: "cjxfok3i9c2az0b42un73vfnf",
-    username: "testUser",
+    username: "강다은",
     intro: "테스트2",
-    uri: "https://i.imgur.com/KZsmUi2l.jpg"
+    uri: "http://www.xhift.co.kr/wp-content/uploads/2019/05/team_13.jpg"
   }),
   (data = {
     id: "cjxfok3i9c2az0b42un73vfnf",
-    username: "testUser",
+    username: "김진원",
     intro: "테스트2",
     uri: "https://i.imgur.com/2nCt3Sbl.jpg"
   }),
   (data = {
     id: "cjxfok3i9c2az0b42un73vfnf",
-    username: "testUser",
+    username: "이보미",
     intro: "테스트2",
-    uri: "https://i.imgur.com/lceHsT6l.jpg"
+    uri: "http://www.xhift.co.kr/wp-content/uploads/2018/09/team_11.png"
+  })
+];
+
+export const ENTRIES_CONTENT = [
+  (data = {
+    id: "cjxfok3i9c2az0b42un73vfnf",
+    title: "이런강좌1",
+    username: "박보영",
+    intro: "이렇게하는거래",
+    uri: "http://www.xhift.co.kr/wp-content/uploads/2018/09/team_08.png"
+  }),
+  (data = {
+    id: "cjxfok3i9c2az0b42un73vfnf",
+    title: "이런강좌1",
+    username: "박보영",
+    intro: "이렇게하는거래",
+    uri:
+      "https://static.wanted.co.kr/images/company/1387/15360_2_6.__1080_790.jpg"
+  }),
+  (data = {
+    id: "cjxfok3i9c2az0b42un73vfnf",
+    title: "이런강좌1",
+    username: "박보영",
+    intro: "이렇게하는거래",
+    uri: "https://i.imgur.com/MABUbpDl.jpg"
+  }),
+  (data = {
+    id: "cjxfok3i9c2az0b42un73vfnf",
+    title: "이런강좌1",
+    username: "박보영",
+    intro: "이렇게하는거래",
+    uri: "https://i.imgur.com/KZsmUi2l.jpg"
   })
 ];

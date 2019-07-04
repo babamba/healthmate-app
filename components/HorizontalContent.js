@@ -1,5 +1,5 @@
 import React from "react";
-import { View, TouchableOpacity, Alert, Text, Platform } from "react-native";
+import { View, TouchableOpacity, Alert, Platform } from "react-native";
 import { withNavigation } from "react-navigation";
 import PropTypes from "prop-types";
 import styled from "styled-components";
@@ -12,16 +12,36 @@ const testAlert = id => {
 const Conatiner = styled.View`
   margin-left: 10;
   margin-left: 10;
-  border-radius: 10;
-  shadow-opacity: 0.75;
+  /* shadow-opacity: 0.75;
   shadow-radius: 5px;
   shadow-color: #000;
-  shadow-offset: 0px 0px;
+  shadow-offset: 0px 0px; */
 `;
 
 const Image = styled.Image`
-  width: ${constants.width / 1.6};
+  width: ${constants.width / 2.5};
   height: ${constants.height / 5};
+  border-radius: 15;
+`;
+const TextContainer = styled.View`
+  flex: 1;
+  margin-top: 10px;
+`;
+
+const UserName = styled.Text`
+  color: black;
+  text-align: left;
+  font-weight: 600;
+  font-size: 18px;
+  font-family: NanumBarunGothic;
+`;
+
+const Introduction = styled.Text`
+  color: black;
+  text-align: left;
+  font-weight: 600;
+  font-size: 13px;
+  font-family: NanumBarunGothic;
 `;
 
 const HorizontalUser = ({ navigation, uri, id, username, intro }) => (
@@ -30,7 +50,10 @@ const HorizontalUser = ({ navigation, uri, id, username, intro }) => (
     <TouchableOpacity onLongPress={() => testAlert(id)} activeOpacity={0.3}>
       <Image source={{ uri }} />
     </TouchableOpacity>
-    <Text>{username}</Text>
+    <TextContainer>
+      <UserName>{username}</UserName>
+      <Introduction>{intro}</Introduction>
+    </TextContainer>
   </Conatiner>
 );
 
