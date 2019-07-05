@@ -3,9 +3,8 @@ import { gql } from "apollo-boost";
 import { useQuery } from "react-apollo-hooks";
 import styled from "styled-components";
 import { ScrollView, RefreshControl, SafeAreaView } from "react-native";
-import PlanList from "../../components/PlanList";
+import RoomList from "../../components/RoomList";
 import Loader from "../../components/Loader";
-import AddPlan from "../../components/AddPlan";
 import constants from "../../constants";
 
 export const SEE_ROOMS = gql`
@@ -64,24 +63,21 @@ export default () => {
     <SafeAreaView>
       <Header>
         <ScreenTitle>Direct Message</ScreenTitle>
-        <AddButton>
-          <AddPlan size={40} />
-        </AddButton>
       </Header>
       <ScrollView>
         {/* {ENTRIES_PLAN.map((data, index) => (
           <PlanContentList key={index} {...data} />
         ))} */}
-        {/* {loading ? (
+        {loading ? (
           <Loader />
         ) : (
           data &&
-          data.seePlan &&
-          data.seePlan.map((data, index) => {
+          data.seeRooms &&
+          data.seeRooms.map((data, index) => {
             console.log("data", data);
-            return <PlanList key={index} {...data} />;
-          }) 
-        )}*/}
+            return <RoomList key={index} {...data} />;
+          })
+        )}
       </ScrollView>
     </SafeAreaView>
   );
