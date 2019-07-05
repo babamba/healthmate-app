@@ -49,7 +49,7 @@ const HorizontalUser = ({ navigation, uri, id, username, intro }) => (
     {/* <TouchableOpacity onPress={() => navigation.navigate("Detail", { id })}> */}
     <TouchableOpacity
       //onLongPress={() => testAlert(id)}
-      onLongPress={() =>
+      onPress={() =>
         navigation.navigate("UserDetail", { username: "babamba88" })
       }
       activeOpacity={0.3}

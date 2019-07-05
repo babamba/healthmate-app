@@ -10,10 +10,11 @@ const testAlert = id => {
 };
 
 const Conatiner = styled.View`
-  padding-vertical: 8;
-  border-radius: 10;
-  margin-left: 10;
-  margin-left: 10;
+  padding-vertical: 8px;
+  padding-horizontal: 8px;
+  border-radius: 10px;
+  margin-left: 10px;
+  margin-left: 10px;
   /* shadow-opacity: 0.75;
   shadow-radius: 5px;
   shadow-color: #000;
@@ -26,11 +27,11 @@ const TextContainer = styled.View`
   flex-direction: row;
 `;
 
-const Image = styled.Image`
-  width: ${constants.width / 2.2};
-  height: ${constants.height / 5};
-  border-radius: 15;
-`;
+// const Image = styled.Image`
+//   width: ${constants.width / 2.2};
+//   height: ${constants.height / 5};
+//   border-radius: 15;
+// `;
 
 const ContentTItle = styled.Text`
   color: black;
@@ -67,30 +68,38 @@ const Row = styled.View`
   justify-content: flex-end;
 `;
 
-const SquareContent = ({ navigation, uri, id, username, intro, title }) => (
+const PlanList = ({
+  navigation,
+  planTitle,
+  id,
+  exerciseTime,
+  exerciseDate
+  // id,
+  // user,
+  // exerciseType,
+  // exerciseDate,
+  // exerciseTime
+}) => (
   <Conatiner>
     {/* <TouchableOpacity onPress={() => navigation.navigate("Detail", { id })}> */}
     <TouchableOpacity
       //onLongPress={() => testAlert(id)}
-      onPress={() =>
-        navigation.navigate("UserDetail", { username: "babamba88" })
-      }
+      onPress={() => navigation.navigate("PlanDetail", { planId: id })}
     >
-      <Image source={{ uri }} />
+      {/* <Image source={{ uri }} /> */}
+      <TextContainer>
+        <Column>
+          <ContentTItle>{planTitle}</ContentTItle>
+        </Column>
+        <Row>
+          <UserName>{exerciseTime}</UserName>
+        </Row>
+      </TextContainer>
     </TouchableOpacity>
-    <TextContainer>
-      <Column>
-        <ContentTItle>{title}</ContentTItle>
-        <Introduction>{intro}</Introduction>
-      </Column>
-      <Row>
-        <UserName>{username}</UserName>
-      </Row>
-    </TextContainer>
   </Conatiner>
 );
 
-// SquareContent.propTypes = {
+// PlanContentList.propTypes = {
 //   files: PropTypes.arrayOf(
 //     PropTypes.shape({
 //       id: PropTypes.string.isRequired,
@@ -100,4 +109,4 @@ const SquareContent = ({ navigation, uri, id, username, intro, title }) => (
 //   id: PropTypes.string.isRequired
 // };
 
-export default withNavigation(SquareContent);
+export default withNavigation(PlanList);

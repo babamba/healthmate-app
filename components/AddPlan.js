@@ -1,0 +1,17 @@
+import React from "react";
+import { Platform } from "react-native";
+import styled from "styled-components";
+import { Ionicons } from "@expo/vector-icons";
+import { withNavigation } from "react-navigation";
+import styles from "../styles";
+import NavIcon from "./NavIcon";
+
+const Container = styled.TouchableOpacity`
+  padding-right: 20px;
+`;
+
+export default withNavigation(({ navigation, size }) => (
+  <Container onPress={() => navigation.navigate("PlanNavigation")}>
+    <NavIcon name={Platform.OS === "ios" ? "ios-add" : "md-add"} size={size} />
+  </Container>
+));

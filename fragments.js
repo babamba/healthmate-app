@@ -46,3 +46,34 @@ export const USER_FRAGMENT = gql`
   }
   ${POST_FRAGMENT}
 `;
+
+export const PLAN_FRAGMENT = gql`
+  fragment PlanParts on Plan {
+    id
+    exerciseDate
+    exerciseTime
+    user {
+      ...UserParts
+    }
+    exerciseType {
+      ...ExerciseTypeParts
+    }
+    planContent {
+      ...PlanContentParts
+    }
+  }
+`;
+
+export const PLAN_CONTENT_FRAGMENT = gql`
+  fragment PlanContentParts on PlanContent {
+    id
+    planTitle
+  }
+`;
+
+export const EXERCISE_TYPE_FRAGMENT = gql`
+  fragment ExerciseTypeParts on Exercise {
+    id
+    title
+  }
+`;

@@ -5,18 +5,22 @@ import {
   createStackNavigator
 } from "react-navigation";
 import Main from "../screens/Tabs/Main";
-import Home from "../screens/Tabs/Home";
+// import Home from "../screens/Tabs/Home";
+import Plan from "../screens/Tabs/Plan";
+import Chat from "../screens/Tabs/Chat";
+
 import Search from "../screens/Tabs/Search";
 import Notifications from "../screens/Tabs/Notifications";
 import Map from "../screens/Tabs/Map";
 import Profile from "../screens/Tabs/Profile";
 import Detail from "../screens/Detail";
-import MessagesLink from "../components/MessagesLink";
+// import MessagesLink from "../components/MessagesLink";
 import { View } from "react-native";
 import NavIcon from "../components/NavIcon";
 import { stackStyles } from "./config";
 import styles from "../styles";
 import UserDetail from "../screens/UserDetail";
+import PlanDetail from "../screens/Plan/PlanDetail";
 
 const stackFactory = (initialRoute, customConfig) =>
   createStackNavigator(
@@ -37,6 +41,12 @@ const stackFactory = (initialRoute, customConfig) =>
         screen: UserDetail,
         navigationOptions: ({ navigation }) => ({
           title: navigation.getParam("username")
+        })
+      },
+      PlanDetail: {
+        screen: PlanDetail,
+        navigationOptions: ({ navigation }) => ({
+          // title: navigation.getParam("username")
         })
       }
     },
@@ -64,10 +74,12 @@ export default createBottomTabNavigator(
         )
       }
     },
-    Home: {
-      screen: stackFactory(Home, {
-        headerRight: <MessagesLink />,
-        headerTitle: <NavIcon name="logo-instagram" size={36} />
+    Plan: {
+      screen: stackFactory(Plan, {
+        //headerRight: <MessagesLink />
+        //headerRight: <AddPlan />
+        header: null
+        // headerTitle: <NavIcon name="logo-instagram" size={36} />
       }),
       navigationOptions: {
         tabBarIcon: ({ focused }) => (
@@ -78,19 +90,51 @@ export default createBottomTabNavigator(
         )
       }
     },
-    Search: {
-      screen: stackFactory(Search, {
-        headerBackTitle: null
+
+    Chat: {
+      screen: stackFactory(Chat, {
+        //headerRight: <MessagesLink />
+        //headerRight: <AddPlan />
+        header: null
+        // headerTitle: <NavIcon name="logo-instagram" size={36} />
       }),
       navigationOptions: {
         tabBarIcon: ({ focused }) => (
           <NavIcon
             focused={focused}
-            name={Platform.OS === "ios" ? "ios-search" : "md-search"}
+            name={Platform.OS === "ios" ? "ios-paper-plane" : "md-paper-plane"}
           />
         )
       }
     },
+
+    // Home: {
+    //   screen: stackFactory(Home, {
+    //     headerRight: <MessagesLink />,
+    //     headerTitle: <NavIcon name="logo-instagram" size={36} />
+    //   }),
+    //   navigationOptions: {
+    //     tabBarIcon: ({ focused }) => (
+    //       <NavIcon
+    //         focused={focused}
+    //         name={Platform.OS === "ios" ? "ios-archive" : "md-home"}
+    //       />
+    //     )
+    //   }
+    // },
+    // Search: {
+    //   screen: stackFactory(Search, {
+    //     headerBackTitle: null
+    //   }),
+    //   navigationOptions: {
+    //     tabBarIcon: ({ focused }) => (
+    //       <NavIcon
+    //         focused={focused}
+    //         name={Platform.OS === "ios" ? "ios-search" : "md-search"}
+    //       />
+    //     )
+    //   }
+    // },
     // Add: {
     //   screen: View,
     //   navigationOptions: {

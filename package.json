@@ -27,6 +27,7 @@
     "react-apollo-hooks": "^0.4.5",
     "react-dom": "^16.8.6",
     "react-native": "https://github.com/expo/react-native/archive/sdk-33.0.0.tar.gz",
+    "react-native-gifted-chat": "^0.9.11",
     "react-native-maps": "~0.24.0",
     "react-native-snap-carousel": "^3.8.0",
     "react-native-swiper": "^1.5.14",

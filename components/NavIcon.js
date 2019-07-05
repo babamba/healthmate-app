@@ -7,7 +7,7 @@ const NavIcon = ({
   focused = true,
   name,
   color = styles.blackColor,
-  size = 30
+  size = size ? size : 30
 }) => (
   <Ionicons
     name={name}
