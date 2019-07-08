@@ -17,6 +17,13 @@ export const SEE_ROOMS = gql`
       messages {
         text
       }
+      lastMessage {
+        text
+      }
+      person {
+        username
+        avatar
+      }
     }
   }
 `;
@@ -57,7 +64,7 @@ export default () => {
   const { loading, data, refetch } = useQuery(SEE_ROOMS, {
     fetchPolicy: "network-only"
   });
-  console.log(data.seeRooms);
+  // console.log("data : ", data.seeRooms);
 
   return (
     <SafeAreaView>
@@ -74,7 +81,6 @@ export default () => {
           data &&
           data.seeRooms &&
           data.seeRooms.map((data, index) => {
-            console.log("data", data);
             return <RoomList key={index} {...data} />;
           })
         )}

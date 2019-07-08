@@ -23,11 +23,14 @@ const TextContainer = styled.View`
   flex-direction: row;
 `;
 
-// const Image = styled.Image`
-//   width: ${constants.width / 2.2};
-//   height: ${constants.height / 5};
-//   border-radius: 15;
-// `;
+const Image = styled.Image`
+  flex:1;
+  width:40px;
+  height:40px;
+  /* width: ${constants.width / 2.2};
+  height: ${constants.height / 5}; */
+  border-radius: 15;
+`;
 
 const ContentTItle = styled.Text`
   color: black;
@@ -54,44 +57,42 @@ const UserName = styled.Text`
 `;
 
 const Column = styled.View`
-  flex: 1;
+  flex: 0.2;
   flex-direction: column;
 `;
 
 const Row = styled.View`
-  flex: 1;
+  flex: 0.8;
   flex-direction: row;
-  justify-content: flex-end;
+  justify-content: flex-start;
 `;
 
-const RoomList = ({
-  navigation,
-  planTitle,
-  id,
-  participants,
-  messages
-  // id,
-  // user,
-  // exerciseType,
-  // exerciseDate,
-  // exerciseTime
-}) => (
-  <Conatiner>
-    {/* <TouchableOpacity onPress={() => navigation.navigate("Detail", { id })}> */}
-    <TouchableOpacity
-      //onLongPress={() => testAlert(id)}
-      onPress={() => navigation.navigate("Chat", { roomId: id })}
-    >
-      {/* <Image source={{ uri }} /> */}
-      <TextContainer>
-        <Column>
-          {/* <ContentTItle>{participants[0].username}</ContentTItle> */}
-        </Column>
-        <Row>{/* <UserName>{messages[0].text}</UserName> */}</Row>
-      </TextContainer>
-    </TouchableOpacity>
-  </Conatiner>
-);
+const RoomList = ({ navigation, id, participants, lastMessage, person }) => {
+  // console.log("navigation ", navigation);
+  // console.log("person :", person);
+  // console.log("participants :", participants);
+  // console.log("lastMessage :", lastMessage);
+  return (
+    <Conatiner>
+      {/* <TouchableOpacity onPress={() => navigation.navigate("Detail", { id })}> */}
+      <TouchableOpacity
+        //onLongPress={() => testAlert(id)}
+        onPress={() => navigation.navigate("ChatDetail", { roomId: id })}
+      >
+        {/* <Image source={{ uri }} /> */}
+        <TextContainer>
+          <Column>
+            {/* <ContentTItle /> */}
+            <Image source={{ uri: person[0].avatar }} />
+          </Column>
+          <Row>
+            <Introduction>{lastMessage[0].text}</Introduction>
+          </Row>
+        </TextContainer>
+      </TouchableOpacity>
+    </Conatiner>
+  );
+};
 
 // PlanContentList.propTypes = {
 //   files: PropTypes.arrayOf(

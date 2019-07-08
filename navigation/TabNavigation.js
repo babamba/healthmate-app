@@ -21,6 +21,7 @@ import { stackStyles } from "./config";
 import styles from "../styles";
 import UserDetail from "../screens/UserDetail";
 import PlanDetail from "../screens/Plan/PlanDetail";
+import ChatDetail from "../components/ChatDetail";
 
 const stackFactory = (initialRoute, customConfig) =>
   createStackNavigator(
@@ -45,6 +46,12 @@ const stackFactory = (initialRoute, customConfig) =>
       },
       PlanDetail: {
         screen: PlanDetail,
+        navigationOptions: ({ navigation }) => ({
+          // title: navigation.getParam("username")
+        })
+      },
+      ChatDetail: {
+        screen: ChatDetail,
         navigationOptions: ({ navigation }) => ({
           // title: navigation.getParam("username")
         })
