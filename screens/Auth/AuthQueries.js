@@ -6,18 +6,26 @@ export const LOG_IN = gql`
   }
 `;
 
+export const PASSWORD_LOG_IN = gql`
+  mutation login($email: String!, $password: String!) {
+    login(email: $email, password: $password)
+  }
+`;
+
 export const CREATE_ACCOUNT = gql`
   mutation createAccount(
     $username: String!
     $email: String!
     $firstName: String
     $lastName: String
+    $password: String!
   ) {
     createAccount(
       username: $username
       email: $email
       firstName: $firstName
       lastName: $lastName
+      password: $password
     )
   }
 `;

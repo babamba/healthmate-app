@@ -47,7 +47,7 @@ export default () => {
     text-align: left;
     font-weight: 600;
     font-size: 52px;
-    font-family: NanumBarunGothic;
+    font-family: NotoSansKR_Bold;
   `;
 
   const SubTitleArea = styled.View`
@@ -61,7 +61,7 @@ export default () => {
     text-align: left;
     font-weight: 100;
     font-size: 18px;
-    font-family: NanumBarunGothic;
+    font-family: NotoSansKR_Medium;
   `;
 
   const Container = styled.View`

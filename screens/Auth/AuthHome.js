@@ -25,7 +25,7 @@ const LoginLinkText = styled.Text`
 
 export default ({ navigation }) => (
   <View>
-    <Image resizeMode={"contain"} source={require("../../assets/logo.png")} />
+    {/* <Image resizeMode={"contain"} source={require("../../assets/logo.png")} /> */}
     <AuthButton
       text={"Create New Account"}
       onPress={() => navigation.navigate("Signup")}

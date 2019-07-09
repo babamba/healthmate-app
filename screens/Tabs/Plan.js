@@ -54,7 +54,7 @@ const ScreenTitle = styled.Text`
   color: black;
   font-weight: 600;
   font-size: 32px;
-  font-family: NanumBarunGothic;
+  font-family: NotoSansKR_Bold;
 `;
 
 const AddButton = styled.View`

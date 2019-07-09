@@ -6,7 +6,8 @@ import AuthInput from "../../components/AuthInput";
 import useInput from "../../hooks/useInput";
 import { Alert } from "react-native";
 import { useMutation } from "react-apollo-hooks";
-import { LOG_IN } from "./AuthQueries";
+import { PASSWORD_LOG_IN } from "./AuthQueries";
+import { useLogIn } from "../../AuthContext";
 
 const View = styled.View`
   justify-content: center;
@@ -16,14 +17,20 @@ const View = styled.View`
 
 export default ({ navigation }) => {
   const emailInput = useInput(navigation.getParam("email", ""));
+  const passwordInput = useInput("");
+  const logIn = useLogIn();
   const [loading, setLoading] = useState(false);
-  const requestSecretMutation = useMutation(LOG_IN, {
+  const loginMutation = useMutation(PASSWORD_LOG_IN, {
     variables: {
-      email: emailInput.value
+      email: emailInput.value,
+      password: passwordInput.value
     }
   });
+
   const handleLogin = async () => {
     const { value } = emailInput;
+    const { value: password } = passwordInput;
+
     const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     if (value === "") {
       return Alert.alert("Email can't be empty");
@@ -31,19 +38,19 @@ export default ({ navigation }) => {
       return Alert.alert("Please write an email");
     } else if (!emailRegex.test(value)) {
       return Alert.alert("That email is invalid");
+    } else if (password === "") {
+      return Alert.alert("Password can't be empty");
     }
     try {
       setLoading(true);
       const {
-        data: { requestSecret }
-      } = await requestSecretMutation();
-      if (requestSecret) {
-        Alert.alert("Check your email");
-        navigation.navigate("Confirm", { email: value });
-        return;
+        data: { login }
+      } = await loginMutation();
+      if (login !== "" || login !== false) {
+        Alert.alert("Success Login");
+        logIn(login);
       } else {
-        Alert.alert("Account not found");
-        navigation.navigate("Signup", { email: value });
+        Alert.alert("Wrong email or password!");
       }
     } catch (e) {
       console.log(e);
@@ -62,6 +69,13 @@ export default ({ navigation }) => {
           returnKeyType="send"
           onSubmitEditing={handleLogin}
           autoCorrect={false}
+        />
+        <AuthInput
+          {...passwordInput}
+          placeholder="Password"
+          returnKeyType="send"
+          autoCorrect={false}
+          secureTextEntry={true}
         />
         <AuthButton loading={loading} onPress={handleLogin} text="Log In" />
       </View>

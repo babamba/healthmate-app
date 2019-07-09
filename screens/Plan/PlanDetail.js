@@ -25,13 +25,13 @@ const View = styled.View`
 
 const Text = styled.Text``;
 
-const PlanDetail = ({ navigation }) => {
+export default ({ navigation }) => {
   const { loading, data } = useQuery(SEE_ACTIVITY, {
     variables: { planId: navigation.getParam("planId") },
     fetchPolicy: "network-only"
   });
 
-  console.log(data.seeActivity);
+  //console.log(data.seeActivity);
 
   return (
     <ScrollView>
@@ -54,5 +54,3 @@ const PlanDetail = ({ navigation }) => {
 //     <Text>Plan Detail {props}</Text>
 //   </View>
 // );
-
-export default PlanDetail;

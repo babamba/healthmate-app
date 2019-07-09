@@ -33,13 +33,16 @@ export default ({ navigation }) => {
   const lNameInput = useInput("");
   const emailInput = useInput(navigation.getParam("email", ""));
   const usernameInput = useInput("");
+  const passwordInput = useInput("");
+  const passwordCheckInput = useInput("");
   const [loading, setLoading] = useState(false);
   const createAccountMutation = useMutation(CREATE_ACCOUNT, {
     variables: {
       username: usernameInput.value,
       email: emailInput.value,
       firstName: fNameInput.value,
-      lastName: lNameInput.value
+      lastName: lNameInput.value,
+      password: passwordInput.value
     }
   });
   const handleSingup = async () => {
@@ -47,6 +50,8 @@ export default ({ navigation }) => {
     const { value: fName } = fNameInput;
     const { value: lName } = lNameInput;
     const { value: username } = usernameInput;
+    const { value: password } = passwordInput;
+    const { value: passwordCheck } = passwordCheckInput;
     const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     if (!emailRegex.test(email)) {
       return Alert.alert("That email is invalid");
@@ -56,6 +61,15 @@ export default ({ navigation }) => {
     }
     if (username === "") {
       return Alert.alert("Invalid username");
+    }
+    if (password === "") {
+      return Alert.alert("Invalid password");
+    }
+    if (password.length < 8) {
+      return Alert.alert("password Too short");
+    }
+    if (password !== passwordCheck) {
+      return Alert.alert("wrong Password");
     }
     try {
       setLoading(true);
@@ -147,6 +161,20 @@ export default ({ navigation }) => {
           keyboardType="email-address"
           returnKeyType="send"
           autoCorrect={false}
+        />
+        <AuthInput
+          {...passwordInput}
+          placeholder="Password"
+          returnKeyType="send"
+          autoCorrect={false}
+          secureTextEntry={true}
+        />
+        <AuthInput
+          {...passwordCheckInput}
+          placeholder="PasswordCheck"
+          returnKeyType="send"
+          autoCorrect={false}
+          secureTextEntry={true}
         />
         <AuthInput
           {...usernameInput}

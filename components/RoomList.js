@@ -1,5 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import { View, TouchableOpacity, Alert, Platform } from "react-native";
+import { gql } from "apollo-boost";
+import { useSubscription } from "react-apollo-hooks";
 import { withNavigation } from "react-navigation";
 import PropTypes from "prop-types";
 import styled from "styled-components";
@@ -37,7 +39,7 @@ const ContentTItle = styled.Text`
   text-align: left;
   font-weight: 600;
   font-size: 18px;
-  font-family: NanumBarunGothic;
+  font-family: NotoSansKR_Regular;
 `;
 
 const Introduction = styled.Text`
@@ -45,7 +47,7 @@ const Introduction = styled.Text`
   text-align: left;
   font-weight: 600;
   font-size: 13px;
-  font-family: NanumBarunGothic;
+  font-family: NotoSansKR_Regular;
 `;
 
 const UserName = styled.Text`
@@ -53,7 +55,7 @@ const UserName = styled.Text`
   text-align: left;
   font-weight: 600;
   font-size: 18px;
-  font-family: NanumBarunGothic;
+  font-family: NotoSansKR_Regular;
 `;
 
 const Column = styled.View`
@@ -67,17 +69,35 @@ const Row = styled.View`
   justify-content: flex-start;
 `;
 
-const RoomList = ({ navigation, id, participants, lastMessage, person }) => {
+const RoomList = ({
+  navigation,
+  id,
+  participants,
+  lastMessage,
+  person,
+  messages,
+  me
+}) => {
+  // console.log("roomId : ", id);
   // console.log("navigation ", navigation);
   // console.log("person :", person);
   // console.log("participants :", participants);
   // console.log("lastMessage :", lastMessage);
+  //console.log("messages : ", messages);
+  const [lastMessages, setLastMessage] = useState(lastMessage[0].text);
+
   return (
     <Conatiner>
       {/* <TouchableOpacity onPress={() => navigation.navigate("Detail", { id })}> */}
       <TouchableOpacity
         //onLongPress={() => testAlert(id)}
-        onPress={() => navigation.navigate("ChatDetail", { roomId: id })}
+        onPress={() =>
+          navigation.navigate("ChatDetail", {
+            roomId: id,
+            messages: messages,
+            me
+          })
+        }
       >
         {/* <Image source={{ uri }} /> */}
         <TextContainer>
@@ -86,7 +106,7 @@ const RoomList = ({ navigation, id, participants, lastMessage, person }) => {
             <Image source={{ uri: person[0].avatar }} />
           </Column>
           <Row>
-            <Introduction>{lastMessage[0].text}</Introduction>
+            <Introduction>{lastMessages}</Introduction>
           </Row>
         </TextContainer>
       </TouchableOpacity>

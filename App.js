@@ -15,19 +15,34 @@ import styles from "./styles";
 import NavController from "./components/NavController";
 import { AuthProvider } from "./AuthContext";
 
+import * as Permissions from "expo-permissions";
+import { Notifications } from "expo";
+
 export default function App() {
   const [loaded, setLoaded] = useState(false);
   const [client, setClient] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(null);
+  const [notificationStatus, setStatus] = useState(false);
+
+  // const ask = async () => {
+  //   const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
+  //   setStatus(status);
+  //   let token = await Notifications.getExpoPushTokenAsync();
+  //   console.log(token);
+  //   Notifications.setBadgeNumberAsync(0);
+  // };
+
   const preLoad = async () => {
     try {
+      console.log("preLoad start @@@");
       await Font.loadAsync({
         ...Ionicons.font,
-        NanumBarunGothic: require("./assets/Fonts/NanumBarunGothic.otf"),
-        NanumBarunGothicBold: require("./assets/Fonts/NanumBarunGothicBold.otf"),
-        NanumBarunGothicLight: require("./assets/Fonts/NanumBarunGothicLight.otf"),
-        NanumBarunGothicUltraLight: require("./assets/Fonts/NanumBarunGothicUltraLight.otf"),
-        swagger: require("./assets/Fonts/swagger.ttf")
+        NotoSansKR_Thin: require("./assets/Fonts/NotoSansKR_Thin.ttf"),
+        NotoSansKR_Black: require("./assets/Fonts/NotoSansKR_Black.ttf"),
+        NotoSansKR_Bold: require("./assets/Fonts/NotoSansKR_Bold.ttf"),
+        NotoSansKR_Light: require("./assets/Fonts/NotoSansKR_Light.ttf"),
+        NotoSansKR_Medium: require("./assets/Fonts/NotoSansKR_Medium.ttf"),
+        NotoSansKR_Regular: require("./assets/Fonts/NotoSansKR_Regular.ttf")
       });
       await Asset.loadAsync([require("./assets/logo.png")]);
       const cache = new InMemoryCache();
@@ -59,6 +74,7 @@ export default function App() {
   };
   useEffect(() => {
     preLoad();
+    //ask();
   }, []);
 
   return loaded && client && isLoggedIn !== null ? (

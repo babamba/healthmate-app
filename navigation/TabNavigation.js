@@ -32,6 +32,12 @@ const stackFactory = (initialRoute, customConfig) =>
           ...customConfig
         }
       },
+      ChatDetail: {
+        screen: ChatDetail
+        // navigationOptions: ({ navigation }) => ({
+        //   // title: navigation.getParam("username")
+        // })
+      },
       Detail: {
         screen: Detail,
         navigationOptions: {
@@ -49,12 +55,6 @@ const stackFactory = (initialRoute, customConfig) =>
         navigationOptions: ({ navigation }) => ({
           // title: navigation.getParam("username")
         })
-      },
-      ChatDetail: {
-        screen: ChatDetail,
-        navigationOptions: ({ navigation }) => ({
-          // title: navigation.getParam("username")
-        })
       }
     },
     {
@@ -68,6 +68,22 @@ const stackFactory = (initialRoute, customConfig) =>
 
 export default createBottomTabNavigator(
   {
+    Chat: {
+      screen: stackFactory(Chat, {
+        //headerRight: <MessagesLink />
+        //headerRight: <AddPlan />
+        header: null
+        // headerTitle: <NavIcon name="logo-instagram" size={36} />
+      }),
+      navigationOptions: {
+        tabBarIcon: ({ focused }) => (
+          <NavIcon
+            focused={focused}
+            name={Platform.OS === "ios" ? "ios-paper-plane" : "md-paper-plane"}
+          />
+        )
+      }
+    },
     Main: {
       screen: stackFactory(Main, {
         header: null
@@ -93,23 +109,6 @@ export default createBottomTabNavigator(
           <NavIcon
             focused={focused}
             name={Platform.OS === "ios" ? "ios-archive" : "md-home"}
-          />
-        )
-      }
-    },
-
-    Chat: {
-      screen: stackFactory(Chat, {
-        //headerRight: <MessagesLink />
-        //headerRight: <AddPlan />
-        header: null
-        // headerTitle: <NavIcon name="logo-instagram" size={36} />
-      }),
-      navigationOptions: {
-        tabBarIcon: ({ focused }) => (
-          <NavIcon
-            focused={focused}
-            name={Platform.OS === "ios" ? "ios-paper-plane" : "md-paper-plane"}
           />
         )
       }

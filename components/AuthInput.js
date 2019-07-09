@@ -21,6 +21,7 @@ const AuthInput = ({
   keyboardType = "default",
   autoCapitalize = "none",
   returnKeyType = "done",
+  secureTextEntry = false,
   onChange,
   onSubmitEditing = () => null,
   autoCorrect = true
@@ -34,6 +35,7 @@ const AuthInput = ({
       autoCapitalize={autoCapitalize}
       onSubmitEditing={onSubmitEditing}
       autoCorrect={autoCorrect}
+      secureTextEntry={secureTextEntry}
       value={value}
     />
   </Container>

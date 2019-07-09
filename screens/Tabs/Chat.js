@@ -6,6 +6,7 @@ import { ScrollView, RefreshControl, SafeAreaView } from "react-native";
 import RoomList from "../../components/RoomList";
 import Loader from "../../components/Loader";
 import constants from "../../constants";
+import withSuspense from "../../withSuspense";
 
 export const SEE_ROOMS = gql`
   query seeRooms {
@@ -15,13 +16,28 @@ export const SEE_ROOMS = gql`
         username
       }
       messages {
+        id
         text
+        from {
+          id
+          username
+          avatar
+        }
+        to {
+          username
+        }
+        createdAt
       }
       lastMessage {
         text
       }
       person {
         username
+        avatar
+      }
+      me {
+        username
+        id
         avatar
       }
     }
@@ -52,7 +68,7 @@ const ScreenTitle = styled.Text`
   color: black;
   font-weight: 600;
   font-size: 32px;
-  font-family: NanumBarunGothic;
+  font-family: NotoSansKR_Bold;
 `;
 
 const AddButton = styled.View`
@@ -60,11 +76,10 @@ const AddButton = styled.View`
   text-align: left;
 `;
 
-export default () => {
+function Chat() {
   const { loading, data, refetch } = useQuery(SEE_ROOMS, {
-    fetchPolicy: "network-only"
+    suspend: true
   });
-  // console.log("data : ", data.seeRooms);
 
   return (
     <SafeAreaView>
@@ -87,4 +102,6 @@ export default () => {
       </ScrollView>
     </SafeAreaView>
   );
-};
+}
+
+export default withSuspense(Chat);

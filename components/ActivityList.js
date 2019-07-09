@@ -37,7 +37,7 @@ const ContentTItle = styled.Text`
   text-align: left;
   font-weight: 600;
   font-size: 18px;
-  font-family: NanumBarunGothic;
+  font-family: NotoSansKR_Regular;
 `;
 
 const Introduction = styled.Text`
@@ -45,7 +45,7 @@ const Introduction = styled.Text`
   text-align: left;
   font-weight: 600;
   font-size: 13px;
-  font-family: NanumBarunGothic;
+  font-family: NotoSansKR_Regular;
 `;
 
 const UserName = styled.Text`
@@ -53,7 +53,7 @@ const UserName = styled.Text`
   text-align: left;
   font-weight: 600;
   font-size: 18px;
-  font-family: NanumBarunGothic;
+  font-family: NotoSansKR_Regular;
 `;
 
 const Column = styled.View`
