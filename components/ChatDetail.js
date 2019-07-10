@@ -5,6 +5,7 @@ import styled from "styled-components";
 import { gql } from "apollo-boost";
 import { useQuery, useMutation, useSubscription } from "react-apollo-hooks";
 import Loader from "./Loader";
+import withSuspense from "../withSuspense";
 
 import { GiftedChat } from "react-native-gifted-chat";
 
@@ -72,7 +73,10 @@ export const NEW_MESSAGE = gql`
   }
 `;
 
-const ChatDetail = ({ navigation }) => {
+function ChatDetail(props) {
+  // const ChatDetail = ({ navigation }) => {
+  //const roomId = navigation.getParam("roomId");
+  const { navigation } = props;
   const roomId = navigation.getParam("roomId");
   let postMessage = "";
   let tempMessage;
@@ -190,6 +194,6 @@ const ChatDetail = ({ navigation }) => {
     //     }}
     // />
   );
-};
+}
 
-export default ChatDetail;
+export default withSuspense(ChatDetail);

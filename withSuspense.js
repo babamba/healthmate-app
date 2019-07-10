@@ -18,7 +18,7 @@ export default function withSuspense(Component) {
             </View>
           }
         >
-          <Component />
+          <Component {...this.props} />
         </Suspense>
       );
     }
