@@ -73,73 +73,96 @@ export const NEW_MESSAGE = gql`
   }
 `;
 
-function ChatDetail(props) {
-  // const ChatDetail = ({ navigation }) => {
-  //const roomId = navigation.getParam("roomId");
-  const { navigation } = props;
+// function ChatDetail(props) {
+const ChatDetail = ({ navigation }) => {
   const roomId = navigation.getParam("roomId");
+  //const { navigation } = props;
+
   let postMessage = "";
   let tempMessage;
 
   // 초기 메시지 리스트
-  const {
-    data: { seeRoom: initialRoomData }
-  } = useQuery(SEE_ROOM, {
+  const { data, loading, error } = useQuery(SEE_ROOM, {
     variables: { roomId: navigation.getParam("roomId") },
-    suspend: true
+    fetchPolicy: "network-only"
   });
 
-  const [me] = useState(initialRoomData.me);
-  const [messagesList, setMessageList] = useState(
-    rewriteList(initialRoomData.messages) || []
-  );
+  const [messagesList, setMessageList] = useState();
 
   // react-native gift-chat에 맞춰 object 수정
   function rewriteList(list) {
     if (list) {
-      tempMessage = list.map(message => ({
-        _id: message.id,
-        text: message.text,
-        user: {
-          _id: message.from.id,
-          name: message.from.username,
-          avatar: message.from.avatar
-        },
-        ...message
-      }));
+      if (Array.isArray(list) === true) {
+        tempMessage = list.map(message => ({
+          _id: message.id,
+          text: message.text,
+          user: {
+            _id: message.from.id,
+            name: message.from.username,
+            avatar: message.from.avatar
+          },
+          ...message
+        }));
+      } else {
+        tempMessage = {
+          _id: list.id,
+          text: list.text,
+          user: {
+            _id: list.from.id,
+            name: list.from.username,
+            avatar: list.from.avatar
+          },
+          ...list
+        };
+      }
       return tempMessage;
     }
   }
 
   // 구독 상태 관리
   console.log("roomId : ", roomId);
-  const { data } = useSubscription(NEW_MESSAGE, {
+  const { data: newSubscription } = useSubscription(NEW_MESSAGE, {
     variables: {
       roomId
     },
     onSubscriptionData: ({ client, subscriptionData }) => {
-      console.log("onSubscriptionData", subscriptionData);
+      //console.log("onSubscriptionData", subscriptionData);
     }
   });
 
   const handleNewMessage = () => {
-    if (data !== undefined) {
-      console.log("handleNewMessage data :", data);
-      if (data.subscription !== undefined) {
-        onsole.log("subscription :", data.subscription);
-        if (data.subscription.newMessage !== null) {
-          console.log("subscription updated : ", data.subscription.newMessage);
-          const { messages } = initialRoomData;
-          tempMessage = rewriteList(messages);
-          setMessageList(GiftedChat.append(messagesList, tempMessage));
-        }
+    if (newSubscription !== undefined) {
+      console.log("newSubscription");
+      if (newSubscription.newMessage !== null) {
+        console.log("subscription updated : ", newSubscription.newMessage);
+        tempMessage = rewriteList(newSubscription.newMessage);
+        setMessageList(GiftedChat.append(messagesList, tempMessage));
       }
     }
   };
 
   useEffect(() => {
     handleNewMessage();
-  }, [data]);
+  }, [newSubscription]);
+
+  useEffect(() => {}, [messagesList]);
+
+  useEffect(() => {
+    const onCompleted = data => {
+      //console.log(data);
+      setMessageList(rewriteList(data.seeRoom.messages));
+    };
+    const onError = error => {
+      console.log("error initial load data");
+    };
+    if (onCompleted || onError) {
+      if (onCompleted && !loading && !error) {
+        onCompleted(data);
+      } else if (onError && !loading && error) {
+        onError(error);
+      }
+    }
+  }, [data, loading, error]);
 
   // 메시지 보내기
   const SendMessageMutation = useMutation(SEND_MESSAGE);
@@ -158,19 +181,19 @@ function ChatDetail(props) {
         }
       });
 
-      postMessage = {
-        _id: data.sendMessage.id,
-        text: data.sendMessage.text,
-        createdAt: data.sendMessage.createdAt,
-        user: {
-          _id: data.sendMessage.from.id,
-          name: data.sendMessage.from.username,
-          avatar: data.sendMessage.from.avatar
-        },
-        from: data.sendMessage.from
-      };
+      // postMessage = {
+      //   _id: data.sendMessage.id,
+      //   text: data.sendMessage.text,
+      //   createdAt: data.sendMessage.createdAt,
+      //   user: {
+      //     _id: data.sendMessage.from.id,
+      //     name: data.sendMessage.from.username,
+      //     avatar: data.sendMessage.from.avatar
+      //   },
+      //   from: data.sendMessage.from
+      // };
 
-      setMessageList(GiftedChat.append(messagesList, postMessage));
+      //setMessageList(GiftedChat.append(messagesList, postMessage));
     } catch (e) {
       console.log(e);
     }
@@ -178,13 +201,19 @@ function ChatDetail(props) {
 
   return (
     <View style={{ flex: 1 }}>
-      <GiftedChat
-        messages={messagesList}
-        onSend={messages => onSend(messages)}
-        user={{
-          _id: me.id
-        }}
-      />
+      {loading ? (
+        <Loader />
+      ) : (
+        data && (
+          <GiftedChat
+            messages={messagesList}
+            onSend={sendMessage => onSend(sendMessage)}
+            user={{
+              _id: data.seeRoom.me.id
+            }}
+          />
+        )
+      )}
     </View>
     // <GiftedChat
     //     messages={this.state.messages}
@@ -194,6 +223,6 @@ function ChatDetail(props) {
     //     }}
     // />
   );
-}
+};
 
-export default withSuspense(ChatDetail);
+export default ChatDetail;

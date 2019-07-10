@@ -76,9 +76,10 @@ const AddButton = styled.View`
   text-align: left;
 `;
 
-function Chat() {
+// function Chat() {
+const Chat = () => {
   const { loading, data, refetch } = useQuery(SEE_ROOMS, {
-    suspend: true
+    fetchPolicy: "network-only"
   });
 
   return (
@@ -102,6 +103,6 @@ function Chat() {
       </ScrollView>
     </SafeAreaView>
   );
-}
+};
 
-export default withSuspense(Chat);
+export default Chat;
