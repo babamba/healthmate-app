@@ -106,7 +106,7 @@ const RoomList = ({
       roomId: id
     },
     onSubscriptionData: ({ client, subscriptionData }) => {
-      console.log("onSubscriptionData", subscriptionData);
+      //console.log("onSubscriptionData", subscriptionData);
     }
   });
 
@@ -115,7 +115,7 @@ const RoomList = ({
       //console.log("handle room list : ", updateMessage);
       if (updateMessage.newMessage !== undefined) {
         //console.log("subscription :", data.newMessage);
-        console.log("updateMessage ! ");
+        //console.log("updateMessage ! ");
         if (updateMessage.newMessage !== null) {
           console.log("subscription updated : ", updateMessage.newMessage);
           const { text } = updateMessage.newMessage;
@@ -130,7 +130,7 @@ const RoomList = ({
   }, [updateMessage]);
 
   useEffect(() => {
-    console.log(lastMessage);
+    //console.log(lastMessage);
   }, [lastMessage]);
 
   return (

@@ -120,7 +120,7 @@ const ChatDetail = ({ navigation }) => {
   }
 
   // 구독 상태 관리
-  console.log("roomId : ", roomId);
+  //console.log("roomId : ", roomId);
   const { data: newSubscription } = useSubscription(NEW_MESSAGE, {
     variables: {
       roomId
@@ -132,9 +132,9 @@ const ChatDetail = ({ navigation }) => {
 
   const handleNewMessage = () => {
     if (newSubscription !== undefined) {
-      console.log("newSubscription");
+      //console.log("newSubscription");
       if (newSubscription.newMessage !== null) {
-        console.log("subscription updated : ", newSubscription.newMessage);
+        //console.log("subscription updated : ", newSubscription.newMessage);
         tempMessage = rewriteList(newSubscription.newMessage);
         setMessageList(GiftedChat.append(messagesList, tempMessage));
       }

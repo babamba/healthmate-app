@@ -68,18 +68,18 @@ const stackFactory = (initialRoute, customConfig) =>
 
 export default createBottomTabNavigator(
   {
-    Chat: {
-      screen: stackFactory(Chat, {
-        //headerRight: <MessagesLink />
-        //headerRight: <AddPlan />
+    Map: {
+      screen: stackFactory(Map, {
         header: null
-        // headerTitle: <NavIcon name="logo-instagram" size={36} />
       }),
       navigationOptions: {
+        // tabBarOnPress: ({ navigation }) =>
+        //   navigation.navigate("PhotoNavigation"),
         tabBarIcon: ({ focused }) => (
           <NavIcon
             focused={focused}
-            name={Platform.OS === "ios" ? "ios-paper-plane" : "md-paper-plane"}
+            size={32}
+            name={Platform.OS === "ios" ? "ios-map" : "md-map"}
           />
         )
       }
@@ -113,7 +113,22 @@ export default createBottomTabNavigator(
         )
       }
     },
-
+    Chat: {
+      screen: stackFactory(Chat, {
+        //headerRight: <MessagesLink />
+        //headerRight: <AddPlan />
+        header: null
+        // headerTitle: <NavIcon name="logo-instagram" size={36} />
+      }),
+      navigationOptions: {
+        tabBarIcon: ({ focused }) => (
+          <NavIcon
+            focused={focused}
+            name={Platform.OS === "ios" ? "ios-paper-plane" : "md-paper-plane"}
+          />
+        )
+      }
+    },
     // Home: {
     //   screen: stackFactory(Home, {
     //     headerRight: <MessagesLink />,
@@ -159,22 +174,6 @@ export default createBottomTabNavigator(
     //     )
     //   }
     // },
-    Map: {
-      screen: stackFactory(Map, {
-        header: null
-      }),
-      navigationOptions: {
-        // tabBarOnPress: ({ navigation }) =>
-        //   navigation.navigate("PhotoNavigation"),
-        tabBarIcon: ({ focused }) => (
-          <NavIcon
-            focused={focused}
-            size={32}
-            name={Platform.OS === "ios" ? "ios-map" : "md-map"}
-          />
-        )
-      }
-    },
     // Notifications: {
     //   screen: stackFactory(Notifications, {
     //     title: "Notifications"

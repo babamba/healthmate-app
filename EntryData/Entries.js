@@ -148,6 +148,39 @@ export const ENTRIES_PLAN = [
   })
 ];
 
+export const ENTRIES_CAROUSEL = [
+  {
+    title: "Favourites landscapes 1",
+    subtitle: "Lorem ipsum dolor sit amet",
+    thumbnail: "http://www.xhift.co.kr/wp-content/uploads/2018/09/team_07.png"
+  },
+  {
+    title: "Favourites landscapes 2",
+    subtitle: "Lorem ipsum dolor sit amet et nuncat mergitur",
+    thumbnail: "http://www.xhift.co.kr/wp-content/uploads/2018/09/team_08.png"
+  },
+  {
+    title: "Favourites landscapes 3",
+    subtitle: "Lorem ipsum dolor sit amet et nuncat",
+    thumbnail: "http://www.xhift.co.kr/wp-content/uploads/2018/09/team_12.jpg"
+  },
+  {
+    title: "Favourites landscapes 4",
+    subtitle: "Lorem ipsum dolor sit amet et nuncat mergitur",
+    thumbnail: "http://www.xhift.co.kr/wp-content/uploads/2018/09/team_11.png"
+  },
+  {
+    title: "Favourites landscapes 5",
+    subtitle: "Lorem ipsum dolor sit amet",
+    thumbnail: "http://www.xhift.co.kr/wp-content/uploads/2018/09/team_04.png"
+  },
+  {
+    title: "Favourites landscapes 6",
+    subtitle: "Lorem ipsum dolor sit amet et nuncat",
+    thumbnail: "http://www.xhift.co.kr/wp-content/uploads/2018/09/team_03.png"
+  }
+];
+
 export const ENTRIES_MESSAGE = [
   // {
   //   _id: 7,

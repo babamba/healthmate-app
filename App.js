@@ -31,15 +31,21 @@ export default function App() {
   const [loaded, setLoaded] = useState(false);
   const [client, setClient] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(null);
-  const [notificationStatus, setStatus] = useState(false);
+  const [notificationStatus, setNotificationStatus] = useState(false);
+  const [locationStatus, setLocationStatus] = useState(false);
 
-  // const ask = async () => {
-  //   const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
-  //   setStatus(status);
-  //   let token = await Notifications.getExpoPushTokenAsync();
-  //   console.log(token);
-  //   Notifications.setBadgeNumberAsync(0);
-  // };
+  const ask = async () => {
+    // const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
+    // setNotificationStatus(status);
+    // let token = await Notifications.getExpoPushTokenAsync();
+    // console.log(token);
+    // Notifications.setBadgeNumberAsync(0);
+
+    const { status: locationstatus } = await Permissions.askAsync(
+      Permissions.LOCATION
+    );
+    setLocationStatus(locationstatus);
+  };
 
   const preLoad = async () => {
     try {
