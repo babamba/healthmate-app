@@ -145,7 +145,27 @@ const ChatDetail = ({ navigation }) => {
     handleNewMessage();
   }, [newSubscription]);
 
-  useEffect(() => {}, [messagesList]);
+  useEffect(() => {
+    /* TODO 나중에 캐시와 비교해서 업데이트된 
+      채팅메시지가 있으면 
+      setMessageList(GiftedChat.append(업데이트))
+      하도록 하자 일단은 network only
+     */
+    // if (messagesList !== undefined && messagesList.length > 0) {
+    //   console.log("messagesList : ", messagesList.length);
+    //   console.log("data.seeRoom.messages : ", data.seeRoom.messages.length);
+    //   if (messagesList.length !== data.seeRoom.messages.length) {
+    //     const updatedMessage = data.seeRoom.messages.filter(
+    //       (messages, index) => {
+    //         console.log("loadedMessage : ", messagesList[index]);
+    //         console.log("messagesList : ", data.seeRoom.messages[index]);
+    //         return messagesList[index].id !== data.seeRoom.messages[index].id;
+    //       }
+    //     );
+    //     console.log(updatedMessage);
+    //   }
+    // }
+  }, [messagesList]);
 
   useEffect(() => {
     const onCompleted = data => {

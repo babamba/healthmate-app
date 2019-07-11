@@ -8,6 +8,7 @@ import styled from "styled-components";
 import constants from "../constants";
 
 const Conatiner = styled.View`
+  flex: 1;
   padding-vertical: 8px;
   padding-horizontal: 8px;
   border-radius: 10px;
@@ -69,10 +70,16 @@ const Row = styled.View`
   justify-content: flex-start;
 `;
 
-export const NEW_MESSAGE = gql`
+export const UPDATE_ROOM_MESSAGE = gql`
   subscription newMessage($roomId: String!) {
     newMessage(roomId: $roomId) {
       text
+      id
+      room {
+        lastMessage {
+          text
+        }
+      }
     }
   }
 `;
@@ -94,7 +101,7 @@ const RoomList = ({
   //console.log("messages : ", messages);
   const [lastMessages, setLastMessage] = useState(lastMessage[0].text);
 
-  const { data } = useSubscription(NEW_MESSAGE, {
+  const { data: updateMessage } = useSubscription(UPDATE_ROOM_MESSAGE, {
     variables: {
       roomId: id
     },
@@ -104,14 +111,15 @@ const RoomList = ({
   });
 
   const handleRoomList = () => {
-    if (data !== undefined) {
-      console.log("handleNewMessage data :", data);
-      if (data.subscription !== undefined) {
-        onsole.log("subscription :", data.subscription);
-        if (data.subscription.newMessage !== null) {
-          console.log("subscription updated : ", data.subscription.newMessage);
-          const { text } = data.subscription.newMessage;
-          setLastMessage(lastMessages);
+    if (updateMessage !== undefined) {
+      //console.log("handle room list : ", updateMessage);
+      if (updateMessage.newMessage !== undefined) {
+        //console.log("subscription :", data.newMessage);
+        console.log("updateMessage ! ");
+        if (updateMessage.newMessage !== null) {
+          console.log("subscription updated : ", updateMessage.newMessage);
+          const { text } = updateMessage.newMessage;
+          setLastMessage(text);
         }
       }
     }
@@ -119,7 +127,11 @@ const RoomList = ({
 
   useEffect(() => {
     handleRoomList();
-  }, [data]);
+  }, [updateMessage]);
+
+  useEffect(() => {
+    console.log(lastMessage);
+  }, [lastMessage]);
 
   return (
     <Conatiner>
