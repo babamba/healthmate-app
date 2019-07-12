@@ -15,7 +15,7 @@ const { width: screenWidth } = Dimensions.get("window");
 const MyCarousel = props => {
   //console.log(props);
   const carouselRef = useRef(null);
-
+  const { onSnapUser } = props;
   //   const goForward = () => {
   //     carouselRef.current.snapToNext();
   //   };
@@ -66,6 +66,7 @@ const MyCarousel = props => {
         data={props.data}
         renderItem={data => _renderItem(data)}
         hasParallaxImages={true}
+        onSnapToItem={index => onSnapUser(index)}
       />
     </View>
   );

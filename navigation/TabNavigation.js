@@ -70,7 +70,10 @@ export default createBottomTabNavigator(
   {
     Map: {
       screen: stackFactory(Map, {
-        header: null
+        headerTitle: "근처 운동친구들을 찾아보세요",
+        headerTitleStyle: {
+          fontFamily: "NotoSansKR_Light"
+        }
       }),
       navigationOptions: {
         // tabBarOnPress: ({ navigation }) =>
