@@ -6,6 +6,7 @@ import { gql } from "apollo-boost";
 import { useQuery, useMutation, useSubscription } from "react-apollo-hooks";
 import Loader from "./Loader";
 import withSuspense from "../withSuspense";
+import { getOperationName } from "apollo-link";
 
 import { GiftedChat } from "react-native-gifted-chat";
 
@@ -49,6 +50,9 @@ export const SEND_MESSAGE = gql`
         avatar
         username
       }
+      to {
+        username
+      }
       createdAt
     }
   }
@@ -64,6 +68,7 @@ export const NEW_MESSAGE = gql`
         avatar
         username
       }
+      createdAt
       #  room {
       #    messages {
       #      text
@@ -76,18 +81,18 @@ export const NEW_MESSAGE = gql`
 // function ChatDetail(props) {
 const ChatDetail = ({ navigation }) => {
   const roomId = navigation.getParam("roomId");
-  //const { navigation } = props;
 
   let postMessage = "";
   let tempMessage;
 
   // 초기 메시지 리스트
-  const { data, loading, error } = useQuery(SEE_ROOM, {
-    variables: { roomId: navigation.getParam("roomId") },
-    fetchPolicy: "network-only"
+  const { data, loading, error, refetch } = useQuery(SEE_ROOM, {
+    variables: { roomId },
+    fetchPolicy: "cache-and-network"
   });
 
   const [messagesList, setMessageList] = useState();
+  const [userSelf, setUserSelf] = useState(data.seeRoom.me.id || "");
 
   // react-native gift-chat에 맞춰 object 수정
   function rewriteList(list) {
@@ -134,7 +139,7 @@ const ChatDetail = ({ navigation }) => {
     if (newSubscription !== undefined) {
       //console.log("newSubscription");
       if (newSubscription.newMessage !== null) {
-        //console.log("subscription updated : ", newSubscription.newMessage);
+        console.log("subscription updated : ", newSubscription.newMessage);
         tempMessage = rewriteList(newSubscription.newMessage);
         setMessageList(GiftedChat.append(messagesList, tempMessage));
       }
@@ -170,6 +175,8 @@ const ChatDetail = ({ navigation }) => {
   useEffect(() => {
     const onCompleted = data => {
       //console.log(data);
+      // console.log(data.seeRoom.me);
+      // setUserSelf(data.seeRoom.me.id);
       setMessageList(rewriteList(data.seeRoom.messages));
     };
     const onError = error => {
@@ -185,55 +192,94 @@ const ChatDetail = ({ navigation }) => {
   }, [data, loading, error]);
 
   // 메시지 보내기
-  const SendMessageMutation = useMutation(SEND_MESSAGE);
-  const onSend = async sendMessage => {
+  const SendMessageMutation = useMutation(SEND_MESSAGE, {
+    // 메시지 보낸후 아폴로 캐시 업데이트를 위해 전송결과 데이터와 캐시 데이터를 합쳐서 캐시업데이트를 해준다.
+    update: (proxy, mutationResult) => {
+      try {
+        // 기존 쿼리의 캐시데이터 읽기.
+        let roomData = proxy.readQuery({
+          query: SEE_ROOM,
+          variables: { roomId }
+        });
+
+        // 메시지 부분만 전개
+        let {
+          seeRoom: { messages }
+        } = roomData;
+
+        // 전송 메시지 메시지 데이터 부분만 전개
+        const {
+          data: { sendMessage }
+        } = mutationResult;
+
+        // 이전 캐시와 전송 메시지데이터 전개 후 합침
+        const newCacheData = [sendMessage, ...messages];
+        roomData.seeRoom.messages = newCacheData;
+
+        // 캐쉬에 업데이트
+        proxy.writeQuery({
+          query: SEE_ROOM,
+          variables: { roomId },
+          newCacheData
+        });
+      } catch (error) {
+        console.log("Cache update error", error);
+      }
+    }
+  });
+  const onSend = sendMessage => {
     console.log("sendMessage : ", sendMessage[0].text);
     if (sendMessage[0].text === "") {
       return;
     }
 
     sendText = sendMessage[0].text;
-    try {
-      const { data } = await SendMessageMutation({
-        variables: {
-          roomId,
-          message: sendText
-        }
-      });
+    //try {
+    SendMessageMutation({
+      variables: {
+        roomId,
+        message: sendText
+      }
+    });
 
-      // postMessage = {
-      //   _id: data.sendMessage.id,
-      //   text: data.sendMessage.text,
-      //   createdAt: data.sendMessage.createdAt,
-      //   user: {
-      //     _id: data.sendMessage.from.id,
-      //     name: data.sendMessage.from.username,
-      //     avatar: data.sendMessage.from.avatar
-      //   },
-      //   from: data.sendMessage.from
-      // };
+    //refetch({ roomId });
 
-      //setMessageList(GiftedChat.append(messagesList, postMessage));
-    } catch (e) {
-      console.log(e);
-    }
+    // postMessage = {
+    //   _id: data.sendMessage.id,
+    //   text: data.sendMessage.text,
+    //   createdAt: data.sendMessage.createdAt,
+    //   user: {
+    //     _id: data.sendMessage.from.id,
+    //     name: data.sendMessage.from.username,
+    //     avatar: data.sendMessage.from.avatar
+    //   },
+    //   from: data.sendMessage.from
+    // };
+
+    //setMessageList(GiftedChat.append(messagesList, postMessage));
+    // } catch (e) {
+    //   console.log(e);
+    // }
   };
 
   return (
     <View style={{ flex: 1 }}>
+      {/* 
       {loading ? (
         <Loader />
       ) : (
-        data && (
-          <GiftedChat
-            messages={messagesList}
-            onSend={sendMessage => onSend(sendMessage)}
-            user={{
-              _id: data.seeRoom.me.id
-            }}
-          />
-        )
+         */}
+      {data && data.seeRoom && data.seeRoom.me && data.seeRoom.messages && (
+        <GiftedChat
+          messages={messagesList}
+          onSend={sendMessage => onSend(sendMessage)}
+          user={{
+            _id: userSelf
+          }}
+        />
       )}
+
+      {/* )} */}
     </View>
     // <GiftedChat
     //     messages={this.state.messages}

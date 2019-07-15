@@ -79,7 +79,7 @@ const AddButton = styled.View`
 // function Chat() {
 const Chat = () => {
   const { loading, data, refetch } = useQuery(SEE_ROOMS, {
-    fetchPolicy: "network-only"
+    fetchPolicy: "cache-and-network"
   });
 
   return (
@@ -91,15 +91,21 @@ const Chat = () => {
         {/* {ENTRIES_PLAN.map((data, index) => (
           <PlanContentList key={index} {...data} />
         ))} */}
+
+        {/*         
         {loading ? (
           <Loader />
-        ) : (
-          data &&
+        ) : ( */}
+
+        {data &&
           data.seeRooms &&
           data.seeRooms.map((data, index) => {
             return <RoomList key={index} {...data} />;
-          })
+          })}
+
+        {/* 
         )}
+         */}
       </ScrollView>
     </SafeAreaView>
   );

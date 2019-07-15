@@ -73,7 +73,7 @@ const MapScreen = ({ navigation }) => {
 
   const mapRef = useRef();
   const { data, loading, error } = useQuery(NEAR_USER, {
-    fetchPolicy: "network-only"
+    fetchPolicy: "cache-and-network"
   });
 
   const { width, height } = Dimensions.get("window");
