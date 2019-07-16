@@ -91,7 +91,8 @@ const RoomList = ({
   lastMessage,
   person,
   messages,
-  me
+  me,
+  RootChatScreenRefetch
 }) => {
   // console.log("roomId : ", id);
   // console.log("navigation ", navigation);
@@ -120,6 +121,7 @@ const RoomList = ({
           console.log("subscription updated : ", updateMessage.newMessage);
           const { text } = updateMessage.newMessage;
           setLastMessage(text);
+          RootChatScreenRefetch();
         }
       }
     }
@@ -140,7 +142,10 @@ const RoomList = ({
         //onLongPress={() => testAlert(id)}
         onPress={() =>
           navigation.navigate("ChatDetail", {
-            roomId: id
+            roomId: id,
+            RootChatScreenRefetch,
+            messages,
+            me
           })
         }
       >

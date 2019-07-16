@@ -92,20 +92,25 @@ const Chat = () => {
           <PlanContentList key={index} {...data} />
         ))} */}
 
-        {/*         
-        {loading ? (
-          <Loader />
-        ) : ( */}
-
         {data &&
           data.seeRooms &&
           data.seeRooms.map((data, index) => {
-            return <RoomList key={index} {...data} />;
+            return (
+              <RoomList key={index} {...data} RootChatScreenRefetch={refetch} />
+            );
           })}
 
-        {/* 
-        )}
-         */}
+        {/* {loading ? (
+          <Loader />
+        ) : (
+          data &&
+          data.seeRooms &&
+          data.seeRooms.map((data, index) => {
+            return (
+              <RoomList key={index} {...data} RootChatScreenRefetch={refetch} />
+            );
+          })
+        )} */}
       </ScrollView>
     </SafeAreaView>
   );

@@ -68,6 +68,22 @@ const stackFactory = (initialRoute, customConfig) =>
 
 export default createBottomTabNavigator(
   {
+    Chat: {
+      screen: stackFactory(Chat, {
+        //headerRight: <MessagesLink />
+        //headerRight: <AddPlan />
+        header: null
+        // headerTitle: <NavIcon name="logo-instagram" size={36} />
+      }),
+      navigationOptions: {
+        tabBarIcon: ({ focused }) => (
+          <NavIcon
+            focused={focused}
+            name={Platform.OS === "ios" ? "ios-paper-plane" : "md-paper-plane"}
+          />
+        )
+      }
+    },
     Map: {
       screen: stackFactory(Map, {
         headerTitle: "근처 운동친구들을 찾아보세요",
@@ -112,22 +128,6 @@ export default createBottomTabNavigator(
           <NavIcon
             focused={focused}
             name={Platform.OS === "ios" ? "ios-archive" : "md-home"}
-          />
-        )
-      }
-    },
-    Chat: {
-      screen: stackFactory(Chat, {
-        //headerRight: <MessagesLink />
-        //headerRight: <AddPlan />
-        header: null
-        // headerTitle: <NavIcon name="logo-instagram" size={36} />
-      }),
-      navigationOptions: {
-        tabBarIcon: ({ focused }) => (
-          <NavIcon
-            focused={focused}
-            name={Platform.OS === "ios" ? "ios-paper-plane" : "md-paper-plane"}
           />
         )
       }

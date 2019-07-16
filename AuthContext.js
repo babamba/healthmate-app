@@ -13,6 +13,9 @@ export const AuthProvider = ({
     try {
       await AsyncStorage.setItem("isLoggedIn", "true");
       await AsyncStorage.setItem("jwt", token);
+
+      console.log("jwt : ", token);
+      console.log("isLoggedIn : true ");
       setIsLoggedIn(true);
     } catch (e) {
       console.log(e);
