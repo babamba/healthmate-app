@@ -19,7 +19,7 @@ export default ({ navigation }) => {
   const { loading, data } = useQuery(ME, {
     fetchPolicy: "network-only"
   });
-  console.log("profile data : ", data);
+  //console.log("profile data : ", data);
   return (
     <ScrollView>
       {loading ? <Loader /> : data && data.me && <UserProfile {...data.me} />}

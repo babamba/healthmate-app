@@ -12,6 +12,12 @@ export const PASSWORD_LOG_IN = gql`
   }
 `;
 
+export const LOG_OUT = gql`
+  mutation logout {
+    logout
+  }
+`;
+
 export const CREATE_ACCOUNT = gql`
   mutation createAccount(
     $username: String!

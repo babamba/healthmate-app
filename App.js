@@ -108,7 +108,7 @@ export default function App() {
         request =>
           new Promise((success, fail) => {
             getToken().then(
-              token => console.log("token : ", token),
+              token => console.log("authHeader token : ", token),
               success({ headers: { authorization: `Bearer ${token}` } })
             );
           })

@@ -1,7 +1,9 @@
 import React, { createContext, useContext, useState } from "react";
 import { AsyncStorage } from "react-native";
-import { useApolloClient } from "react-apollo-hooks";
+import { useApolloClient, useMutation } from "react-apollo-hooks";
 import { CachePersistor } from "apollo-cache-persist";
+import { LOG_OUT } from "./screens/Auth/AuthQueries";
+import { SEE_ROOMS } from "./screens/Tabs/Chat";
 
 export const AuthContext = createContext();
 
@@ -10,14 +12,11 @@ export const AuthProvider = ({
   children
   // client
 }) => {
+  const client = useApolloClient();
   const [isLoggedIn, setIsLoggedIn] = useState(isLoggedInProp);
-
-  // const setTokenHeader = (operation, token) => {
-  //   if (token)
-  //     operation.setContext({ headers: { authorization: `Bearer ${token}` } });
-  // };
-
-  // console.log(ApolloLink);
+  const logoutMutation = useMutation(LOG_OUT, {
+    fetchPolicy: "no-cache"
+  });
 
   const logUserIn = async token => {
     try {
@@ -42,12 +41,15 @@ export const AuthProvider = ({
       //   client.cache.reset();
       // });
 
+      const logout = await logoutMutation();
+      console.log(logout);
+
       await AsyncStorage.setItem("isLoggedIn", "false");
       await AsyncStorage.setItem("jwt", "");
-      // await CachePersistor.purge();
+
+      await client.clearStore();
 
       await setIsLoggedIn(false);
-      console.log("logout ");
     } catch (e) {
       console.log(e);
     }
