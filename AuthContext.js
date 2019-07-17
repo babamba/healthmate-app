@@ -14,15 +14,15 @@ export const AuthProvider = ({
 }) => {
   const client = useApolloClient();
   const [isLoggedIn, setIsLoggedIn] = useState(isLoggedInProp);
-  const logoutMutation = useMutation(LOG_OUT, {
-    fetchPolicy: "no-cache"
-  });
+  // const logoutMutation = useMutation(LOG_OUT, {
+  //   fetchPolicy: "no-cache"
+  // });
 
   const logUserIn = async token => {
     try {
       await AsyncStorage.setItem("isLoggedIn", "true");
       await AsyncStorage.setItem("jwt", token);
-
+      //await client.resetStore();
       //await client.resetStore();
       console.log("jwt : ", token);
 
@@ -41,13 +41,15 @@ export const AuthProvider = ({
       //   client.cache.reset();
       // });
 
-      const logout = await logoutMutation();
-      console.log(logout);
-
+      // const logout = await logoutMutation();
+      // console.log(logout);
+      client.clearStore().then(() => {
+        client.resetStore();
+      });
       await AsyncStorage.setItem("isLoggedIn", "false");
       await AsyncStorage.setItem("jwt", "");
 
-      await client.clearStore();
+      //await client.clearStore();
 
       await setIsLoggedIn(false);
     } catch (e) {

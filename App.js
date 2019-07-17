@@ -94,26 +94,76 @@ export default function App() {
         }
       });
 
+      const authheader = setContext(async (req, { headers }) => {
+        const token = await AsyncStorage.getItem("jwt");
+        return {
+          headers: {
+            // ...headers,
+            Authorization: token ? `Bearer ${token}` : ""
+          }
+        };
+      });
+
       // const authMiddleware = new ApolloLink((operation, forward) => {
-      //   console.log("authMiddleware Bearer", token),
-      //     operation.setContext({
-      //       headers: {
-      //         Authorization: `Bearer ${token}`
-      //       }
-      //     });
+      //   // operation.setContext({})
+      //   // console.log(authheader);
       //   return forward(operation);
       // });
 
-      const authHeader = setContext(
-        request =>
-          new Promise((success, fail) => {
-            getToken().then(
-              token => console.log("authHeader token : ", token),
-              success({ headers: { authorization: `Bearer ${token}` } })
-            );
-          })
-      );
+      // console.log(authMiddleware);
 
+      // const authMiddleware = new ApolloLink((operation, forward) => {
+      //   console.log("authMiddleware Bearer", token),
+      //     AsyncStorage.getItem("jwt").then(token => {
+      //       console.log("token : ", token);
+      //       return operation.setContext({
+      //         headers: {
+      //           Authorization: `Bearer ${token}`
+      //         }
+      //       });
+      //     });
+
+      //   // operation.setContext({
+      //   //   headers: {
+      //   //     Authorization: `Bearer ${token}`
+      //   //   }
+      //   // });
+      //   const { headers } = operation.getContext();
+      //   console.log("headers : ", headers);
+
+      //   return forward(operation);
+      // });
+
+      // const authHeader = operation =>
+      //   operation.setContext(
+      //     request =>
+      //       new Promise((success, fail) => {
+      //         getToken().then(
+      //           token => console.log("authHeader token : ", token),
+      //           success({ headers: { authorization: `Bearer ${token}` } })
+      //         );
+      //       })
+      //   );
+
+      // const authMiddleware = new ApolloLink((operation, forward) => {
+      //   console.log("authMiddleware Bearer", token),
+      //     operation.setContext(
+      //       request =>
+      //         new Promise((success, fail) => {
+      //           getToken().then(
+      //             token => console.log("authHeader token : ", token),
+      //             success({ headers: { Authorization: `Bearer ${token}` } })
+      //           );
+      //         })
+      //     );
+      //   console.log(operation.getContext());
+      //   return forward(operation);
+      // });
+
+      // const authMiddleware = new ApolloLink((operation, forward) => {
+      //   authHeader(operation);
+      //   return forward(operation);
+      // });
       // const authMiddleware = new ApolloLink((operation, forward) => {
       //   getToken().then(token => {
       //     console.log("token", token);
@@ -215,7 +265,7 @@ export default function App() {
               );
             if (networkError) console.log(`[Network error]: ${networkError}`);
           }),
-          concat(authHeader, combinedLinks)
+          concat(authheader, combinedLinks)
         ])
       });
 
