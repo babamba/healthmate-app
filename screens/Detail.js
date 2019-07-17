@@ -1,6 +1,6 @@
 import React from "react";
 import { useQuery } from "react-apollo-hooks";
-import { gql } from "apollo-boost";
+import gql from "graphql-tag";
 import { POST_FRAGMENT } from "../fragments";
 import Loader from "../components/Loader";
 import Post from "../components/Post";

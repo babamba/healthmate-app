@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { View } from "react-native";
 import styled from "styled-components";
 
-import { gql } from "apollo-boost";
+import gql from "graphql-tag";
 import {
   useQuery,
   useMutation,
@@ -92,16 +92,15 @@ const ChatDetail = ({ navigation }) => {
   const me_param = navigation.getParam("me");
   const messages_param = navigation.getParam("messages");
 
-  let postMessage = "";
   let tempMessage;
 
   // 초기 메시지 리스트
   const { data, loading, error, refetch } = useQuery(SEE_ROOM, {
     variables: { roomId },
-    fetchPolicy: "cache-and-network"
+    fetchPolicy: "network-only"
   });
 
-  const [messagesList, setMessageList] = useState(messages_param);
+  const [messagesList, setMessageList] = useState(rewriteList(messages_param));
   const [userSelf, setUserSelf] = useState(me_param);
 
   // react-native gift-chat에 맞춰 object 수정
@@ -151,12 +150,11 @@ const ChatDetail = ({ navigation }) => {
       if (newSubscription.newMessage !== null) {
         console.log("subscription updated : ", newSubscription.newMessage);
         tempMessage = rewriteList(newSubscription.newMessage);
+        setMessageList(GiftedChat.append(messagesList, tempMessage));
 
-        const newMessageList = await GiftedChat.append(
-          messagesList,
-          tempMessage
-        );
-        await setMessageList(newMessageList);
+        // const newMessageList = GiftedChat.append(messagesList, tempMessage);
+        // //const newMessageList = [...messagesList, tempMessage];
+        // setMessageList(newMessageList);
 
         let roomData = client.cache.readQuery({
           query: SEE_ROOM,
@@ -268,11 +266,26 @@ const ChatDetail = ({ navigation }) => {
   // }
 
   const onSend = sendMessage => {
-    console.log("sendMessage : ", sendMessage[0].text);
+    //console.log("sendMessage : ", sendMessage[0].text);
+    console.log("sendMessage : ", sendMessage);
     if (sendMessage[0].text === "") {
       return;
     }
     sendText = sendMessage[0].text;
+    //let postMessage = "";
+    const postMessage = {
+      _id: userSelf.id,
+      text: sendText,
+      createdAt: sendMessage.createdAt,
+      user: {
+        _id: userSelf.id,
+        name: userSelf.username,
+        avatar: userSelf.avatar
+      }
+    };
+
+    // GiftedChat.append(messagesList, postMessage);
+
     //try {
     SendMessageMutation({
       variables: {
@@ -281,18 +294,6 @@ const ChatDetail = ({ navigation }) => {
       }
     });
     //refetch({ roomId });
-
-    // postMessage = {
-    //   _id: data.sendMessage.id,
-    //   text: data.sendMessage.text,
-    //   createdAt: data.sendMessage.createdAt,
-    //   user: {
-    //     _id: data.sendMessage.from.id,
-    //     name: data.sendMessage.from.username,
-    //     avatar: data.sendMessage.from.avatar
-    //   },
-    //   from: data.sendMessage.from
-    // };
 
     //setMessageList(GiftedChat.append(messagesList, postMessage));
     // } catch (e) {
@@ -305,7 +306,34 @@ const ChatDetail = ({ navigation }) => {
       {/* {loading ? (
         <Loader />
       ) : ( */}
-      {data && data.seeRoom && data.seeRoom.me && data.seeRoom.messages && (
+
+      {loading ? (
+        <GiftedChat
+          messages={messagesList}
+          onSend={sendMessage => onSend(sendMessage)}
+          user={{
+            _id: me_param.id
+          }}
+        />
+      ) : (
+        data &&
+        data.seeRoom &&
+        data.seeRoom.me &&
+        data.seeRoom.messages && (
+          <GiftedChat
+            messages={messagesList}
+            onSend={sendMessage => onSend(sendMessage)}
+            user={{
+              _id: userSelf
+            }}
+            isAnimated={true}
+            quickReplyStyle={{ borderRadius: 4 }}
+            keyboardShouldPersistTaps="never"
+          />
+        )
+      )}
+
+      {/* {data && data.seeRoom && data.seeRoom.me && data.seeRoom.messages && (
         <GiftedChat
           messages={messagesList}
           onSend={sendMessage => onSend(sendMessage)}
@@ -313,7 +341,7 @@ const ChatDetail = ({ navigation }) => {
             _id: userSelf
           }}
         />
-      )}
+      )} */}
 
       {/* )} */}
 

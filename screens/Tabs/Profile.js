@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { ScrollView } from "react-native";
-import { gql } from "apollo-boost";
+import gql from "graphql-tag";
 import { USER_FRAGMENT } from "../../fragments";
 import Loader from "../../components/Loader";
 import { useQuery } from "react-apollo-hooks";
@@ -16,7 +16,10 @@ export const ME = gql`
 `;
 
 export default ({ navigation }) => {
-  const { loading, data } = useQuery(ME);
+  const { loading, data } = useQuery(ME, {
+    fetchPolicy: "network-only"
+  });
+  console.log("profile data : ", data);
   return (
     <ScrollView>
       {loading ? <Loader /> : data && data.me && <UserProfile {...data.me} />}

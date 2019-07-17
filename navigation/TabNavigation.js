@@ -33,10 +33,12 @@ const stackFactory = (initialRoute, customConfig) =>
         }
       },
       ChatDetail: {
-        screen: ChatDetail
-        // navigationOptions: ({ navigation }) => ({
-        //   // title: navigation.getParam("username")
-        // })
+        screen: ChatDetail,
+        navigationOptions: ({ navigation }) =>
+          //console.log("title : ", navigation.getParam("roomUsers").username),
+          ({
+            headerTitle: `${navigation.getParam("userlist")}`
+          })
       },
       Detail: {
         screen: Detail,

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { View, TouchableOpacity, Alert, Platform } from "react-native";
-import { gql } from "apollo-boost";
+import gql from "graphql-tag";
 import { useSubscription } from "react-apollo-hooks";
 import { withNavigation } from "react-navigation";
 import PropTypes from "prop-types";
@@ -96,11 +96,32 @@ const RoomList = ({
 }) => {
   // console.log("roomId : ", id);
   // console.log("navigation ", navigation);
-  // console.log("person :", person);
+  //console.log("person :", person);
   // console.log("participants :", participants);
   // console.log("lastMessage :", lastMessage);
   //console.log("messages : ", messages);
   const [lastMessages, setLastMessage] = useState(lastMessage[0].text);
+  // const [roomUsers, setRoomUsers] = useState();
+  let userlist = "";
+
+  person.map((user, index) => {
+    const separator = ", ";
+    //console.log(person.length);
+
+    if (person.length === 1) {
+      //console.log("person.length = 0");
+      userlist += user.username;
+    } else {
+      //console.log("person.length > 0");
+      if (index !== person.length - 1) {
+        userlist += user.username + separator;
+      } else {
+        userlist += user.username;
+      }
+    }
+  });
+
+  //console.log("userlist : ", userlist);
 
   const { data: updateMessage } = useSubscription(UPDATE_ROOM_MESSAGE, {
     variables: {
@@ -145,7 +166,8 @@ const RoomList = ({
             roomId: id,
             RootChatScreenRefetch,
             messages,
-            me
+            me,
+            userlist
           })
         }
       >

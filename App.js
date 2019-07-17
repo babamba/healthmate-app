@@ -34,6 +34,15 @@ export default function App() {
   const [notificationStatus, setNotificationStatus] = useState(false);
   const [locationStatus, setLocationStatus] = useState(false);
 
+  const getToken = async () => {
+    const token = await AsyncStorage.getItem("jwt");
+    if (token) {
+      return token;
+    } else {
+      return "";
+    }
+  };
+
   const ask = async () => {
     // const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
     // setNotificationStatus(status);
@@ -45,9 +54,12 @@ export default function App() {
       Permissions.LOCATION
     );
     setLocationStatus(locationstatus);
+
+    console.log("ask ----");
   };
 
   const preLoad = async () => {
+    let token = await getToken();
     try {
       console.log("preLoad start @@@");
       await Font.loadAsync({
@@ -68,8 +80,6 @@ export default function App() {
         storage: AsyncStorage
       });
 
-      const token = await AsyncStorage.getItem("jwt");
-
       const httpLink = new HttpLink({
         uri: "http://localhost:4000"
       });
@@ -84,14 +94,62 @@ export default function App() {
         }
       });
 
-      const authMiddleware = new ApolloLink((operation, forward) => {
-        operation.setContext({
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        });
-        return forward(operation);
-      });
+      // const authMiddleware = new ApolloLink((operation, forward) => {
+      //   console.log("authMiddleware Bearer", token),
+      //     operation.setContext({
+      //       headers: {
+      //         Authorization: `Bearer ${token}`
+      //       }
+      //     });
+      //   return forward(operation);
+      // });
+
+      const authHeader = setContext(
+        request =>
+          new Promise((success, fail) => {
+            getToken().then(
+              token => console.log("token : ", token),
+              success({ headers: { authorization: `Bearer ${token}` } })
+            );
+          })
+      );
+
+      // const authMiddleware = new ApolloLink((operation, forward) => {
+      //   getToken().then(token => {
+      //     console.log("token", token);
+      //     console.log("operation", operation);
+      //     console.log("forward", forward);
+      //     operation.setContext({
+      //       headers: {
+      //         Authorization: `Bearer ${token}`
+      //       }
+      //     });
+      //   });
+      //   return forward(operation);
+      // });
+
+      // const authMiddleware = new ApolloLink((operation, forward) => {
+      //   getToken().then(token => {
+      //     console.log(token),
+      //       operation.setContext({
+      //         headers: {
+      //           Authorization: `Bearer ${token}`
+      //         }
+      //       });
+      //   });
+      //   return forward(operation);
+      // });
+
+      // const authMiddleware = setContext(operation =>
+      //   getToken().then(token => {
+      //     return {
+      //       // Make sure to actually set the headers here
+      //       headers: {
+      //         authorization: token || null
+      //       }
+      //     };
+      //   })
+      // );
 
       const combinedLinks = split(
         ({ query }) => {
@@ -157,7 +215,7 @@ export default function App() {
               );
             if (networkError) console.log(`[Network error]: ${networkError}`);
           }),
-          concat(authMiddleware, combinedLinks)
+          concat(authHeader, combinedLinks)
         ])
       });
 
@@ -188,6 +246,10 @@ export default function App() {
     preLoad();
     //ask();
   }, []);
+
+  useEffect(() => {
+    console.log("Auth effect !");
+  }, [isLoggedIn]);
 
   return loaded && client && isLoggedIn !== null ? (
     <ApolloProvider client={client}>

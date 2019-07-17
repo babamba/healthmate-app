@@ -18,7 +18,7 @@ import Loader from "../../components/Loader";
 
 import { withNavigation } from "react-navigation";
 
-import { gql } from "apollo-boost";
+import gql from "graphql-tag";
 import { useQuery } from "react-apollo-hooks";
 
 import CarouselItem from "../../components/carousel/carousel";

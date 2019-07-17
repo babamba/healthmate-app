@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { Image, ActivityIndicator, Alert } from "react-native";
 import styled from "styled-components";
-import { gql } from "apollo-boost";
+import gql from "graphql-tag";
 import useInput from "../../hooks/useInput";
 import styles from "../../styles";
 import constants from "../../constants";

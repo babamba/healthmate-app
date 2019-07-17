@@ -1,5 +1,5 @@
 import React from "react";
-import { gql } from "apollo-boost";
+import gql from "graphql-tag";
 import { useQuery } from "react-apollo-hooks";
 import styled from "styled-components";
 import { ScrollView, RefreshControl, SafeAreaView } from "react-native";

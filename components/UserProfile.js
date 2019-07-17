@@ -83,6 +83,7 @@ const UserProfile = ({
   fullName,
   posts
 }) => {
+  console.log("user profile : ", fullName);
   const [isGrid, setIsGrid] = useState(true);
   const logout = useLogOut();
   const toggleGrid = () => setIsGrid(i => !i);

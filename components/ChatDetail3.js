@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { View } from "react-native";
 import styled from "styled-components";
 
-import { gql } from "apollo-boost";
+import gql from "graphql-tag";
 import { useQuery, useMutation } from "react-apollo-hooks";
 import Loader from "./Loader";
 

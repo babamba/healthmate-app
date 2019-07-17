@@ -24,7 +24,8 @@ export default ({ navigation }) => {
     variables: {
       email: emailInput.value,
       password: passwordInput.value
-    }
+    },
+    fetchPolicy: "no-cache"
   });
 
   const handleLogin = async () => {
