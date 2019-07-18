@@ -1,10 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { TouchableWithoutFeedback, Keyboard } from "react-native";
+import { TouchableWithoutFeedback, Keyboard, Alert } from "react-native";
 import AuthButton from "../../components/AuthButton";
 import AuthInput from "../../components/AuthInput";
 import useInput from "../../hooks/useInput";
-import { Alert } from "react-native";
 import { useMutation } from "react-apollo-hooks";
 import { PASSWORD_LOG_IN } from "./AuthQueries";
 import { useLogIn } from "../../AuthContext";
@@ -28,6 +27,13 @@ export default ({ navigation }) => {
     fetchPolicy: "no-cache"
   });
 
+  // Test auto input
+  useEffect(() => {
+    Alert.alert("comp did mount 귀찮아 test");
+    emailInput.setValue("orochi13@naver.com");
+    passwordInput.setValue("test1234");
+  }, []);
+
   const handleLogin = async () => {
     const { value } = emailInput;
     const { value: password } = passwordInput;
@@ -48,7 +54,7 @@ export default ({ navigation }) => {
         data: { login }
       } = await loginMutation();
       if (login !== "" || login !== false) {
-        Alert.alert("Success Login");
+        //Alert.alert("Success Login");
         logIn(login);
       } else {
         Alert.alert("Wrong email or password!");

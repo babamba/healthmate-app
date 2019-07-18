@@ -93,7 +93,8 @@ export default function App() {
       });
 
       const httpLink = new HttpLink({
-        uri: "http://localhost:4000"
+        // uri: "http://localhost:4000"
+        uri: "http://hellojw.net:9333"
       });
 
       const wsLink = new WebSocketLink({
