@@ -1,8 +1,8 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import gql from "graphql-tag";
 import { useQuery } from "react-apollo-hooks";
 import styled from "styled-components";
-import { ScrollView, RefreshControl, SafeAreaView } from "react-native";
+import { ScrollView, RefreshControl } from "react-native";
 import RoomList from "../../components/RoomList";
 import Loader from "../../components/Loader";
 import constants from "../../constants";
@@ -57,9 +57,25 @@ const Header = styled.View`
   margin-horizontal: 15px;
   flex-direction: row;
   text-align: center;
+  background-color: green;
+  opacity: 0.2;
+  flex: 1;
+`;
+
+const SafeAreaView = styled.SafeAreaView`
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+`;
+
+const Container = styled.View`
+  justify-content: center;
+  align-items: center;
+  flex: 1;
 `;
 
 const Content = styled.View`
+  flex: 11;
   width: ${constants.width};
 `;
 
@@ -78,29 +94,69 @@ const AddButton = styled.View`
 
 // function Chat() {
 const Chat = () => {
-  const { loading, data, refetch } = useQuery(SEE_ROOMS, {
+  const [initialStarted, setInitialStarted] = useState(false);
+
+  const { data, loading, error, refetch } = useQuery(SEE_ROOMS, {
     fetchPolicy: "network-only"
   });
 
+  useEffect(() => {
+    const onCompleted = data => {
+      setInitialStarted(true);
+    };
+
+    const onError = error => {
+      console.log("error initial load data");
+    };
+
+    if (onCompleted || onError) {
+      if (onCompleted && !loading && !error) {
+        onCompleted(data);
+      } else if (onError && !loading && error) {
+        onError(error);
+      }
+    }
+  }, [data, loading, error]);
+
   return (
     <SafeAreaView>
-      <Header>
-        <ScreenTitle>Direct Message</ScreenTitle>
-      </Header>
-      <ScrollView>
-        {/* {ENTRIES_PLAN.map((data, index) => (
+      <Container>
+        <Header>
+          <ScreenTitle>Direct Message</ScreenTitle>
+        </Header>
+        <Content>
+          <ScrollView>
+            {/* {ENTRIES_PLAN.map((data, index) => (
           <PlanContentList key={index} {...data} />
         ))} */}
 
-        {data &&
-          data.seeRooms &&
-          data.seeRooms.map((data, index) => {
-            return (
-              <RoomList key={index} {...data} RootChatScreenRefetch={refetch} />
-            );
-          })}
+            {loading
+              ? !initialStarted && <Loader />
+              : data &&
+                data.seeRooms &&
+                data.seeRooms.map((data, index) => {
+                  return (
+                    <RoomList
+                      key={index}
+                      {...data}
+                      RootChatScreenRefetch={refetch}
+                    />
+                  );
+                })}
 
-        {/* {loading ? (
+            {/* {data &&
+              data.seeRooms &&
+              data.seeRooms.map((data, index) => {
+                return (
+                  <RoomList
+                    key={index}
+                    {...data}
+                    RootChatScreenRefetch={refetch}
+                  />
+                );
+              })} */}
+
+            {/* {loading ? (
           <Loader />
         ) : (
           data &&
@@ -111,7 +167,9 @@ const Chat = () => {
             );
           })
         )} */}
-      </ScrollView>
+          </ScrollView>
+        </Content>
+      </Container>
     </SafeAreaView>
   );
 };

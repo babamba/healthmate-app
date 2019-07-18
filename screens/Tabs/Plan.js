@@ -2,7 +2,7 @@ import React from "react";
 import gql from "graphql-tag";
 import { useQuery } from "react-apollo-hooks";
 import styled from "styled-components";
-import { ScrollView, RefreshControl, SafeAreaView } from "react-native";
+import { ScrollView, RefreshControl } from "react-native";
 import PlanList from "../../components/PlanList";
 import Loader from "../../components/Loader";
 import AddPlan from "../../components/AddPlan";
@@ -29,12 +29,17 @@ export const SEE_PLAN = gql`
     }
   }
 `;
+const SafeAreaView = styled.SafeAreaView`
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+`;
 
-// const View = styled.View`
-//   justify-content: center;
-//   align-items: center;
-//   flex: 1;
-// `;
+const Container = styled.View`
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+`;
 
 const Header = styled.View`
   width: ${constants.width};
@@ -47,6 +52,7 @@ const Header = styled.View`
 
 const Content = styled.View`
   width: ${constants.width};
+  flex: 11;
 `;
 
 const ScreenTitle = styled.Text`
@@ -70,27 +76,31 @@ export default () => {
 
   return (
     <SafeAreaView>
-      <Header>
-        <ScreenTitle>플랜을 관리해보세요!</ScreenTitle>
-        <AddButton>
-          <AddPlan size={40} />
-        </AddButton>
-      </Header>
-      <ScrollView>
-        {/* {ENTRIES_PLAN.map((data, index) => (
+      <Container>
+        <Header>
+          <ScreenTitle>플랜을 관리해보세요!</ScreenTitle>
+          <AddButton>
+            <AddPlan size={40} />
+          </AddButton>
+        </Header>
+        <Content>
+          <ScrollView>
+            {/* {ENTRIES_PLAN.map((data, index) => (
           <PlanContentList key={index} {...data} />
         ))} */}
-        {loading ? (
-          <Loader />
-        ) : (
-          data &&
-          data.seePlan &&
-          data.seePlan.map((data, index) => {
-            console.log("data", data);
-            return <PlanList key={index} {...data} />;
-          })
-        )}
-      </ScrollView>
+            {loading ? (
+              <Loader />
+            ) : (
+              data &&
+              data.seePlan &&
+              data.seePlan.map((data, index) => {
+                console.log("data", data);
+                return <PlanList key={index} {...data} />;
+              })
+            )}
+          </ScrollView>
+        </Content>
+      </Container>
     </SafeAreaView>
   );
 };

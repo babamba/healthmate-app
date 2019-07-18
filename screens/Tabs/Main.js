@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ScrollView, RefreshControl, SafeAreaView } from "react-native";
+import { ScrollView, RefreshControl, StyleSheet } from "react-native";
 import styled from "styled-components";
 import gql from "graphql-tag";
 import Loader from "../../components/Loader";
@@ -34,8 +34,19 @@ export default () => {
   //       setRefreshing(false);
   //     }
   //   };
-  const MainTitleArea = styled.View`
+  const SafeAreaView = styled.SafeAreaView`
+    justify-content: center;
+    align-items: center;
     flex: 1;
+  `;
+
+  const View = styled.View`
+    justify-content: center;
+    align-items: center;
+    flex: 1;
+  `;
+
+  const MainTitleArea = styled.View`
     width: ${constants.width};
     padding-top: 15px;
     padding-bottom: 20px;
@@ -77,48 +88,52 @@ export default () => {
 
   return (
     <SafeAreaView>
-      <ScrollView
-      //    refreshControl={
-      //      <RefreshControl refreshing={refreshing} onRefresh={refresh} />
-      //    }
-      >
+      <View>
         <MainTitleArea>
           <MainTitle>메인</MainTitle>
         </MainTitleArea>
-
-        <Container>
-          <SubTitleArea>
-            <SubTitle>근처 친구들</SubTitle>
-          </SubTitleArea>
-          <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-            {ENTRIES_NEAR.map((data, index) => (
-              <HorizontalContent key={index} {...data} />
-            ))}
-          </ScrollView>
-        </Container>
-
-        <Container>
-          <SubTitleArea>
-            <SubTitle>7월 추천 컨텐츠</SubTitle>
-          </SubTitleArea>
-
-          <ScrollView>
-            <Row>
-              {ENTRIES_CONTENT.map((data, index) => (
-                <SquareContent key={index} {...data} />
+        <ScrollView
+        //    refreshControl={
+        //      <RefreshControl refreshing={refreshing} onRefresh={refresh} />
+        //    }
+        >
+          <Container>
+            <SubTitleArea>
+              <SubTitle>근처 친구들</SubTitle>
+            </SubTitleArea>
+            <ScrollView
+              horizontal={true}
+              showsHorizontalScrollIndicator={false}
+            >
+              {ENTRIES_NEAR.map((data, index) => (
+                <HorizontalContent key={index} {...data} />
               ))}
-            </Row>
-          </ScrollView>
-        </Container>
+            </ScrollView>
+          </Container>
 
-        {/* {loading ? (
+          <Container>
+            <SubTitleArea>
+              <SubTitle>7월 추천 컨텐츠</SubTitle>
+            </SubTitleArea>
+
+            <ScrollView>
+              <Row>
+                {ENTRIES_CONTENT.map((data, index) => (
+                  <SquareContent key={index} {...data} />
+                ))}
+              </Row>
+            </ScrollView>
+          </Container>
+
+          {/* {loading ? (
         <Loader />
       ) : (
         data &&
         data.seeFeed &&
         data.seeFeed.map(post => <Post key={post.id} {...post} />)
       )} */}
-      </ScrollView>
+        </ScrollView>
+      </View>
     </SafeAreaView>
   );
 };
