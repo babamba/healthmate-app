@@ -6,7 +6,9 @@ import { ScrollView, RefreshControl } from "react-native";
 import RoomList from "../../components/RoomList";
 import Loader from "../../components/Loader";
 import constants from "../../constants";
+import { SafeAreaView } from "react-navigation";
 import withSuspense from "../../withSuspense";
+import MainTitle from "../../components/MainTitle";
 
 export const SEE_ROOMS = gql`
   query seeRooms {
@@ -57,14 +59,6 @@ const Header = styled.View`
   margin-horizontal: 15px;
   flex-direction: row;
   text-align: center;
-  background-color: green;
-  opacity: 0.2;
-  flex: 1;
-`;
-
-const SafeAreaView = styled.SafeAreaView`
-  justify-content: center;
-  align-items: center;
   flex: 1;
 `;
 
@@ -119,11 +113,12 @@ const Chat = () => {
   }, [data, loading, error]);
 
   return (
-    <SafeAreaView>
+    <SafeAreaView
+      style={constants.commonStyle.safeArea}
+      forceInset={{ top: "always" }}
+    >
+      <MainTitle title={"Direct Message"} fontSize={42} />
       <Container>
-        <Header>
-          <ScreenTitle>Direct Message</ScreenTitle>
-        </Header>
         <Content>
           <ScrollView>
             {/* {ENTRIES_PLAN.map((data, index) => (

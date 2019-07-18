@@ -72,9 +72,7 @@ const SquareContent = ({ navigation, uri, id, username, intro, title }) => (
     {/* <TouchableOpacity onPress={() => navigation.navigate("Detail", { id })}> */}
     <TouchableOpacity
       //onLongPress={() => testAlert(id)}
-      onPress={() =>
-        navigation.navigate("UserDetail", { username: "babamba88" })
-      }
+      onPress={() => navigation.navigate("UserDetail", { id, username })}
     >
       <Image source={{ uri }} />
     </TouchableOpacity>

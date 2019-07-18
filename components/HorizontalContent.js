@@ -44,24 +44,24 @@ const Introduction = styled.Text`
   font-family: NotoSansKR_Regular;
 `;
 
-const HorizontalUser = ({ navigation, uri, id, username, intro }) => (
-  <Conatiner>
-    {/* <TouchableOpacity onPress={() => navigation.navigate("Detail", { id })}> */}
-    <TouchableOpacity
-      //onLongPress={() => testAlert(id)}
-      onPress={() =>
-        navigation.navigate("UserDetail", { username: "babamba88" })
-      }
-      activeOpacity={0.3}
-    >
-      <Image source={{ uri }} />
-    </TouchableOpacity>
-    <TextContainer>
-      <UserName>{username}</UserName>
-      <Introduction>{intro}</Introduction>
-    </TextContainer>
-  </Conatiner>
-);
+const HorizontalUser = ({ navigation, username, avatar, id }) => {
+  return (
+    <Conatiner>
+      {/* <TouchableOpacity onPress={() => navigation.navigate("Detail", { id })}> */}
+      <TouchableOpacity
+        //onLongPress={() => testAlert(id)}
+        onPress={() => navigation.navigate("UserDetail", { id, username })}
+        activeOpacity={0.3}
+      >
+        <Image source={{ uri: avatar }} />
+      </TouchableOpacity>
+      <TextContainer>
+        <UserName>{username}</UserName>
+        {/* <Introduction>{lastPlan[0].planTitle}</Introduction> */}
+      </TextContainer>
+    </Conatiner>
+  );
+};
 
 // HorizontalUser.propTypes = {
 //   files: PropTypes.arrayOf(

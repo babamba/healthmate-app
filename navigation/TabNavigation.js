@@ -70,6 +70,35 @@ const stackFactory = (initialRoute, customConfig) =>
 
 export default createBottomTabNavigator(
   {
+    Plan: {
+      screen: stackFactory(Plan, {
+        //headerRight: <MessagesLink />
+        //headerRight: <AddPlan />
+        header: null
+        // headerTitle: <NavIcon name="logo-instagram" size={36} />
+      }),
+      navigationOptions: {
+        tabBarIcon: ({ focused }) => (
+          <NavIcon
+            focused={focused}
+            name={Platform.OS === "ios" ? "ios-archive" : "md-home"}
+          />
+        )
+      }
+    },
+    Main: {
+      screen: stackFactory(Main, {
+        header: null
+      }),
+      navigationOptions: {
+        tabBarIcon: ({ focused }) => (
+          <NavIcon
+            focused={focused}
+            name={Platform.OS === "ios" ? "ios-home" : "md-home"}
+          />
+        )
+      }
+    },
     Chat: {
       screen: stackFactory(Chat, {
         //headerRight: <MessagesLink />
@@ -88,7 +117,7 @@ export default createBottomTabNavigator(
     },
     Map: {
       screen: stackFactory(Map, {
-        headerTitle: "근처 운동친구들을 찾아보세요",
+        header: null,
         headerTitleStyle: {
           fontFamily: "NotoSansKR_Light"
         }
@@ -105,35 +134,7 @@ export default createBottomTabNavigator(
         )
       }
     },
-    Main: {
-      screen: stackFactory(Main, {
-        header: null
-      }),
-      navigationOptions: {
-        tabBarIcon: ({ focused }) => (
-          <NavIcon
-            focused={focused}
-            name={Platform.OS === "ios" ? "ios-home" : "md-home"}
-          />
-        )
-      }
-    },
-    Plan: {
-      screen: stackFactory(Plan, {
-        //headerRight: <MessagesLink />
-        //headerRight: <AddPlan />
-        header: null
-        // headerTitle: <NavIcon name="logo-instagram" size={36} />
-      }),
-      navigationOptions: {
-        tabBarIcon: ({ focused }) => (
-          <NavIcon
-            focused={focused}
-            name={Platform.OS === "ios" ? "ios-archive" : "md-home"}
-          />
-        )
-      }
-    },
+
     // Home: {
     //   screen: stackFactory(Home, {
     //     headerRight: <MessagesLink />,
@@ -202,7 +203,7 @@ export default createBottomTabNavigator(
     // },
     Profile: {
       screen: stackFactory(Profile, {
-        title: "Profile"
+        header: null
       }),
       navigationOptions: {
         tabBarIcon: ({ focused }) => (

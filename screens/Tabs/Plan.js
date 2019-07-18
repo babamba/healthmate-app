@@ -7,12 +7,15 @@ import PlanList from "../../components/PlanList";
 import Loader from "../../components/Loader";
 import AddPlan from "../../components/AddPlan";
 import constants from "../../constants";
+import CarouselItem from "../../components/PlanCarouselList";
+import { SafeAreaView } from "react-navigation";
 
 export const SEE_PLAN = gql`
   query seePlan {
     seePlan {
       id
       planTitle
+      planImage
       exerciseDate
       exerciseTime
       user {
@@ -21,6 +24,7 @@ export const SEE_PLAN = gql`
       exerciseType {
         id
         title
+        image
       }
       activity {
         id
@@ -28,11 +32,6 @@ export const SEE_PLAN = gql`
       }
     }
   }
-`;
-const SafeAreaView = styled.SafeAreaView`
-  justify-content: center;
-  align-items: center;
-  flex: 1;
 `;
 
 const Container = styled.View`
@@ -45,7 +44,7 @@ const Header = styled.View`
   width: ${constants.width};
   padding-top: 15px;
   padding-bottom: 20px;
-  margin-horizontal: 15px;
+  padding-horizontal: 20px;
   flex-direction: row;
   text-align: center;
 `;
@@ -72,33 +71,55 @@ export default () => {
   const { loading, data, refetch } = useQuery(SEE_PLAN, {
     fetchPolicy: "network-only"
   });
-  console.log(data.seePlan);
+  //console.log(data.seePlan);
+
+  const onSnapUser = async index => {
+    console.log("onSnapUser");
+
+    // let moveRegion = {
+    //   coords: {
+    //     latitude: nearUser[index].location.latitude,
+    //     longitude: nearUser[index].location.longitude
+    //   }
+    // };
+
+    // locationChanged(moveRegion);
+  };
 
   return (
-    <SafeAreaView>
+    <SafeAreaView
+      style={constants.commonStyle.safeArea}
+      forceInset={{ top: "always" }}
+    >
       <Container>
         <Header>
-          <ScreenTitle>플랜을 관리해보세요!</ScreenTitle>
+          <ScreenTitle>Make your own Planner </ScreenTitle>
           <AddButton>
             <AddPlan size={40} />
           </AddButton>
         </Header>
         <Content>
-          <ScrollView>
-            {/* {ENTRIES_PLAN.map((data, index) => (
+          {/* <ScrollView> */}
+          {/* {ENTRIES_PLAN.map((data, index) => (
           <PlanContentList key={index} {...data} />
         ))} */}
-            {loading ? (
-              <Loader />
-            ) : (
-              data &&
-              data.seePlan &&
-              data.seePlan.map((data, index) => {
-                console.log("data", data);
-                return <PlanList key={index} {...data} />;
-              })
-            )}
-          </ScrollView>
+          {loading ? (
+            <Loader />
+          ) : (
+            data &&
+            data.seePlan && (
+              // data.seePlan.map((data, index) => {
+              //   console.log("data", data);
+              //   return <PlanList key={index} {...data} />;
+              // })
+              <CarouselItem
+                data={data.seePlan}
+                onSnapUser={onSnapUser}
+                {...data}
+              />
+            )
+          )}
+          {/* </ScrollView> */}
         </Content>
       </Container>
     </SafeAreaView>

@@ -1,4 +1,5 @@
 import { Dimensions } from "react-native";
+import { StyleSheet } from "react-native";
 
 const { width, height } = Dimensions.get("screen");
 
@@ -12,4 +13,14 @@ const getToken = () => {
   return AUTH_TOKEN;
 };
 
-export default { width, height, setToken, getToken };
+const commonStyle = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: "#ffffff"
+  },
+  map: {
+    ...StyleSheet.absoluteFillObject
+  }
+});
+
+export default { width, height, setToken, getToken, commonStyle };

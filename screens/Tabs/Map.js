@@ -5,7 +5,6 @@ import {
   Alert,
   Dimensions,
   TouchableOpacity,
-  SafeAreaView,
   ActionSheetIOS
 } from "react-native";
 import MapView, {
@@ -25,6 +24,10 @@ import CarouselItem from "../../components/carousel/carousel";
 import Marker from "../../components/Map/Markers";
 import { ENTRIES_CAROUSEL } from "../../EntryData/Entries";
 import Markers from "../../components/Map/Markers";
+
+import constants from "../../constants";
+import { SafeAreaView } from "react-navigation";
+import MainTitle from "../../components/MainTitle";
 
 export const NEAR_USER = gql`
   query getNearUser {
@@ -59,12 +62,6 @@ const ContentContainer = styled.View`
   /* background-color: red;
   opacity: 0.4; */
 `;
-
-const styles = StyleSheet.create({
-  map: {
-    ...StyleSheet.absoluteFillObject
-  }
-});
 
 const Icon = styled.View``;
 
@@ -232,7 +229,7 @@ const MapScreen = ({ navigation }) => {
         if (buttonIndex === 1) {
           /* destructive action */
           console.log("프로필 네비게이션");
-          // navigation.navigate("UserDetail", { username: user.username })
+          navigation.navigate("UserDetail", { username: user.id });
         } else if (buttonIndex === 2) {
           console.log("채팅 디테일 네비게이션");
         }
@@ -299,48 +296,56 @@ const MapScreen = ({ navigation }) => {
   }, [data, loading, error]);
 
   return (
-    <View>
-      {loading ? (
-        <Loader />
-      ) : (
-        data &&
-        data.getNearUser && (
-          <MapContainer>
-            <AnimatedMap
-              ref={mapRef}
-              provider={"google"}
-              style={styles.map}
-              showsUserLocation={true}
-              showCompass={true}
-              rotateEnabled={false}
-              region={initialRegion.coords}
-              onRegionChange={region => onRegionChange(region)}
-              onRegionChangeComplete={region => onRegionChangeComplete(region)}
-              initialRegion={initialRegion.coords}
-              followsUserLocation={true}
-              zoomEnabled={true}
-              moveOnMarkerPress={true}
-            >
-              {nearUser.length > 0 &&
-                nearUser.map(marker => (
-                  <Markers
-                    marker={marker}
-                    key={marker.id}
-                    press={handleMarkerPress}
-                  />
-                ))}
-            </AnimatedMap>
-            <Icon name="add" style={styles.icon} size={20} />
-            <ContentContainer>
-              <CarouselItem
-                data={rewriteProfile(nearUser)}
-                onSnapUser={onSnapUser}
-              />
-            </ContentContainer>
-          </MapContainer>
-        )
-      )}
-    </View>
+    <SafeAreaView
+      style={constants.commonStyle.safeArea}
+      forceInset={{ top: "always" }}
+    >
+      <MainTitle title={"Map"} />
+      <View>
+        {loading ? (
+          <Loader />
+        ) : (
+          data &&
+          data.getNearUser && (
+            <MapContainer>
+              <AnimatedMap
+                ref={mapRef}
+                provider={"google"}
+                style={constants.commonStyle.map}
+                showsUserLocation={true}
+                showCompass={true}
+                rotateEnabled={false}
+                region={initialRegion.coords}
+                onRegionChange={region => onRegionChange(region)}
+                onRegionChangeComplete={region =>
+                  onRegionChangeComplete(region)
+                }
+                initialRegion={initialRegion.coords}
+                followsUserLocation={true}
+                zoomEnabled={true}
+                moveOnMarkerPress={true}
+              >
+                {nearUser.length > 0 &&
+                  nearUser.map(marker => (
+                    <Markers
+                      marker={marker}
+                      key={marker.id}
+                      press={handleMarkerPress}
+                    />
+                  ))}
+              </AnimatedMap>
+              {/* <Icon name="add" style={styles.icon} size={20} /> */}
+              <ContentContainer>
+                <CarouselItem
+                  data={rewriteProfile(nearUser)}
+                  onSnapUser={onSnapUser}
+                />
+              </ContentContainer>
+            </MapContainer>
+          )
+        )}
+      </View>
+    </SafeAreaView>
   );
 };
 

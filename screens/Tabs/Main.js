@@ -1,15 +1,16 @@
 import React, { useState } from "react";
-import { ScrollView, RefreshControl, StyleSheet } from "react-native";
+import { ScrollView, RefreshControl } from "react-native";
 import styled from "styled-components";
 import gql from "graphql-tag";
 import Loader from "../../components/Loader";
-import { useQuery } from "react-apollo-hooks";
+import { useQuery, useApolloClient } from "react-apollo-hooks";
 import Post from "../../components/Post";
 import HorizontalContent from "../../components/HorizontalContent";
 import SquareContent from "../../components/SquareContent";
 
 import { ENTRIES_NEAR, ENTRIES_CONTENT } from "../../EntryData/Entries"; // 더미 데이터
 import constants from "../../constants";
+import { SafeAreaView } from "react-navigation";
 //import { POST_FRAGMENT } from "../../fragments";
 
 // export const FEED_QUERY = gql`
@@ -21,7 +22,30 @@ import constants from "../../constants";
 //   ${POST_FRAGMENT}
 // `;
 
+const RECOMMEND_USER = gql`
+  query recommendUser {
+    recommendUser {
+      id
+      username
+      avatar
+      email
+      location {
+        address
+        latitude
+        longitude
+      }
+      lastPlan {
+        planTitle
+      }
+    }
+  }
+`;
+
 export default () => {
+  const { loading, data, error } = useQuery(RECOMMEND_USER, {
+    fetchPolicy: "network-only"
+  });
+
   //   const [refreshing, setRefreshing] = useState(false);
   //   //const { loading, data, refetch } = useQuery(FEED_QUERY);
   //   const refresh = async () => {
@@ -34,12 +58,6 @@ export default () => {
   //       setRefreshing(false);
   //     }
   //   };
-  const SafeAreaView = styled.SafeAreaView`
-    justify-content: center;
-    align-items: center;
-    flex: 1;
-  `;
-
   const View = styled.View`
     justify-content: center;
     align-items: center;
@@ -49,14 +67,14 @@ export default () => {
   const MainTitleArea = styled.View`
     width: ${constants.width};
     padding-top: 15px;
-    padding-bottom: 20px;
-    margin-horizontal: 15px;
+    padding-bottom: 15px;
+    padding-horizontal: 20px;
   `;
 
   const MainTitle = styled.Text`
     color: black;
     text-align: left;
-    font-weight: 600;
+    font-weight: 300;
     font-size: 52px;
     font-family: NotoSansKR_Bold;
   `;
@@ -77,7 +95,7 @@ export default () => {
 
   const Container = styled.View`
     flex: 1;
-    margin-vertical: 20px;
+    padding-vertical: 15px;
     width: ${constants.width};
   `;
 
@@ -86,8 +104,18 @@ export default () => {
     flex-wrap: wrap;
   `;
 
+  // const client = useApolloClient();
+  // let cacheData = client.cache.readQuery({
+  //   query: RECOMMEND_USER
+  // });
+
+  // console.log("cacheData", cacheData);
+
   return (
-    <SafeAreaView>
+    <SafeAreaView
+      style={constants.commonStyle.safeArea}
+      forceInset={{ top: "always" }}
+    >
       <View>
         <MainTitleArea>
           <MainTitle>메인</MainTitle>
@@ -105,9 +133,18 @@ export default () => {
               horizontal={true}
               showsHorizontalScrollIndicator={false}
             >
-              {ENTRIES_NEAR.map((data, index) => (
+              {loading ? (
+                <Loader />
+              ) : (
+                data &&
+                data.recommendUser &&
+                data.recommendUser.map((data, index) => (
+                  <HorizontalContent key={index} {...data} />
+                ))
+              )}
+              {/* {ENTRIES_NEAR.map((data, index) => (
                 <HorizontalContent key={index} {...data} />
-              ))}
+              ))} */}
             </ScrollView>
           </Container>
 
