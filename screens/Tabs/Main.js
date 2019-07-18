@@ -22,7 +22,7 @@ import { SafeAreaView } from "react-navigation";
 //   ${POST_FRAGMENT}
 // `;
 
-const RECOMMEND_USER = gql`
+export const RECOMMEND_USER = gql`
   query recommendUser {
     recommendUser {
       id

@@ -25,7 +25,7 @@ import { onError } from "apollo-link-error";
 import { ApolloLink, split, concat } from "apollo-link";
 import { WebSocketLink } from "apollo-link-ws";
 import { HttpLink } from "apollo-link-http";
-import { getMainDefinition } from "apollo-utilities";
+import { getMainDefinition, toIdValue } from "apollo-utilities";
 
 export default function App() {
   const [loaded, setLoaded] = useState(false);
@@ -73,7 +73,19 @@ export default function App() {
       });
       await Asset.loadAsync([require("./assets/logo.png")]);
 
-      const cache = new InMemoryCache();
+      const cache = new InMemoryCache({
+        cacheRedirects: {
+          Query: {
+            book: (_, args) =>
+              toIdValue(
+                cache.config.dataIdFromObject({
+                  __typename: "Book",
+                  id: args.id
+                })
+              )
+          }
+        }
+      });
 
       await persistCache({
         cache,

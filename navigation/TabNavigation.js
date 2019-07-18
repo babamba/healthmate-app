@@ -70,6 +70,19 @@ const stackFactory = (initialRoute, customConfig) =>
 
 export default createBottomTabNavigator(
   {
+    Main: {
+      screen: stackFactory(Main, {
+        header: null
+      }),
+      navigationOptions: {
+        tabBarIcon: ({ focused }) => (
+          <NavIcon
+            focused={focused}
+            name={Platform.OS === "ios" ? "ios-home" : "md-home"}
+          />
+        )
+      }
+    },
     Plan: {
       screen: stackFactory(Plan, {
         //headerRight: <MessagesLink />
@@ -82,19 +95,6 @@ export default createBottomTabNavigator(
           <NavIcon
             focused={focused}
             name={Platform.OS === "ios" ? "ios-archive" : "md-home"}
-          />
-        )
-      }
-    },
-    Main: {
-      screen: stackFactory(Main, {
-        header: null
-      }),
-      navigationOptions: {
-        tabBarIcon: ({ focused }) => (
-          <NavIcon
-            focused={focused}
-            name={Platform.OS === "ios" ? "ios-home" : "md-home"}
           />
         )
       }
