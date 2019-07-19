@@ -101,7 +101,7 @@ export default function App() {
 
       const wsLink = new WebSocketLink({
         //uri: `ws://localhost:4000/`,
-        uri: "http://hellojw.net:9333",
+        uri: "ws://hellojw.net:9333",
         options: {
           connectionParams: {
             Bearer: token

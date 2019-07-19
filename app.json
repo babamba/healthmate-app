@@ -4,7 +4,10 @@
     "slug": "healthmate-app",
     "privacy": "public",
     "sdkVersion": "33.0.0",
-    "platforms": ["ios", "android"],
+    "platforms": [
+      "ios",
+      "android"
+    ],
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -16,14 +19,18 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true
     },
     "android": {
       "package": "com.healthmate.www",
       "config": {
-        "googleMaps": { "apiKey": "AIzaSyC4398z-PHjl88fSjs9999QcH3I6NIrdn4" }
+        "googleMaps": {
+          "apiKey": "AIzaSyC4398z-PHjl88fSjs9999QcH3I6NIrdn4"
+        }
       },
       "splash": {
         "resizeMode": "cover"
