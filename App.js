@@ -73,19 +73,20 @@ export default function App() {
       });
       await Asset.loadAsync([require("./assets/logo.png")]);
 
-      const cache = new InMemoryCache({
-        cacheRedirects: {
-          Query: {
-            book: (_, args) =>
-              toIdValue(
-                cache.config.dataIdFromObject({
-                  __typename: "Book",
-                  id: args.id
-                })
-              )
-          }
-        }
-      });
+      const cache = new InMemoryCache();
+      // const cache = new InMemoryCache({
+      //   cacheRedirects: {
+      //     Query: {
+      //       book: (_, args) =>
+      //         toIdValue(
+      //           cache.config.dataIdFromObject({
+      //             __typename: "Book",
+      //             id: args.id
+      //           })
+      //         )
+      //     }
+      //   }
+      // });
 
       await persistCache({
         cache,
@@ -93,12 +94,14 @@ export default function App() {
       });
 
       const httpLink = new HttpLink({
-        // uri: "http://localhost:4000"
+        //uri: "exp://10.50.1.226:19000"
+        //uri: "http://localhost:4000"
         uri: "http://hellojw.net:9333"
       });
 
       const wsLink = new WebSocketLink({
-        uri: `ws://localhost:4000/`,
+        //uri: `ws://localhost:4000/`,
+        uri: "http://hellojw.net:9333",
         options: {
           connectionParams: {
             Bearer: token
@@ -109,7 +112,7 @@ export default function App() {
 
       const authheader = setContext(async (req, { headers }) => {
         const token = await AsyncStorage.getItem("jwt");
-        //console.log("token", token);
+        console.log("token", token);
         return {
           headers: {
             // ...headers,

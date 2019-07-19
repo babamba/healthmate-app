@@ -100,7 +100,7 @@ const Chat = () => {
     };
 
     const onError = error => {
-      console.log("error initial load data");
+      console.log("error initial load data : ", error);
     };
 
     if (onCompleted || onError) {

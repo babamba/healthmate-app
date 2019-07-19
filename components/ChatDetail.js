@@ -222,7 +222,7 @@ const ChatDetail = ({ navigation }) => {
       setMessageList(rewriteList(data.seeRoom.messages));
     };
     const onError = error => {
-      console.log("error initial load data");
+      console.log("error initial load data : ", error);
     };
     if (onCompleted || onError) {
       if (onCompleted && !loading && !error) {

@@ -20,10 +20,13 @@ export const ME = gql`
 `;
 
 export default ({ navigation }) => {
-  const { loading, data } = useQuery(ME, {
+  const { loading, data, error } = useQuery(ME, {
     fetchPolicy: "network-only"
   });
   //console.log("profile data : ", data);
+  if (error) {
+    console.log(error);
+  }
   return (
     <SafeAreaView
       style={constants.commonStyle.safeArea}
