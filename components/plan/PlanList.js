@@ -3,7 +3,7 @@ import { View, TouchableOpacity, Alert, Platform } from "react-native";
 import { withNavigation } from "react-navigation";
 import PropTypes from "prop-types";
 import styled from "styled-components";
-import constants from "../constants";
+import constants from "../../constants";
 import Swipeout from "react-native-swipeout";
 
 const testAlert = id => {
@@ -98,25 +98,25 @@ const PlanList = ({
   // exerciseDate,
   // exerciseTime
 }) => (
-  <Swipeout right={swipeoutBtns} backgroundColor={"#ffffff"}>
-    <Conatiner>
-      {/* <TouchableOpacity onPress={() => navigation.navigate("Detail", { id })}> */}
-      <TouchableOpacity
-        //onLongPress={() => testAlert(id)}
-        onPress={() => navigation.navigate("PlanDetail", { planId: id })}
-      >
-        {/* <Image source={{ uri }} /> */}
-        <TextContainer>
-          <Column>
-            <ContentTItle>{planTitle}</ContentTItle>
-          </Column>
-          <Row>
-            <UserName>{exerciseTime}</UserName>
-          </Row>
-        </TextContainer>
-      </TouchableOpacity>
-    </Conatiner>
-  </Swipeout>
+  // <Swipeout right={swipeoutBtns} backgroundColor={"#ffffff"}>
+  <Conatiner>
+    {/* <TouchableOpacity onPress={() => navigation.navigate("Detail", { id })}> */}
+    <TouchableOpacity
+      //onLongPress={() => testAlert(id)}
+      onPress={() => navigation.navigate("PlanDetail", { planId: id })}
+    >
+      {/* <Image source={{ uri }} /> */}
+      <TextContainer>
+        <Column>
+          <ContentTItle>{planTitle}</ContentTItle>
+        </Column>
+        <Row>
+          <UserName>{exerciseTime}</UserName>
+        </Row>
+      </TextContainer>
+    </TouchableOpacity>
+  </Conatiner>
+  // </Swipeout>
 );
 
 // PlanContentList.propTypes = {

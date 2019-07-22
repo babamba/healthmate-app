@@ -3,11 +3,11 @@ import gql from "graphql-tag";
 import { useQuery } from "react-apollo-hooks";
 import styled from "styled-components";
 import { ScrollView, RefreshControl } from "react-native";
-import PlanList from "../../components/PlanList";
+import PlanList from "../../components/plan/PlanList";
 import Loader from "../../components/Loader";
-import AddPlan from "../../components/AddPlan";
+import AddPlan from "../../components/plan/AddPlan";
 import constants from "../../constants";
-import CarouselItem from "../../components/PlanCarouselList";
+import CarouselItem from "../../components/plan/PlanCarouselList";
 import { SafeAreaView } from "react-navigation";
 
 export const SEE_PLAN = gql`
@@ -45,26 +45,43 @@ const Header = styled.View`
   padding-top: 15px;
   padding-bottom: 20px;
   padding-horizontal: 20px;
-  flex-direction: row;
+  /* flex-direction: row; */
   text-align: center;
+  /* background-color: green;
+  opacity: 0.2; */
+  flex: 1;
+`;
+
+const Footer = styled.View`
+  width: ${constants.width};
+  padding-top: 15px;
+  padding-bottom: 20px;
+  /* background-color: red;
+  opacity: 0.2; */
+  flex: 1;
+  align-items: flex-end;
 `;
 
 const Content = styled.View`
   width: ${constants.width};
-  flex: 11;
+  flex: 10;
+  /* background-color: blue;
+  opacity: 0.2; */
+  align-items: center;
+  justify-content: center;
 `;
 
 const ScreenTitle = styled.Text`
-  flex: 0.85;
   color: black;
   font-weight: 600;
-  font-size: 32px;
+  font-size: 42px;
   font-family: NotoSansKR_Bold;
+  text-align: left;
+  color: #3b3b3b;
 `;
 
 const AddButton = styled.View`
-  flex: 0.15;
-  text-align: left;
+  text-align: right;
 `;
 
 export default () => {
@@ -93,10 +110,7 @@ export default () => {
     >
       <Container>
         <Header>
-          <ScreenTitle>Make your own Planner </ScreenTitle>
-          <AddButton>
-            <AddPlan size={40} />
-          </AddButton>
+          <ScreenTitle>Planner </ScreenTitle>
         </Header>
         <Content>
           {/* <ScrollView> */}
@@ -121,6 +135,11 @@ export default () => {
           )}
           {/* </ScrollView> */}
         </Content>
+        <Footer>
+          <AddButton>
+            <AddPlan size={50} />
+          </AddButton>
+        </Footer>
       </Container>
     </SafeAreaView>
   );

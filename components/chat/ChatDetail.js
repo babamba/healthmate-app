@@ -11,7 +11,7 @@ import {
 } from "react-apollo-hooks";
 
 import { GiftedChat } from "react-native-gifted-chat";
-import Loader from "./Loader";
+import Loader from "../Loader";
 
 export const SEE_ROOM = gql`
   query seeRoom($roomId: String!) {

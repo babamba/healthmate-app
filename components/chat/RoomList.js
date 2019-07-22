@@ -5,7 +5,7 @@ import { useSubscription } from "react-apollo-hooks";
 import { withNavigation } from "react-navigation";
 import PropTypes from "prop-types";
 import styled from "styled-components";
-import constants from "../constants";
+import constants from "../../constants";
 
 const Conatiner = styled.View`
   flex: 1;

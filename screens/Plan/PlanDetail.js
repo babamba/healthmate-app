@@ -4,7 +4,7 @@ import { ScrollView, TouchableOpacity, Alert, Platform } from "react-native";
 import { useQuery } from "react-apollo-hooks";
 import styled from "styled-components";
 import Loader from "../../components/Loader";
-import ActivitList from "../../components/ActivityList";
+import ActivitList from "../../components/plan/ActivityList";
 
 const SEE_ACTIVITY = gql`
   query seeActivity($planId: String!) {

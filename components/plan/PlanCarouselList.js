@@ -12,9 +12,12 @@ import {
   Text,
   Image
 } from "react-native";
+import TouchableScale from "react-native-touchable-scale";
 import { withNavigation } from "react-navigation";
+import { BlurView } from "expo-blur";
 
 const { width: screenWidth } = Dimensions.get("window");
+const entryBorderRadius = 8;
 
 const MyCarousel = props => {
   //   const {
@@ -38,16 +41,15 @@ const MyCarousel = props => {
   const _renderItem = ({ item, index }, parallaxProps) => {
     //console.log("item thumbnail", item.thumbnail);
     return (
-      <TouchableOpacity
-        activeOpacity={0.8}
+      <TouchableScale
+        activeScale={0.98}
+        tension={80}
+        friction={4}
         onPress={() => {
           navigation.navigate("PlanDetail", { planId: item.id });
         }}
       >
         <View style={styles.item}>
-          <Text style={styles.title} numberOfLines={2}>
-            {item.exerciseTime}
-          </Text>
           {/* <ParallaxImage
             source={{ uri: item.thumbnail }}
             containerStyle={styles.imageContainer}
@@ -56,17 +58,34 @@ const MyCarousel = props => {
             fadeDuration={300}
             {...parallaxProps}
           /> */}
-
-          <Image
-            source={{
-              uri: item.planImage ? item.planImage : item.exerciseType.image
-            }}
-            //   containerStyle={styles.imageContainer}
-            style={styles.image}
-            //   {...parallaxProps}
-          />
+          <View style={styles.imageContainer}>
+            <Image
+              source={{
+                uri: item.planImage ? item.planImage : item.exerciseType.image
+              }}
+              //   containerStyle={styles.imageContainer}
+              style={styles.image}
+              //   {...parallaxProps}
+            />
+            <View style={styles.overlay} />
+            <BlurView
+              tint="dark"
+              intensity={30}
+              style={[
+                styles.textContainer,
+                {
+                  borderRadius: 8,
+                  borderTopLeftRadius: 0,
+                  borderTopRightRadius: 0
+                }
+              ]}
+            >
+              <Text style={styles.title}>{item.planTitle}</Text>
+              <Text style={styles.title}>{item.exerciseTime}</Text>
+            </BlurView>
+          </View>
         </View>
-      </TouchableOpacity>
+      </TouchableScale>
     );
   };
 
@@ -88,7 +107,7 @@ const MyCarousel = props => {
         ref={carouselRef}
         sliderWidth={screenWidth}
         sliderHeight={screenWidth}
-        itemWidth={screenWidth - 90}
+        itemWidth={screenWidth - 80}
         data={data}
         renderItem={data => _renderItem(data)}
         hasParallaxImages={false}
@@ -110,34 +129,78 @@ const MyCarousel = props => {
 export default withNavigation(MyCarousel);
 
 const styles = StyleSheet.create({
-  container: {},
+  container: {
+    justifyContent: "center",
+    alignItems: "center"
+  },
   item: {
     width: screenWidth - 100,
-    height: screenWidth - 30
+    height: screenWidth + 60,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 6
+    },
+    shadowOpacity: 0.37,
+    shadowRadius: 7.49,
+    elevation: 12,
+    borderRadius: 8
   },
   imageContainer: {
     flex: 1,
     //     marginBottom: Platform.select({ ios: 0, android: 1 }), // Prevent a random Android rendering issue
-    backgroundColor: "white"
+    backgroundColor: "white",
+    borderRadius: 8
   },
   image: {
-    ...StyleSheet.absoluteFillObject,
+    flex: 1,
     resizeMode: "cover",
     borderRadius: 8,
     marginBottom: Platform.select({ ios: 0, android: 1 }) // Prevent a random Android rendering issue
   },
   paginationContainer: {
-    //     paddingBottom: 13,
-    //     paddingTop: 6,
-    paddingVertical: 10
-    //     justifyContent: "flex-start"
-    //     backgroundColor: "red",
-    //     opacity: 0.5
+    paddingVertical: 20
   },
   paginationDot: {
     width: 15,
     height: 8,
-    borderRadius: 4,
-    marginHorizontal: 0
+    borderRadius: 4
+  },
+  textContainer: {
+    position: "absolute",
+    bottom: 0,
+    // justifyContent: "center",
+    // paddingTop: 20 - entryBorderRadius,
+    // paddingBottom: 20,
+    // paddingHorizontal: 16,
+    paddingHorizontal: 16,
+    paddingVertical: 20,
+    width: screenWidth - 100,
+    alignItems: "center",
+    justifyContent: "center",
+    overflow: "hidden"
+  },
+  // overlay: {
+  //   ...StyleSheet.absoluteFillObject,
+  //   backgroundColor: "rgba(0,0,0,0.2)",
+  //   borderBottomLeftRadius: entryBorderRadius,
+  //   borderBottomRightRadius: entryBorderRadius
+  // },
+  overlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: "rgba(0,0,0,0.1)",
+    borderBottomLeftRadius: entryBorderRadius,
+    borderBottomRightRadius: entryBorderRadius
+  },
+  title: {
+    color: "white",
+    fontSize: 16,
+    letterSpacing: 0.5,
+    fontFamily: "NotoSansKR_Medium"
+  },
+  subtitle: {
+    color: "white",
+    fontSize: 12,
+    fontFamily: "NotoSansKR_Light"
   }
 });

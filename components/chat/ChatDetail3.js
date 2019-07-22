@@ -4,7 +4,7 @@ import styled from "styled-components";
 
 import gql from "graphql-tag";
 import { useQuery, useMutation } from "react-apollo-hooks";
-import Loader from "./Loader";
+import Loader from "../Loader";
 
 import { GiftedChat } from "react-native-gifted-chat";
 
