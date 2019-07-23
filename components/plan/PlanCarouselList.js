@@ -138,12 +138,10 @@ const styles = StyleSheet.create({
     height: screenWidth + 60,
     shadowColor: "#000",
     shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 5
-    },
-    shadowOpacity: 0.29,
-    shadowRadius: 12.3,
+
+    shadowOpacity: 0.25,
+    shadowOffset: { width: 0, height: 10 },
+    shadowRadius: 10,
 
     elevation: 13,
 
@@ -161,7 +159,7 @@ const styles = StyleSheet.create({
     flex: 1,
     resizeMode: "cover",
     borderRadius: 8,
-    marginBottom: Platform.select({ ios: 0, android: 1 }) // Prevent a random Android rendering issue
+    marginBottom: Platform.select({ ios: 0, android: -1 }) // Prevent a random Android rendering issue
   },
   paginationContainer: {
     paddingVertical: 20

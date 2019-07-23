@@ -82,7 +82,31 @@ const Weather = () => {
   };
 
   const locationChanged = location => {
+    getName(location);
     _getWeather(location);
+  };
+
+  const getName = location => {
+    const {
+      coords: { latitude, longitude }
+    } = location;
+    const API_KEY = "fc072b0abe5b7cb7fae986e4a21d7b78";
+
+    fetch(
+      `https://dapi.kakao.com/v2/local/geo/coord2address.json?x=${longitude}&y=${latitude}&output=json&input_coord=WGS84`,
+      {
+        headers: {
+          Authorization: `KakaoAK ${API_KEY}`
+        }
+      }
+    )
+      .then(response => response.json()) // 응답값을 json으로 변환
+      .then(async json => {
+        console.log("getName", json);
+      })
+      .catch(e => {
+        console.log(e);
+      });
   };
 
   const _getWeather = location => {

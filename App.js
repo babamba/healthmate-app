@@ -77,6 +77,15 @@ export default function App() {
       });
       await Asset.loadAsync([
         require("./assets/logo.png"),
+        require("./assets/WeatherIcon/icons8-more-50.png"),
+        require("./assets/WeatherIcon/icons8-fog-50.png"),
+        require("./assets/WeatherIcon/icons8-windy-weather-50.png"),
+        require("./assets/WeatherIcon/icons8-wet-50.png"),
+        require("./assets/WeatherIcon/icons8-snow-50.png"),
+        require("./assets/WeatherIcon/icons8-partly-cloudy-day-50.png"),
+        require("./assets/WeatherIcon/icons8-storm-50.png"),
+        require("./assets/WeatherIcon/icons8-rain-50.png"),
+        require("./assets/WeatherIcon/icons8-sun-50.png"),
         require("./assets/WeatherIcon/icons8-more-50.png")
       ]);
 
