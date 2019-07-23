@@ -7,6 +7,7 @@ import * as Location from "expo-location";
 
 import { WEATHER } from "../assets/Weather/AnimationWeather";
 import { weather_text, weather_icon } from "../weatherType";
+import { WEATHER_KEY } from "react-native-dotenv";
 
 import LottieView from "lottie-react-native";
 
@@ -83,9 +84,9 @@ const Weather = () => {
     const {
       coords: { latitude, longitude }
     } = location;
-    const API_KEY = "8a8a5340f48722a24abf1b77b4059837";
+    //const API_KEY = "8a8a5340f48722a24abf1b77b4059837";
     fetch(
-      `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${API_KEY}`
+      `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${WEATHER_KEY}`
     )
       .then(response => response.json()) // 응답값을 json으로 변환
       .then(async json => {
