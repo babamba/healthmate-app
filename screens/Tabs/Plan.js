@@ -9,6 +9,8 @@ import AddPlan from "../../components/plan/AddPlan";
 import constants from "../../constants";
 import CarouselItem from "../../components/plan/PlanCarouselList";
 import { SafeAreaView } from "react-navigation";
+import Weather from "../../components/Weather";
+import MainTitle from "../../components/MainTitle";
 
 export const SEE_PLAN = gql`
   query seePlan {
@@ -54,12 +56,14 @@ const Header = styled.View`
 
 const Footer = styled.View`
   width: ${constants.width};
-  padding-top: 15px;
-  padding-bottom: 20px;
-  /* background-color: red;
+  padding-top: 5px;
+  padding-bottom: 30px;
+  /* background-color: yellow;
   opacity: 0.2; */
   flex: 1;
-  align-items: flex-end;
+  align-items: center;
+  flex-direction: row;
+  padding-horizontal: 60px;
 `;
 
 const Content = styled.View`
@@ -74,17 +78,33 @@ const Content = styled.View`
 const ScreenTitle = styled.Text`
   color: black;
   font-weight: 600;
-  font-size: 42px;
+  font-size: 52px;
   font-family: NotoSansKR_Bold;
   text-align: left;
   color: #3b3b3b;
 `;
 
-const AddButton = styled.View`
-  text-align: right;
+const RowLeft = styled.View`
+  flex: 2;
+  /* background-color: red;
+  opacity: 0.4; */
+  height: 100%;
+`;
+const RowRight = styled.View`
+  flex: 1;
+  /* background-color: blue;
+  opacity: 0.4; */
+  height: 100%;
 `;
 
-export default () => {
+const AddButton = styled.View`
+  align-self: flex-end;
+  padding-top: 5px;
+  /* background-color: green;
+  opacity: 0.4; */
+`;
+
+export default ({ navigation }) => {
   const { loading, data, refetch } = useQuery(SEE_PLAN, {
     fetchPolicy: "network-only"
   });
@@ -111,6 +131,7 @@ export default () => {
       <Container>
         <Header>
           <ScreenTitle>Planner </ScreenTitle>
+          {/* <MainTitle title={"Planner"} fontSize={32} /> */}
         </Header>
         <Content>
           {/* <ScrollView> */}
@@ -136,9 +157,14 @@ export default () => {
           {/* </ScrollView> */}
         </Content>
         <Footer>
-          <AddButton>
-            <AddPlan size={50} />
-          </AddButton>
+          <RowLeft>
+            <Weather />
+          </RowLeft>
+          <RowRight>
+            <AddButton>
+              <AddPlan size={40} />
+            </AddButton>
+          </RowRight>
         </Footer>
       </Container>
     </SafeAreaView>

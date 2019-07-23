@@ -14,7 +14,7 @@ import TouchableScale from "react-native-touchable-scale";
 export default withNavigation(({ navigation, size }) => (
   <TouchableScale
     onPress={() => navigation.navigate("PlanNavigation")}
-    style={{ paddingRight: 20, color: "#3b3b3b" }}
+    style={{ color: "#3b3b3b" }}
     activeScale={0.85}
   >
     <NavIcon

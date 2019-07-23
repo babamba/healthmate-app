@@ -7,9 +7,12 @@ import MainNavigation from "../navigation/MainNavigation";
 import Loader from "./Loader";
 import { SEE_PLAN } from "../screens/Tabs/Plan";
 import { RECOMMEND_USER } from "../screens/Tabs/Main";
+import { ME } from "../screens/Tabs/Profile";
+import { SEE_ROOMS } from "../screens/Tabs/Chat";
 
-export default () => {
+export default props => {
   const isLoggedIn = useIsLoggedIn();
+  const actionSheet = props.showActionSheetWithOptions;
 
   const {
     data: recom_data,
@@ -27,6 +30,18 @@ export default () => {
     fetchPolicy: "network-only"
   });
 
+  const { loading: me_loading, data: me_data, error: me_error } = useQuery(ME, {
+    fetchPolicy: "network-only"
+  });
+
+  const {
+    data: room_data,
+    loading: room_loading,
+    error: room_error
+  } = useQuery(SEE_ROOMS, {
+    fetchPolicy: "network-only"
+  });
+
   useEffect(() => {
     if (isLoggedIn) {
       console.log("log in user ");
@@ -35,52 +50,11 @@ export default () => {
     }
   }, [isLoggedIn]);
 
-  // if (isLoggedIn) {
-  //   console.log("isLoggedin");
-
-  //   // useEffect(() => {
-  //   //   const onCompleted = data => {
-  //   //     console.log("onCompleted recommend ");
-  //   //   };
-  //   //   const onError = error => {
-  //   //     console.log("error initial load data");
-  //   //   };
-  //   //   if (onCompleted || onError) {
-  //   //     if (onCompleted && !recom_loading && !recom_error) {
-  //   //       onCompleted(data);
-  //   //     } else if (onError && !recom_loading && recom_error) {
-  //   //       onError(error);
-  //   //     }
-  //   //   }
-  //   // }, [recom_loading, recom_error]);
-
-  //   // useEffect(() => {
-  //   //   const onCompleted = data => {
-  //   //     console.log("onCompleted plan ");
-  //   //   };
-  //   //   const onError = error => {
-  //   //     console.log("error initial load data");
-  //   //   };
-  //   //   if (onCompleted || onError) {
-  //   //     if (onCompleted && !plan_loading && !plan_error) {
-  //   //       onCompleted(data);
-  //   //     } else if (onError && !plan_loading && plan_error) {
-  //   //       onError(error);
-  //   //     }
-  //   //   }
-  //   // }, [plan_loading, plan_error]);
-
-  //   //return recom_loading || plan_loading ? <Loader /> : <MainNavigation />;
-  // } else {
-  //   console.log("Log in please");
-  //   //return <AuthNavigation />;
-  // }`
-
   return isLoggedIn ? (
-    recom_loading ? (
+    recom_loading || plan_loading || room_loading || me_loading ? (
       <Loader />
     ) : (
-      <MainNavigation />
+      <MainNavigation screenProps={actionSheet} />
     )
   ) : (
     <AuthNavigation />

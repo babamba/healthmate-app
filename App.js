@@ -26,6 +26,10 @@ import { ApolloLink, split, concat } from "apollo-link";
 import { WebSocketLink } from "apollo-link-ws";
 import { HttpLink } from "apollo-link-http";
 import { getMainDefinition, toIdValue } from "apollo-utilities";
+import {
+  ActionSheetProvider,
+  connectActionSheet
+} from "@expo/react-native-action-sheet";
 
 export default function App() {
   const [loaded, setLoaded] = useState(false);
@@ -71,7 +75,10 @@ export default function App() {
         NotoSansKR_Medium: require("./assets/Fonts/NotoSansKR_Medium.ttf"),
         NotoSansKR_Regular: require("./assets/Fonts/NotoSansKR_Regular.ttf")
       });
-      await Asset.loadAsync([require("./assets/logo.png")]);
+      await Asset.loadAsync([
+        require("./assets/logo.png"),
+        require("./assets/WeatherIcon/icons8-more-50.png")
+      ]);
 
       const cache = new InMemoryCache();
       // const cache = new InMemoryCache({
@@ -112,7 +119,7 @@ export default function App() {
 
       const authheader = setContext(async (req, { headers }) => {
         const token = await AsyncStorage.getItem("jwt");
-        console.log("token", token);
+        //console.log("token", token);
         return {
           headers: {
             // ...headers,
@@ -318,11 +325,15 @@ export default function App() {
     console.log("Auth effect !");
   }, [isLoggedIn]);
 
+  const ConnectionNavController = connectActionSheet(NavController);
+
   return loaded && client && isLoggedIn !== null ? (
     <ApolloProvider client={client}>
       <ThemeProvider theme={styles}>
         <AuthProvider isLoggedIn={isLoggedIn} client={client}>
-          <NavController />
+          <ActionSheetProvider>
+            <ConnectionNavController />
+          </ActionSheetProvider>
         </AuthProvider>
       </ThemeProvider>
     </ApolloProvider>

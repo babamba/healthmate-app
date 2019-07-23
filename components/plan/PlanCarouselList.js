@@ -44,7 +44,7 @@ const MyCarousel = props => {
       <TouchableScale
         activeScale={0.98}
         tension={80}
-        friction={4}
+        friction={2}
         onPress={() => {
           navigation.navigate("PlanDetail", { planId: item.id });
         }}
@@ -69,8 +69,8 @@ const MyCarousel = props => {
             />
             <View style={styles.overlay} />
             <BlurView
-              tint="dark"
-              intensity={30}
+              tint="default"
+              intensity={100}
               style={[
                 styles.textContainer,
                 {
@@ -113,13 +113,13 @@ const MyCarousel = props => {
         hasParallaxImages={false}
         //    onSnapToItem={index => onSnapUser(index)}
         onSnapToItem={index => setActiveSlide(index)}
-        enableMomentum={true}
+        enableMomentum={false}
         activeAnimationType={"spring"}
         activeSlideAlignment={"center"}
         inactiveSlideScale={0.97}
         activeAnimationOptions={{
-          friction: 4,
-          tension: 40
+          friction: 8,
+          tension: 80
         }}
       />
     </View>
@@ -137,14 +137,19 @@ const styles = StyleSheet.create({
     width: screenWidth - 100,
     height: screenWidth + 60,
     shadowColor: "#000",
+    shadowColor: "#000",
     shadowOffset: {
       width: 0,
       height: 6
     },
-    shadowOpacity: 0.37,
-    shadowRadius: 7.49,
-    elevation: 12,
-    borderRadius: 8
+    shadowOpacity: 0.39,
+    shadowRadius: 8.3,
+
+    elevation: 13,
+
+    borderRadius: 8,
+    marginLeft: 10,
+    marginTop: 10
   },
   imageContainer: {
     flex: 1,
@@ -189,8 +194,7 @@ const styles = StyleSheet.create({
   overlay: {
     ...StyleSheet.absoluteFillObject,
     backgroundColor: "rgba(0,0,0,0.1)",
-    borderBottomLeftRadius: entryBorderRadius,
-    borderBottomRightRadius: entryBorderRadius
+    borderRadius: entryBorderRadius
   },
   title: {
     color: "white",

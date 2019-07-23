@@ -67,10 +67,11 @@ const Icon = styled.View``;
 
 const MapScreen = ({ navigation }) => {
   // 1KM 내 유저 검색
+  const actionSheet = navigation.getScreenProps("actionSheet");
 
   const mapRef = useRef();
   const { data, loading, error } = useQuery(NEAR_USER, {
-    fetchPolicy: "cache-and-network"
+    fetchPolicy: "network-only"
   });
 
   const { width, height } = Dimensions.get("window");
@@ -219,7 +220,27 @@ const MapScreen = ({ navigation }) => {
   };
 
   const showActionSheet = () => {
-    ActionSheetIOS.showActionSheetWithOptions(
+    // ActionSheetIOS.showActionSheetWithOptions(
+    //   {
+    //     options: ["취소", "프로필 보기", "메시지 보내기"],
+    //     destructiveButtonIndex: 1,
+    //     cancelButtonIndex: 0
+    //   },
+    //   buttonIndex => {
+    //     if (buttonIndex === 1) {
+    //       /* destructive action */
+    //       console.log("프로필 네비게이션");
+    //       navigation.navigate("UserDetail", { username: user.id });
+    //     } else if (buttonIndex === 2) {
+    //       console.log("채팅 디테일 네비게이션");
+    //     }
+    //   }
+    // );
+    const options = ["Delete", "Save", "Cancel"];
+    const destructiveButtonIndex = 0;
+    const cancelButtonIndex = 2;
+
+    actionSheet(
       {
         options: ["취소", "프로필 보기", "메시지 보내기"],
         destructiveButtonIndex: 1,
@@ -349,4 +370,4 @@ const MapScreen = ({ navigation }) => {
   );
 };
 
-export default withNavigation(MapScreen);
+export default MapScreen;
