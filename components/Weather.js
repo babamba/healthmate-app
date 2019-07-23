@@ -33,6 +33,7 @@ const Content = styled.View`
 `;
 
 const IconContainer = styled.View`
+  padding-left: 10px;
   padding-right: 20px;
   /* background-color: green;
   opacity: 0.5; */
@@ -47,6 +48,10 @@ const Icon = styled.Image`
 const TextContainer = styled.View`
   /* background-color: red;
   opacity: 0.5; */
+`;
+
+const LoadingContainer = styled.View`
+  align-items: center;
 `;
 
 const Weather = () => {
@@ -97,7 +102,6 @@ const Weather = () => {
         //await setIcon(WEATHER.Thunderstorm);
         await setWeather(getLocaleName(json.weather[0].main));
         setWeatherLoadComplete(true);
-        //    animationIcon.current.play();
       });
   };
 
@@ -146,20 +150,21 @@ const Weather = () => {
         </Content>
       ) : (
         <Content>
-          <IconContainer>
+          <LoadingContainer>
+            <Text>위치를 읽어들이는 중 ... </Text>
             {/* <Icon source={icon} /> */}
-            <LottieView
-              ref={animationIcon}
-              source={WEATHER.Loading}
-              autoPlay={true}
-              loop={true}
-              speed={4}
-              style={{
-                width: 50,
-                height: 50
-              }}
-            />
-          </IconContainer>
+            {/* <LottieView
+            ref={animationIcon}
+            source={WEATHER.Loading}
+            autoPlay={true}
+            loop={true}
+            speed={4}
+            style={{
+              width: 300,
+              height: 50
+            }}
+          /> */}
+          </LoadingContainer>
         </Content>
       )}
     </Container>
