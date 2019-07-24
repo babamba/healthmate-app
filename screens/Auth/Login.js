@@ -1,6 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
-import { TouchableWithoutFeedback, Keyboard, Alert } from "react-native";
+import {
+  TouchableWithoutFeedback,
+  Keyboard,
+  Alert,
+  KeyboardAvoidingView
+} from "react-native";
 import AuthButton from "../../components/AuthButton";
 import AuthInput from "../../components/AuthInput";
 import useInput from "../../hooks/useInput";
@@ -12,6 +17,11 @@ const View = styled.View`
   justify-content: center;
   align-items: center;
   flex: 1;
+`;
+
+const KeyboardAvoiding = styled.KeyboardAvoidingView`
+  flex: 1;
+  justify-content: center;
 `;
 
 export default ({ navigation }) => {
@@ -55,6 +65,8 @@ export default ({ navigation }) => {
       } = await loginMutation();
       if (login !== "" || login !== false) {
         //Alert.alert("Success Login");
+        // console.log(dropdown);
+
         logIn(login);
       } else {
         Alert.alert("Wrong email or password!");
@@ -67,25 +79,27 @@ export default ({ navigation }) => {
     }
   };
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <View>
-        <AuthInput
-          {...emailInput}
-          placeholder="Email"
-          keyboardType="email-address"
-          returnKeyType="send"
-          onSubmitEditing={handleLogin}
-          autoCorrect={false}
-        />
-        <AuthInput
-          {...passwordInput}
-          placeholder="Password"
-          returnKeyType="send"
-          autoCorrect={false}
-          secureTextEntry={true}
-        />
-        <AuthButton loading={loading} onPress={handleLogin} text="Log In" />
-      </View>
-    </TouchableWithoutFeedback>
+    <KeyboardAvoiding behavior="padding">
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <View>
+          <AuthInput
+            {...emailInput}
+            placeholder="Email"
+            keyboardType="email-address"
+            returnKeyType="send"
+            onSubmitEditing={handleLogin}
+            autoCorrect={false}
+          />
+          <AuthInput
+            {...passwordInput}
+            placeholder="Password"
+            returnKeyType="send"
+            autoCorrect={false}
+            secureTextEntry={true}
+          />
+          <AuthButton loading={loading} onPress={handleLogin} text="Log In" />
+        </View>
+      </TouchableWithoutFeedback>
+    </KeyboardAvoiding>
   );
 };

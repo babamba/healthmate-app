@@ -12,6 +12,8 @@ import { SafeAreaView } from "react-navigation";
 import Weather from "../../components/Weather";
 import MainTitle from "../../components/MainTitle";
 
+import TestButton from "../../components/plan/TestButton";
+
 export const SEE_PLAN = gql`
   query seePlan {
     seePlan {
@@ -79,7 +81,7 @@ const ScreenTitle = styled.Text`
   color: black;
   font-weight: 600;
   font-size: 52px;
-  font-family: NotoSansKR_Bold;
+  font-family: CoreGothicD_ExtraBold;
   text-align: left;
   color: #3b3b3b;
 `;
@@ -89,17 +91,21 @@ const RowLeft = styled.View`
   /* background-color: red;
   opacity: 0.4; */
   height: 100%;
+  align-items: flex-start;
 `;
 const RowRight = styled.View`
   flex: 1;
   /* background-color: blue;
   opacity: 0.4; */
   height: 100%;
+  flex-direction: row;
+  align-items: flex-end;
 `;
 
 const AddButton = styled.View`
-  align-self: flex-end;
-  padding-top: 5px;
+  align-self: center;
+  /* padding-top: 5px; */
+  padding-right: 10px;
   /* background-color: green;
   opacity: 0.4; */
 `;
@@ -163,6 +169,9 @@ export default ({ navigation }) => {
           <RowRight>
             <AddButton>
               <AddPlan size={40} />
+            </AddButton>
+            <AddButton>
+              <TestButton size={40} />
             </AddButton>
           </RowRight>
         </Footer>

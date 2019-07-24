@@ -12,7 +12,7 @@ import {
 
 const { width: screenWidth } = Dimensions.get("window");
 
-const MyCarousel = props => {
+const MapUserCarousel = props => {
   //console.log(props);
   const carouselRef = useRef(null);
   const { onSnapUser } = props;
@@ -72,7 +72,7 @@ const MyCarousel = props => {
   );
 };
 
-export default MyCarousel;
+export default MapUserCarousel;
 
 const styles = StyleSheet.create({
   container: {},

@@ -20,7 +20,7 @@ import { withNavigation } from "react-navigation";
 import gql from "graphql-tag";
 import { useQuery } from "react-apollo-hooks";
 
-import CarouselItem from "../../components/carousel/carousel";
+import CarouselItem from "../../components/Map/MapUsercarousel";
 import Marker from "../../components/Map/Markers";
 import { ENTRIES_CAROUSEL } from "../../EntryData/Entries";
 import Markers from "../../components/Map/Markers";

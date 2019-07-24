@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { AppLoading } from "expo";
@@ -35,6 +35,8 @@ export default function App() {
   const [loaded, setLoaded] = useState(false);
   const [client, setClient] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(null);
+  const [isLaunched, setIsLaunched] = useState(null);
+
   const [notificationStatus, setNotificationStatus] = useState(false);
   const [locationStatus, setLocationStatus] = useState(false);
 
@@ -73,7 +75,13 @@ export default function App() {
         NotoSansKR_Bold: require("./assets/Fonts/NotoSansKR_Bold.ttf"),
         NotoSansKR_Light: require("./assets/Fonts/NotoSansKR_Light.ttf"),
         NotoSansKR_Medium: require("./assets/Fonts/NotoSansKR_Medium.ttf"),
-        NotoSansKR_Regular: require("./assets/Fonts/NotoSansKR_Regular.ttf")
+        NotoSansKR_Regular: require("./assets/Fonts/NotoSansKR_Regular.ttf"),
+
+        CoreGothicD_ExtLt: require("./assets/Fonts/CoreGothicD_ExtLt.ttf"),
+        CoreGothicD_ExtraBold: require("./assets/Fonts/CoreGothicD_ExtraBold.ttf"),
+        CoreGothicD_Medium: require("./assets/Fonts/CoreGothicD_Medium.ttf"),
+        CoreGothicD_Reg: require("./assets/Fonts/CoreGothicD_Reg.ttf"),
+        CoreGothicD_Thin: require("./assets/Fonts/CoreGothicD_Thin.ttf")
       });
       await Asset.loadAsync([
         require("./assets/logo.png"),
@@ -86,7 +94,11 @@ export default function App() {
         require("./assets/WeatherIcon/icons8-storm-50.png"),
         require("./assets/WeatherIcon/icons8-rain-50.png"),
         require("./assets/WeatherIcon/icons8-sun-50.png"),
-        require("./assets/WeatherIcon/icons8-more-50.png")
+        require("./assets/WeatherIcon/icons8-more-50.png"),
+
+        require("./assets/Intro/1.jpg"),
+        require("./assets/Intro/2.jpeg"),
+        require("./assets/Intro/3.jpeg")
       ]);
 
       const cache = new InMemoryCache();
@@ -313,12 +325,23 @@ export default function App() {
       //   ...apolloClientOptions
       // });
 
+      //await AsyncStorage.setItem("launched", "false");
+
       const isLoggedIn = await AsyncStorage.getItem("isLoggedIn");
+      const isLaunched = await AsyncStorage.getItem("launched");
       if (!isLoggedIn || isLoggedIn === "false") {
         setIsLoggedIn(false);
       } else {
         setIsLoggedIn(true);
       }
+
+      console.log("App loading : ", isLaunched);
+      if (!isLaunched || isLaunched === "false") {
+        setIsLaunched(false);
+      } else {
+        setIsLaunched(true);
+      }
+
       setLoaded(true);
       setClient(client);
     } catch (e) {
@@ -334,12 +357,20 @@ export default function App() {
     console.log("Auth effect !");
   }, [isLoggedIn]);
 
+  useEffect(() => {
+    console.log("isLaunched App Effect !");
+  }, [isLaunched]);
+
   const ConnectionNavController = connectActionSheet(NavController);
 
   return loaded && client && isLoggedIn !== null ? (
     <ApolloProvider client={client}>
       <ThemeProvider theme={styles}>
-        <AuthProvider isLoggedIn={isLoggedIn} client={client}>
+        <AuthProvider
+          isLoggedIn={isLoggedIn}
+          isLaunched={isLaunched}
+          client={client}
+        >
           <ActionSheetProvider>
             <ConnectionNavController />
           </ActionSheetProvider>

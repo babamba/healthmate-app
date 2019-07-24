@@ -11,8 +11,10 @@ const TextInput = styled.TextInput`
   width: ${constants.width / 1.7};
   padding: 10px;
   background-color: ${props => props.theme.greyColor};
-  border: 0.5px solid ${props => props.theme.darkGreyColor};
+  /* border: 0.5px solid ${props => props.theme.darkGreyColor}; */
   border-radius: 4px;
+  border-width: 0px;
+  border-bottom-color: grey;
 `;
 
 const AuthInput = ({

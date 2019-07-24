@@ -25,7 +25,7 @@ const Row = styled.View``;
 
 const Text = styled.Text`
   font-size: 16px;
-  font-family: NotoSansKR_Light;
+  font-family: CoreGothicD_ExtLt;
   text-align: left;
   line-height: 25px;
   color: #3b3b3b;
@@ -94,12 +94,12 @@ const Weather = () => {
     //   coords: { latitude, longitude }
     // } = location;
 
+    //시뮬레이터에서 자꾸 샌프란시스코로 잡혀서 서초로 수정
     const latitude = 37.490159887580745;
     const longitude = 127.00750177331756;
 
-    console.log(KAKAO_COORD_TO_ADDRESS_API_KEY);
-
-    console.log("getName : lat / ", latitude, " long /", longitude);
+    //console.log(KAKAO_COORD_TO_ADDRESS_API_KEY);
+    //console.log("getName : lat / ", latitude, " long /", longitude);
 
     fetch(
       `https://dapi.kakao.com/v2/local/geo/coord2address.json?x=${longitude}&y=${latitude}&output=json&input_coord=WGS84`,
@@ -111,17 +111,17 @@ const Weather = () => {
     )
       .then(response => response.json()) // 응답값을 json으로 변환
       .then(async json => {
-        console.log("getName", json);
+        //console.log("getName", json);
 
         if (json) {
           if (json.meta) {
             if (json.meta.total_count > 0) {
               await setLocationName(
-                json.documents[0].address.region_1depth_name +
-                  "시 " +
-                  json.documents[0].address.region_2depth_name +
-                  " " +
-                  json.documents[0].address.region_3depth_name
+                json.documents[0].address.region_1depth_name + "시 "
+                // +
+                // json.documents[0].address.region_2depth_name +
+                // " " +
+                // json.documents[0].address.region_3depth_name
               );
             }
           }
@@ -161,7 +161,7 @@ const Weather = () => {
     )
       .then(response => response.json()) // 응답값을 json으로 변환
       .then(async json => {
-        console.log(json);
+        //console.log(json);
         await setWeather(json.weather[0].main);
         await setIcon(getIcon(json.weather[0].main));
         //await setIcon(WEATHER.Thunderstorm);

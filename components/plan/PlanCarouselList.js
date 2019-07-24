@@ -140,10 +140,10 @@ const styles = StyleSheet.create({
     shadowColor: "#000",
 
     shadowOpacity: 0.25,
-    shadowOffset: { width: 0, height: 10 },
-    shadowRadius: 10,
+    shadowOffset: { width: 0, height: 5 },
+    shadowRadius: 6,
 
-    elevation: 13,
+    elevation: 4,
 
     borderRadius: 8,
     marginLeft: 10,
