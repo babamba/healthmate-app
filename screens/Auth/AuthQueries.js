@@ -22,15 +22,15 @@ export const CREATE_ACCOUNT = gql`
   mutation createAccount(
     $username: String!
     $email: String!
-    $firstName: String
-    $lastName: String
+    # $firstName: String
+    # $lastName: String
     $password: String!
   ) {
     createAccount(
       username: $username
       email: $email
-      firstName: $firstName
-      lastName: $lastName
+      # firstName: $firstName
+      # lastName: $lastName
       password: $password
     )
   }

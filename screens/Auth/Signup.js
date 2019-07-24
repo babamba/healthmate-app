@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { TouchableWithoutFeedback, Keyboard } from "react-native";
+import { TouchableWithoutFeedback, Keyboard, Platform } from "react-native";
 import { Alert } from "react-native";
 import { useMutation } from "react-apollo-hooks";
 import * as Facebook from "expo-facebook";
@@ -10,10 +10,24 @@ import useInput from "../../hooks/useInput";
 import { LOG_IN, CREATE_ACCOUNT } from "./AuthQueries";
 import { Google } from "expo";
 
+import NavIcon from "../../components/NavIcon";
+import { SafeAreaView } from "react-navigation";
+import constants from "../../constants";
+
 const View = styled.View`
   justify-content: center;
   align-items: center;
   flex: 1;
+`;
+
+const BackContainer = styled.TouchableOpacity`
+  padding-horizontal: 20px;
+  padding-top: 20px;
+`;
+
+const KeyboardAvoiding = styled.KeyboardAvoidingView`
+  flex: 1;
+  justify-content: center;
 `;
 
 const FBContainer = styled.View`
@@ -29,8 +43,8 @@ const GoogleContainer = styled.View`
 `;
 
 export default ({ navigation }) => {
-  const fNameInput = useInput("");
-  const lNameInput = useInput("");
+  // const fNameInput = useInput("");
+  // const lNameInput = useInput("");
   const emailInput = useInput(navigation.getParam("email", ""));
   const usernameInput = useInput("");
   const passwordInput = useInput("");
@@ -40,15 +54,15 @@ export default ({ navigation }) => {
     variables: {
       username: usernameInput.value,
       email: emailInput.value,
-      firstName: fNameInput.value,
-      lastName: lNameInput.value,
+      // firstName: fNameInput.value,
+      // lastName: lNameInput.value,
       password: passwordInput.value
     }
   });
   const handleSingup = async () => {
     const { value: email } = emailInput;
-    const { value: fName } = fNameInput;
-    const { value: lName } = lNameInput;
+    // const { value: fName } = fNameInput;
+    // const { value: lName } = lNameInput;
     const { value: username } = usernameInput;
     const { value: password } = passwordInput;
     const { value: passwordCheck } = passwordCheckInput;
@@ -56,9 +70,9 @@ export default ({ navigation }) => {
     if (!emailRegex.test(email)) {
       return Alert.alert("That email is invalid");
     }
-    if (fName === "") {
-      return Alert.alert("I need your name");
-    }
+    // if (fName === "") {
+    //   return Alert.alert("I need your name");
+    // }
     if (username === "") {
       return Alert.alert("Invalid username");
     }
@@ -135,71 +149,87 @@ export default ({ navigation }) => {
       setLoading(false);
     }
   };
-  const updateFormData = (email, firstName, lastName) => {
+  const updateFormData = email => {
     emailInput.setValue(email);
-    fNameInput.setValue(firstName);
-    lNameInput.setValue(lastName);
+    // fNameInput.setValue(firstName);
+    // lNameInput.setValue(lastName);
     const [username] = email.split("@");
     usernameInput.setValue(username);
   };
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <View>
-        <AuthInput
-          {...fNameInput}
-          placeholder="First name"
-          autoCapitalize="words"
-        />
-        <AuthInput
-          {...lNameInput}
-          placeholder="Last name"
-          autoCapitalize="words"
-        />
-        <AuthInput
-          {...emailInput}
-          placeholder="Email"
-          keyboardType="email-address"
-          returnKeyType="send"
-          autoCorrect={false}
-        />
-        <AuthInput
-          {...passwordInput}
-          placeholder="Password"
-          returnKeyType="send"
-          autoCorrect={false}
-          secureTextEntry={true}
-        />
-        <AuthInput
-          {...passwordCheckInput}
-          placeholder="PasswordCheck"
-          returnKeyType="send"
-          autoCorrect={false}
-          secureTextEntry={true}
-        />
-        <AuthInput
-          {...usernameInput}
-          placeholder="Username"
-          returnKeyType="send"
-          autoCorrect={false}
-        />
-        <AuthButton loading={loading} onPress={handleSingup} text="Sign up" />
-        <FBContainer>
-          <AuthButton
-            bgColor={"#2D4DA7"}
-            loading={false}
-            onPress={fbLogin}
-            text="Connect Facebook"
+    <SafeAreaView
+      style={constants.commonStyle.safeArea}
+      forceInset={{ top: "always" }}
+    >
+      <KeyboardAvoiding behavior="padding">
+        <BackContainer onPress={() => navigation.goBack(null)}>
+          <NavIcon
+            name={Platform.OS === "ios" ? "ios-arrow-back" : "md-arrow-back"}
           />
-        </FBContainer>
-        <GoogleContainer>
-          <AuthButton
-            bgColor={"#EE1922"}
-            loading={false}
-            onPress={googleLogin}
-            text="Connect Google"
-          />
-        </GoogleContainer>
-      </View>
-    </TouchableWithoutFeedback>
+        </BackContainer>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <View>
+            {/* <AuthInput
+              {...fNameInput}
+              placeholder="First name"
+              autoCapitalize="words"
+            />
+            <AuthInput
+              {...lNameInput}
+              placeholder="Last name"
+              autoCapitalize="words"
+            /> */}
+            <AuthInput
+              {...emailInput}
+              placeholder="Email"
+              keyboardType="email-address"
+              returnKeyType="send"
+              autoCorrect={false}
+            />
+            <AuthInput
+              {...passwordInput}
+              placeholder="Password"
+              returnKeyType="send"
+              autoCorrect={false}
+              secureTextEntry={true}
+            />
+            <AuthInput
+              {...passwordCheckInput}
+              placeholder="PasswordCheck"
+              returnKeyType="send"
+              autoCorrect={false}
+              secureTextEntry={true}
+            />
+            <AuthInput
+              {...usernameInput}
+              placeholder="Username"
+              returnKeyType="send"
+              autoCorrect={false}
+            />
+            <AuthButton
+              loading={loading}
+              onPress={handleSingup}
+              text="Sign up"
+            />
+            <FBContainer>
+              <AuthButton
+                bgColor={"#2D4DA7"}
+                loading={false}
+                onPress={fbLogin}
+                text="Connect Facebook"
+              />
+            </FBContainer>
+            <GoogleContainer>
+              <AuthButton
+                bgColor={"#EE1922"}
+                loading={false}
+                onPress={googleLogin}
+                text="Connect Google"
+              />
+            </GoogleContainer>
+          </View>
+        </TouchableWithoutFeedback>
+      </KeyboardAvoiding>
+    </SafeAreaView>
   );
 };

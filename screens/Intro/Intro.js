@@ -53,8 +53,8 @@ const Intro = () => {
   };
 
   const _onSlideChange = index => {
-    console.log(index);
-    //     animationIconRef.current.play();
+    //console.log(index);
+    //animationIconRef.current.play();
   };
 
   const _renderItem = item => {

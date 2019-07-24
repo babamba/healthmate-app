@@ -4,7 +4,7 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   Alert,
-  KeyboardAvoidingView
+  Platform
 } from "react-native";
 import AuthButton from "../../components/AuthButton";
 import AuthInput from "../../components/AuthInput";
@@ -12,6 +12,10 @@ import useInput from "../../hooks/useInput";
 import { useMutation } from "react-apollo-hooks";
 import { PASSWORD_LOG_IN } from "./AuthQueries";
 import { useLogIn } from "../../AuthContext";
+
+import NavIcon from "../../components/NavIcon";
+import { SafeAreaView } from "react-navigation";
+import constants from "../../constants";
 
 const View = styled.View`
   justify-content: center;
@@ -22,6 +26,11 @@ const View = styled.View`
 const KeyboardAvoiding = styled.KeyboardAvoidingView`
   flex: 1;
   justify-content: center;
+`;
+
+const BackContainer = styled.TouchableOpacity`
+  padding-horizontal: 20px;
+  padding-top: 20px;
 `;
 
 export default ({ navigation }) => {
@@ -79,27 +88,37 @@ export default ({ navigation }) => {
     }
   };
   return (
-    <KeyboardAvoiding behavior="padding">
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <View>
-          <AuthInput
-            {...emailInput}
-            placeholder="Email"
-            keyboardType="email-address"
-            returnKeyType="send"
-            onSubmitEditing={handleLogin}
-            autoCorrect={false}
+    <SafeAreaView
+      style={constants.commonStyle.safeArea}
+      forceInset={{ top: "always" }}
+    >
+      <KeyboardAvoiding behavior="padding">
+        <BackContainer onPress={() => navigation.goBack(null)}>
+          <NavIcon
+            name={Platform.OS === "ios" ? "ios-arrow-back" : "md-arrow-back"}
           />
-          <AuthInput
-            {...passwordInput}
-            placeholder="Password"
-            returnKeyType="send"
-            autoCorrect={false}
-            secureTextEntry={true}
-          />
-          <AuthButton loading={loading} onPress={handleLogin} text="Log In" />
-        </View>
-      </TouchableWithoutFeedback>
-    </KeyboardAvoiding>
+        </BackContainer>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <View>
+            <AuthInput
+              {...emailInput}
+              placeholder="Email"
+              keyboardType="email-address"
+              returnKeyType="send"
+              onSubmitEditing={handleLogin}
+              autoCorrect={false}
+            />
+            <AuthInput
+              {...passwordInput}
+              placeholder="Password"
+              returnKeyType="send"
+              autoCorrect={false}
+              secureTextEntry={true}
+            />
+            <AuthButton loading={loading} onPress={handleLogin} text="Log In" />
+          </View>
+        </TouchableWithoutFeedback>
+      </KeyboardAvoiding>
+    </SafeAreaView>
   );
 };

@@ -16,7 +16,7 @@ export default props => {
   const isLoggedIn = useIsLoggedIn();
   const actionSheet = props.showActionSheetWithOptions;
 
-  console.log("isLaunched : ", isLaunched);
+  //console.log("isLaunched : ", isLaunched);
 
   const {
     data: recom_data,
@@ -71,16 +71,4 @@ export default props => {
   ) : (
     <AppIntro />
   );
-
-  // return isLoggedIn ? (
-  //   recom_loading || plan_loading || room_loading || me_loading ? (
-  //     <Loader />
-  //   ) : (
-  //     <MainNavigation screenProps={actionSheet} />
-  //   )
-  // ) : (
-  //   <AuthNavigation />
-  // );
-
-  //return isLoggedIn ? <MainNavigation /> : <AuthNavigation />;
 };

@@ -80,10 +80,11 @@ const UserProfile = ({
   followersCount,
   followingCount,
   bio,
-  fullName,
+  username,
+  //fullName,
   posts
 }) => {
-  console.log("user profile : ", fullName);
+  //console.log("user profile : ", fullName);
   const [isGrid, setIsGrid] = useState(true);
   const logout = useLogOut();
   const toggleGrid = () => setIsGrid(i => !i);
@@ -113,7 +114,7 @@ const UserProfile = ({
         </HeaderColumn>
       </ProfileHeader>
       <ProfileMeta>
-        <Bold>{fullName}</Bold>
+        <Bold>{username}</Bold>
         <Bio>{bio}</Bio>
         <LogoutButton onPress={logout}>
           <LogoutText>LogOut</LogoutText>
@@ -152,7 +153,7 @@ UserProfile.propTypes = {
   id: PropTypes.string.isRequired,
   avatar: PropTypes.string.isRequired,
   username: PropTypes.string.isRequired,
-  fullName: PropTypes.string.isRequired,
+  // fullName: PropTypes.string.isRequired,
   isFollowing: PropTypes.bool.isRequired,
   isSelf: PropTypes.bool.isRequired,
   bio: PropTypes.string.isRequired,
