@@ -7,7 +7,10 @@ import * as Location from "expo-location";
 
 import { WEATHER } from "../assets/Weather/AnimationWeather";
 import { weather_text, weather_icon } from "../weatherType";
-import { WEATHER_KEY } from "react-native-dotenv";
+import {
+  WEATHER_KEY,
+  KAKAO_COORD_TO_ADDRESS_API_KEY
+} from "react-native-dotenv";
 
 import LottieView from "lottie-react-native";
 
@@ -87,22 +90,61 @@ const Weather = () => {
   };
 
   const getName = location => {
-    const {
-      coords: { latitude, longitude }
-    } = location;
-    const API_KEY = "fc072b0abe5b7cb7fae986e4a21d7b78";
+    // const {
+    //   coords: { latitude, longitude }
+    // } = location;
+
+    const latitude = 37.490159887580745;
+    const longitude = 127.00750177331756;
+
+    console.log(KAKAO_COORD_TO_ADDRESS_API_KEY);
+
+    console.log("getName : lat / ", latitude, " long /", longitude);
 
     fetch(
       `https://dapi.kakao.com/v2/local/geo/coord2address.json?x=${longitude}&y=${latitude}&output=json&input_coord=WGS84`,
       {
         headers: {
-          Authorization: `KakaoAK ${API_KEY}`
+          Authorization: `KakaoAK ${KAKAO_COORD_TO_ADDRESS_API_KEY}`
         }
       }
     )
       .then(response => response.json()) // 응답값을 json으로 변환
       .then(async json => {
         console.log("getName", json);
+
+        if (json) {
+          if (json.meta) {
+            if (json.meta.total_count > 0) {
+              await setLocationName(
+                json.documents[0].address.region_1depth_name +
+                  "시 " +
+                  json.documents[0].address.region_2depth_name +
+                  " " +
+                  json.documents[0].address.region_3depth_name
+              );
+            }
+          }
+        }
+
+        // "documents": Array [
+        //   Object {
+        //     "address": Object {
+        //       "address_name": "서울 서초구 서초동 1500-10",
+        //       "main_address_no": "1500",
+        //       "mountain_yn": "N",
+        //       "region_1depth_name": "서울",
+        //       "region_2depth_name": "서초구",
+        //       "region_3depth_name": "서초동",
+        //       "sub_address_no": "10",
+        //       "zip_code": "",
+        //     },
+        //     "road_address": null,
+        //   },
+        // ],
+        // "meta": Object {
+        //   "total_count": 1,
+        // },
       })
       .catch(e => {
         console.log(e);
@@ -121,7 +163,6 @@ const Weather = () => {
       .then(async json => {
         console.log(json);
         await setWeather(json.weather[0].main);
-        await setLocationName(json.name);
         await setIcon(getIcon(json.weather[0].main));
         //await setIcon(WEATHER.Thunderstorm);
         await setWeather(getLocaleName(json.weather[0].main));
@@ -168,7 +209,7 @@ const Weather = () => {
             /> */}
           </IconContainer>
           <TextContainer>
-            <Text>지금 {locationName} 은</Text>
+            <Text>지금 {locationName}은</Text>
             <Text>{weather} 입니다</Text>
           </TextContainer>
         </Content>
