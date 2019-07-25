@@ -11,7 +11,7 @@ import CarouselItem from "../../components/Plan/PlanCarouselList";
 import { SafeAreaView } from "react-navigation";
 import Weather from "../../components/Weather";
 import MainTitle from "../../components/MainTitle";
-
+import styles from "../../styles";
 import TestButton from "../../components/Plan/TestButton";
 
 export const SEE_PLAN = gql`
@@ -83,7 +83,7 @@ const ScreenTitle = styled.Text`
   font-size: 52px;
   font-family: CoreGothicD_ExtraBold;
   text-align: left;
-  color: #3b3b3b;
+  color: ${styles.lightGrey};
 `;
 
 const RowLeft = styled.View`

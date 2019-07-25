@@ -98,7 +98,9 @@ export default function App() {
 
         require("./assets/Intro/1.jpg"),
         require("./assets/Intro/2.jpeg"),
-        require("./assets/Intro/3.jpeg")
+        require("./assets/Intro/3.jpeg"),
+
+        require("./assets/default_user.png")
       ]);
 
       const cache = new InMemoryCache();

@@ -21,7 +21,7 @@ export const ME = gql`
 
 export default ({ navigation }) => {
   const { loading, data, error } = useQuery(ME, {
-    fetchPolicy: "network-only"
+    fetchPolicy: "cache-first"
   });
   //console.log("profile data : ", data);
   if (error) {

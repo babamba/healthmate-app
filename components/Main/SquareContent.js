@@ -11,9 +11,8 @@ const testAlert = id => {
 
 const Conatiner = styled.View`
   padding-vertical: 8;
-  border-radius: 10;
-  margin-left: 10;
-  margin-left: 10;
+  border-radius: 14;
+  margin-left: 18;
   /* shadow-opacity: 0.75;
   shadow-radius: 5px;
   shadow-color: #000;
@@ -27,7 +26,7 @@ const TextContainer = styled.View`
 `;
 
 const Image = styled.Image`
-  width: ${constants.width / 2.2};
+  width: ${constants.width / 2.3};
   height: ${constants.height / 5};
   border-radius: 15;
 `;

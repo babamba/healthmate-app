@@ -11,6 +11,7 @@ import SquareContent from "../../components/Main/SquareContent";
 import { ENTRIES_NEAR, ENTRIES_CONTENT } from "../../EntryData/Entries"; // 더미 데이터
 import constants from "../../constants";
 import { SafeAreaView } from "react-navigation";
+import MainTitle from "../../components/MainTitle";
 //import { POST_FRAGMENT } from "../../fragments";
 
 // export const FEED_QUERY = gql`
@@ -64,20 +65,20 @@ export default () => {
     flex: 1;
   `;
 
-  const MainTitleArea = styled.View`
-    width: ${constants.width};
-    padding-top: 15px;
-    padding-bottom: 15px;
-    padding-horizontal: 20px;
-  `;
+  // const MainTitleArea = styled.View`
+  //   width: ${constants.width};
+  //   padding-top: 15px;
+  //   padding-bottom: 15px;
+  //   padding-horizontal: 20px;
+  // `;
 
-  const MainTitle = styled.Text`
-    color: black;
-    text-align: left;
-    font-weight: 300;
-    font-size: 52px;
-    font-family: NotoSansKR_Bold;
-  `;
+  // const MainTitle = styled.Text`
+  //   color: black;
+  //   text-align: left;
+  //   font-weight: 300;
+  //   font-size: 52px;
+  //   font-family: NotoSansKR_Bold;
+  // `;
 
   const SubTitleArea = styled.View`
     flex: 1;
@@ -117,9 +118,11 @@ export default () => {
       forceInset={{ top: "always" }}
     >
       <View>
-        <MainTitleArea>
+        <MainTitle title={"Main"} fontSize={52} isMain={true} />
+        {/* <MainTitleArea>
+          
           <MainTitle>메인</MainTitle>
-        </MainTitleArea>
+        </MainTitleArea> */}
         <ScrollView
         //    refreshControl={
         //      <RefreshControl refreshing={refreshing} onRefresh={refresh} />

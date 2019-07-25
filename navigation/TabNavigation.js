@@ -12,7 +12,7 @@ import Chat from "../screens/Tabs/Chat";
 import Search from "../screens/Tabs/Search";
 import Notifications from "../screens/Tabs/Notifications";
 import Map from "../screens/Tabs/Map";
-import Profile from "../screens/Tabs/Profile";
+// import Profile from "../screens/Tabs/Profile";
 import Detail from "../screens/Detail";
 // import MessagesLink from "../components/MessagesLink";
 import { View } from "react-native";
@@ -133,7 +133,7 @@ export default createBottomTabNavigator(
           />
         )
       }
-    },
+    }
 
     // Home: {
     //   screen: stackFactory(Home, {
@@ -201,19 +201,19 @@ export default createBottomTabNavigator(
     //     )
     //   }
     // },
-    Profile: {
-      screen: stackFactory(Profile, {
-        header: null
-      }),
-      navigationOptions: {
-        tabBarIcon: ({ focused }) => (
-          <NavIcon
-            focused={focused}
-            name={Platform.OS === "ios" ? "ios-person" : "md-person"}
-          />
-        )
-      }
-    }
+    // Profile: {
+    //   screen: stackFactory(Profile, {
+    //     header: null
+    //   }),
+    //   navigationOptions: {
+    //     tabBarIcon: ({ focused }) => (
+    //       <NavIcon
+    //         focused={focused}
+    //         name={Platform.OS === "ios" ? "ios-person" : "md-person"}
+    //       />
+    //     )
+    //   }
+    // }
   },
   {
     tabBarOptions: {

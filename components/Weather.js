@@ -115,7 +115,7 @@ const Weather = () => {
           if (json.meta) {
             if (json.meta.total_count > 0) {
               await setLocationName(
-                json.documents[0].address.region_1depth_name + "시 "
+                json.documents[0].address.region_1depth_name + "시"
                 // +
                 // json.documents[0].address.region_2depth_name +
                 // " " +
@@ -212,7 +212,7 @@ const Weather = () => {
             /> */}
           </IconContainer>
           <TextContainer>
-            <Text>지금 {locationName}은</Text>
+            <Text>지금 {locationName}는</Text>
             <Text>{weather} 입니다</Text>
           </TextContainer>
         </Content>
