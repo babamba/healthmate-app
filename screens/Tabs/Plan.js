@@ -58,14 +58,13 @@ const Header = styled.View`
 
 const Footer = styled.View`
   width: ${constants.width};
-  padding-top: 5px;
-  padding-bottom: 30px;
   /* background-color: yellow;
   opacity: 0.2; */
   flex: 1;
-  align-items: center;
+  /* align-items: center; */
   flex-direction: row;
-  padding-horizontal: 60px;
+  padding-horizontal: 24px;
+  margin-bottom: 14px;
 `;
 
 const Content = styled.View`
@@ -90,20 +89,17 @@ const RowLeft = styled.View`
   flex: 2;
   /* background-color: red;
   opacity: 0.4; */
-  height: 100%;
-  align-items: flex-start;
 `;
 const RowRight = styled.View`
   flex: 1;
   /* background-color: blue;
   opacity: 0.4; */
-  height: 100%;
   flex-direction: row;
-  align-items: flex-end;
+  justify-content: flex-end;
 `;
 
 const AddButton = styled.View`
-  align-self: center;
+  justify-content: center;
   /* padding-top: 5px; */
   padding-right: 10px;
   /* background-color: green;

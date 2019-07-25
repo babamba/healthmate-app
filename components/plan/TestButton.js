@@ -29,6 +29,7 @@ const TestButton = ({ navigation, size }) => {
       onPress={() => TestAlert()}
       style={{ color: "#3b3b3b" }}
       activeScale={0.92}
+      friction={30}
     >
       <NavIcon
         name={Platform.OS === "ios" ? "ios-alert" : "md-alert"}

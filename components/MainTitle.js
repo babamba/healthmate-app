@@ -40,7 +40,6 @@ const CircleArea = styled.View`
 // `;
 
 const MainTitle = ({ title, fontSize, fontFamily, isMain }) => {
-  console.log("isMain ? ", isMain);
   return (
     <MainTitleArea>
       <TitleArea>

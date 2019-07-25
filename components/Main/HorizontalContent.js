@@ -59,10 +59,10 @@ const HorizontalUser = ({ navigation, username, avatar, id }) => {
       >
         <Image source={{ uri: avatar }} />
       </TouchableOpacity>
-      <TextContainer>
+      {/* <TextContainer>
         <UserName>{username}</UserName>
-        {/* <Introduction>{lastPlan[0].planTitle}</Introduction> */}
-      </TextContainer>
+        <Introduction>{lastPlan[0].planTitle}</Introduction>
+      </TextContainer> */}
     </Conatiner>
   );
 };

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
-import { ActivityIndicator, StyleSheet, Platform } from "react-native";
-import styled from "styled-components";
+import { ActivityIndicator, StyleSheet, Platform, Image } from "react-native";
+import styled from "styled-components/native";
 
 import * as Permissions from "expo-permissions";
 import * as Location from "expo-location";
@@ -14,45 +14,52 @@ import {
 
 import LottieView from "lottie-react-native";
 import * as Animatable from "react-native-animatable";
+import constants from "../constants";
+import styles from "../styles";
 
 const Container = styled.View`
   flex: 1;
-  justify-content: center;
-  align-items: flex-start;
-  flex-direction: row;
 `;
 
-const Row = styled.View``;
+const IconContainer = styled.View`
+  width: 100%;
+  height: 100%;
+  /* background-color: green;
+  opacity: 0.5; */
+  flex: 1;
+  justify-content: center;
+  align-content: flex-start;
+`;
+
+const Icon = styled.Image`
+  height: 100vh;
+`;
+
+const TextContainer = Animatable.createAnimatableComponent(styled.View`
+  margin-left: 14px;
+  flex: 3;
+  justify-content: center;
+`);
 
 const Text = styled.Text`
   font-size: 16px;
   font-family: CoreGothicD_ExtLt;
   text-align: left;
-  line-height: 25px;
   color: #3b3b3b;
+  line-height: 20px;
 `;
-
-const IconContainer = styled.View`
-  padding-left: 10px;
-  padding-right: 20px;
-  /* background-color: green;
-  opacity: 0.5; */
-`;
-
-const Icon = styled.Image`
-  flex: 1;
-  width: 40px;
-  height: 40px;
-`;
-
-const TextContainer = Animatable.createAnimatableComponent(styled.View``);
 
 const Content = Animatable.createAnimatableComponent(styled.View`
+  justify-content: center;
   flex-direction: row;
+  /* background-color: blue;
+  opacity: 0.3; */
 `);
 
 const LoadingContainer = Animatable.createAnimatableComponent(styled.View`
   align-items: center;
+  width: ${constants.width / 9};
+  height: ${constants.width / 9};
 `);
 
 const Weather = () => {
@@ -198,7 +205,16 @@ const Weather = () => {
           useNativeDriver={true}
         >
           <IconContainer>
-            <Icon source={icon} />
+            <Image
+              source={icon}
+              style={{
+                resizeMode: "cover",
+                width: "80%",
+                height: "80%",
+                alignSelf: "center"
+              }}
+            />
+            {/* <Icon source={icon} /> */}
             {/* <LottieView
               ref={animationIcon}
               source={icon}
@@ -219,19 +235,19 @@ const Weather = () => {
       ) : (
         <Content animation="flash" easing="ease-in" useNativeDriver={true}>
           <LoadingContainer>
-            <Text>위치를 읽어들이는 중 ... </Text>
+            {/* <Text>위치를 읽어들이는 중 ... </Text> */}
             {/* <Icon source={icon} /> */}
-            {/* <LottieView
-            ref={animationIcon}
-            source={WEATHER.Loading}
-            autoPlay={true}
-            loop={true}
-            speed={4}
-            style={{
-              width: 300,
-              height: 50
-            }}
-          /> */}
+            <LottieView
+              ref={animationIcon}
+              source={WEATHER.Loading}
+              autoPlay={true}
+              loop={true}
+              speed={4}
+              style={{
+                width: 300,
+                height: 50
+              }}
+            />
           </LoadingContainer>
         </Content>
       )}

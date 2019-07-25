@@ -16,7 +16,6 @@ import * as Location from "expo-location";
 import Loader from "../../components/Loader";
 
 import { withNavigation } from "react-navigation";
-
 import gql from "graphql-tag";
 import { useQuery } from "react-apollo-hooks";
 
@@ -56,7 +55,7 @@ const MapContainer = styled.View({
 
 const ContentContainer = styled.View`
   position: absolute;
-  flex: 0.32;
+  flex: 0.3;
   justify-content: flex-end;
   bottom: 14;
   /* background-color: red;
@@ -152,7 +151,7 @@ const MapScreen = ({ navigation }) => {
 
     const { status } = await Permissions.askAsync(Permissions.LOCATION);
     if (status !== "granted") {
-      setErrorMessage("지도 기능 권한을 승인하지 않으면 사용 할 수 없다.");
+      setErrorMessage("지도 기능 권한을 승인하지 않으면 사용 할 수 없습니다.");
       Alert.alert(errorMessage);
     }
 
@@ -194,9 +193,9 @@ const MapScreen = ({ navigation }) => {
     if (data) {
       if (Array.isArray(data) === true) {
         tempData = data.map(profile => ({
-          title: profile.username,
-          subtitle: profile.bio,
-          thumbnail: profile.avatar
+          username: profile.username,
+          bio: profile.bio,
+          avatar: profile.avatar
         }));
       }
     }

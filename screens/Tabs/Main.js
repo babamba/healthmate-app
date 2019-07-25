@@ -84,9 +84,11 @@ export default () => {
     flex: 1;
     width: ${constants.width};
     padding: 15px;
+    flex-direction: row;
   `;
 
   const SubTitle = styled.Text`
+    flex: 1;
     color: black;
     text-align: left;
     font-weight: 100;
@@ -104,6 +106,12 @@ export default () => {
     flex-direction: row;
     flex-wrap: wrap;
   `;
+  const Divider = styled.View`
+    flex: 2.5;
+    height: 1px;
+    border: 1px solid lightgray;
+    margin-top: 10px;
+  `;
 
   // const client = useApolloClient();
   // let cacheData = client.cache.readQuery({
@@ -119,6 +127,7 @@ export default () => {
     >
       <View>
         <MainTitle title={"Main"} fontSize={52} isMain={true} />
+
         {/* <MainTitleArea>
           
           <MainTitle>메인</MainTitle>
@@ -153,7 +162,7 @@ export default () => {
 
           <Container>
             <SubTitleArea>
-              <SubTitle>7월 추천 컨텐츠</SubTitle>
+              <SubTitle>7월 추천</SubTitle>
             </SubTitleArea>
 
             <ScrollView>

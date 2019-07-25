@@ -70,6 +70,25 @@ const stackFactory = (initialRoute, customConfig) =>
 
 export default createBottomTabNavigator(
   {
+    Map: {
+      screen: stackFactory(Map, {
+        header: null,
+        headerTitleStyle: {
+          fontFamily: "NotoSansKR_Light"
+        }
+      }),
+      navigationOptions: {
+        // tabBarOnPress: ({ navigation }) =>
+        //   navigation.navigate("PhotoNavigation"),
+        tabBarIcon: ({ focused }) => (
+          <NavIcon
+            focused={focused}
+            size={32}
+            name={Platform.OS === "ios" ? "ios-map" : "md-map"}
+          />
+        )
+      }
+    },
     Plan: {
       screen: stackFactory(Plan, {
         //headerRight: <MessagesLink />
@@ -111,25 +130,6 @@ export default createBottomTabNavigator(
           <NavIcon
             focused={focused}
             name={Platform.OS === "ios" ? "ios-paper-plane" : "md-paper-plane"}
-          />
-        )
-      }
-    },
-    Map: {
-      screen: stackFactory(Map, {
-        header: null,
-        headerTitleStyle: {
-          fontFamily: "NotoSansKR_Light"
-        }
-      }),
-      navigationOptions: {
-        // tabBarOnPress: ({ navigation }) =>
-        //   navigation.navigate("PhotoNavigation"),
-        tabBarIcon: ({ focused }) => (
-          <NavIcon
-            focused={focused}
-            size={32}
-            name={Platform.OS === "ios" ? "ios-map" : "md-map"}
           />
         )
       }

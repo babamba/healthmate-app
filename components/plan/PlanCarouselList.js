@@ -144,9 +144,8 @@ const styles = StyleSheet.create({
   item: {
     width: screenWidth - 100,
     height: screenWidth + 60,
-    shadowColor: "#000",
-    shadowColor: "#000",
 
+    shadowColor: "#000",
     shadowOpacity: 0.25,
     shadowOffset: { width: 0, height: 5 },
     shadowRadius: 6,

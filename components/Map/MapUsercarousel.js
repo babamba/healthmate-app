@@ -9,11 +9,17 @@ import {
   Text,
   Image
 } from "react-native";
+import * as Animatable from "react-native-animatable";
+import { BlurView } from "expo-blur";
+import constants from "../../constants";
+import { red } from "ansi-colors";
 
-const { width: screenWidth } = Dimensions.get("window");
+// const { width: screenWidth } = Dimensions.get("window");
+
+const carouselWidth = constants.width / 1.36;
+const carouselHeight = constants.width / 2.4;
 
 const MapUserCarousel = props => {
-  //console.log(props);
   const carouselRef = useRef(null);
   const { onSnapUser } = props;
   //   const goForward = () => {
@@ -23,33 +29,54 @@ const MapUserCarousel = props => {
   const _renderItem = ({ item, index }, parallaxProps) => {
     //console.log("item thumbnail", item.thumbnail);
     return (
-      <TouchableOpacity
-        activeOpacity={0.8}
-        onPress={() => {
-          alert(`You've clicked '${item.subtitle}'`);
-        }}
+      <Animatable.View
+        animation="fadeInUp"
+        easing="ease-in-out"
+        delay={50 * (index * 3)}
+        useNativeDriver={true}
       >
+        {/* <TouchableOpacity
+          activeOpacity={0.8}
+          // onPress={() => {
+          //   alert(`You've clicked '${item.subtitle}'`);
+          // }}
+        > */}
         <View style={styles.item}>
-          <Text style={styles.title} numberOfLines={2}>
-            {item.subtitle}
-          </Text>
-          {/* <ParallaxImage
+          <BlurView tint="light" intensity={80} style={styles.textContainer}>
+            <View style={styles.rightTextRow}>
+              <Text style={styles.username} numberOfLines={2}>
+                {item.username}
+              </Text>
+              <Text style={styles.bio} numberOfLines={2}>
+                {item.bio}
+              </Text>
+            </View>
+          </BlurView>
+        </View>
+        <View style={styles.imageContainer}>
+          <Image
+            source={{ uri: item.avatar }}
+            //   containerStyle={styles.imageContainer}
+            style={styles.textContainer}
+            //   {...parallaxProps}
+          />
+        </View>
+
+        {/* <View style={styles.item}>
+            <Text style={styles.title} numberOfLines={2}>
+              {item.subtitle}
+            </Text>
+            <ParallaxImage
             source={{ uri: item.thumbnail }}
             containerStyle={styles.imageContainer}
             style={styles.image}
             parallaxFactor={0.4}
             fadeDuration={300}
             {...parallaxProps}
-          /> */}
-
-          <Image
-            source={{ uri: item.thumbnail }}
-            //   containerStyle={styles.imageContainer}
-            style={styles.image}
-            //   {...parallaxProps}
           />
-        </View>
-      </TouchableOpacity>
+          </View> */}
+        {/* </TouchableOpacity> */}
+      </Animatable.View>
     );
   };
 
@@ -60,9 +87,9 @@ const MapUserCarousel = props => {
       </TouchableOpacity> */}
       <Carousel
         ref={carouselRef}
-        sliderWidth={screenWidth}
-        sliderHeight={screenWidth}
-        itemWidth={screenWidth - 180}
+        sliderWidth={constants.width}
+        sliderHeight={constants.width}
+        itemWidth={carouselWidth}
         data={props.data}
         renderItem={data => _renderItem(data)}
         hasParallaxImages={true}
@@ -75,20 +102,55 @@ const MapUserCarousel = props => {
 export default MapUserCarousel;
 
 const styles = StyleSheet.create({
-  container: {},
+  // container: {
+  //   flex: 1,
+  //   justifyContent: "center"
+  // },
   item: {
-    width: screenWidth - 180,
-    height: screenWidth - 180
+    width: carouselWidth,
+    height: carouselHeight, //155
+
+    shadowColor: "#000",
+    shadowOpacity: 0.35,
+    shadowOffset: { width: 0, height: 5 },
+    shadowRadius: 6,
+
+    elevation: 4,
+    marginBottom: 20,
+    paddingTop: 20
+    // backgroundColor: "red",
+    // opacity: 0.2
   },
   imageContainer: {
-    flex: 1,
-    //     marginBottom: Platform.select({ ios: 0, android: 1 }), // Prevent a random Android rendering issue
-    backgroundColor: "white"
+    position: "absolute",
+    width: constants.width / 4,
+    height: constants.width / 4,
+    left: 20
   },
   image: {
-    ...StyleSheet.absoluteFillObject,
+    flex: 1,
     resizeMode: "cover",
-    borderRadius: 8,
     marginBottom: Platform.select({ ios: 0, android: 1 }) // Prevent a random Android rendering issue
+  },
+
+  textContainer: {
+    flex: 1,
+    borderRadius: 8,
+    paddingTop: 10
+  },
+  rightTextRow: {
+    width: carouselWidth - constants.width / 4 + 60,
+    paddingLeft: constants.width / 4 + 30
+  },
+  username: {
+    fontFamily: "CoreGothicD_ExtLt",
+    fontSize: 22
+    //paddingLeft: constants.width / 4 + 30
+  },
+  bio: {
+    fontFamily: "CoreGothicD_Thin",
+    fontSize: 16,
+    //paddingLeft: constants.width / 4 + 30,
+    paddingTop: 5
   }
 });

@@ -11,19 +11,23 @@ import TouchableScale from "react-native-touchable-scale";
 //   padding-right: 20px;
 // `;
 
+const Container = styled.View``;
+
 export default withNavigation(({ navigation, size }) => (
-  <TouchableScale
-    onPress={() => navigation.navigate("PlanNavigation")}
-    style={{ color: "#3b3b3b" }}
-    activeScale={0.85}
-  >
-    <NavIcon
-      name={
-        Platform.OS === "ios"
-          ? "ios-add-circle-outline"
-          : "md-add-circle-outline"
-      }
-      size={size}
-    />
-  </TouchableScale>
+  <Container>
+    <TouchableScale
+      onPress={() => navigation.navigate("PlanNavigation")}
+      style={{ color: "#3b3b3b" }}
+      activeScale={0.85}
+    >
+      <NavIcon
+        name={
+          Platform.OS === "ios"
+            ? "ios-add-circle-outline"
+            : "md-add-circle-outline"
+        }
+        size={size}
+      />
+    </TouchableScale>
+  </Container>
 ));

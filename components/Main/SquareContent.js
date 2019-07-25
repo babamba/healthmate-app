@@ -26,7 +26,7 @@ const TextContainer = styled.View`
 `;
 
 const Image = styled.Image`
-  width: ${constants.width / 2.3};
+  width: ${constants.width / 2.35};
   height: ${constants.height / 5};
   border-radius: 15;
 `;
@@ -80,9 +80,9 @@ const SquareContent = ({ navigation, uri, id, username, intro, title }) => (
         <ContentTItle>{title}</ContentTItle>
         <Introduction>{intro}</Introduction>
       </Column>
-      <Row>
+      {/* <Row>
         <UserName>{username}</UserName>
-      </Row>
+      </Row> */}
     </TextContainer>
   </Conatiner>
 );
