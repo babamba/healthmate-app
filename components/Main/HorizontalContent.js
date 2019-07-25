@@ -3,7 +3,7 @@ import { View, TouchableOpacity, Alert, Platform } from "react-native";
 import { withNavigation } from "react-navigation";
 import PropTypes from "prop-types";
 import styled from "styled-components";
-import constants from "../constants";
+import constants from "../../constants";
 
 const testAlert = id => {
   Alert.alert("id : ", id);
@@ -18,14 +18,17 @@ const Conatiner = styled.View`
   shadow-offset: 0px 0px; */
 `;
 
+const round_value = constants.width / 5;
+
 const Image = styled.Image`
-  width: ${constants.width / 2.5};
-  height: ${constants.height / 5};
-  border-radius: 15;
+  width: ${round_value};
+  height: ${round_value};
+  border-radius: ${Math.round(round_value / 2)};
 `;
 const TextContainer = styled.View`
   flex: 1;
   margin-top: 10px;
+  align-items: center;
 `;
 
 const UserName = styled.Text`
@@ -45,6 +48,7 @@ const Introduction = styled.Text`
 `;
 
 const HorizontalUser = ({ navigation, username, avatar, id }) => {
+  // console.log("round_value : ", round_value);
   return (
     <Conatiner>
       {/* <TouchableOpacity onPress={() => navigation.navigate("Detail", { id })}> */}

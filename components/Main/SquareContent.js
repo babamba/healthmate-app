@@ -3,7 +3,7 @@ import { View, TouchableOpacity, Alert, Platform } from "react-native";
 import { withNavigation } from "react-navigation";
 import PropTypes from "prop-types";
 import styled from "styled-components";
-import constants from "../constants";
+import constants from "../../constants";
 
 const testAlert = id => {
   Alert.alert("id : ", id);

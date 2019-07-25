@@ -3,7 +3,7 @@ import gql from "graphql-tag";
 import { useQuery } from "react-apollo-hooks";
 import styled from "styled-components";
 import { ScrollView, RefreshControl } from "react-native";
-import RoomList from "../../components/chat/RoomList";
+import RoomList from "../../components/Chat/RoomList";
 import Loader from "../../components/Loader";
 import constants from "../../constants";
 import { SafeAreaView } from "react-navigation";

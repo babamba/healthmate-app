@@ -15,6 +15,7 @@ import {
 import TouchableScale from "react-native-touchable-scale";
 import { withNavigation } from "react-navigation";
 import { BlurView } from "expo-blur";
+import * as Animatable from "react-native-animatable";
 
 const { width: screenWidth } = Dimensions.get("window");
 const entryBorderRadius = 8;
@@ -41,16 +42,22 @@ const MyCarousel = props => {
   const _renderItem = ({ item, index }, parallaxProps) => {
     //console.log("item thumbnail", item.thumbnail);
     return (
-      <TouchableScale
-        activeScale={0.98}
-        tension={80}
-        friction={2}
-        onPress={() => {
-          navigation.navigate("PlanDetail", { planId: item.id });
-        }}
+      <Animatable.View
+        animation="fadeInUp"
+        easing="ease-in-out"
+        delay={50 * (index * 3)}
+        useNativeDriver={true}
       >
-        <View style={styles.item}>
-          {/* <ParallaxImage
+        <TouchableScale
+          activeScale={0.98}
+          tension={80}
+          friction={2}
+          onPress={() => {
+            navigation.navigate("PlanDetail", { planId: item.id });
+          }}
+        >
+          <View style={styles.item}>
+            {/* <ParallaxImage
             source={{ uri: item.thumbnail }}
             containerStyle={styles.imageContainer}
             style={styles.image}
@@ -58,34 +65,35 @@ const MyCarousel = props => {
             fadeDuration={300}
             {...parallaxProps}
           /> */}
-          <View style={styles.imageContainer}>
-            <Image
-              source={{
-                uri: item.planImage ? item.planImage : item.exerciseType.image
-              }}
-              //   containerStyle={styles.imageContainer}
-              style={styles.image}
-              //   {...parallaxProps}
-            />
-            <View style={styles.overlay} />
-            <BlurView
-              tint="default"
-              intensity={100}
-              style={[
-                styles.textContainer,
-                {
-                  borderRadius: 8,
-                  borderTopLeftRadius: 0,
-                  borderTopRightRadius: 0
-                }
-              ]}
-            >
-              <Text style={styles.title}>{item.planTitle}</Text>
-              <Text style={styles.title}>{item.exerciseTime}</Text>
-            </BlurView>
+            <View style={styles.imageContainer}>
+              <Image
+                source={{
+                  uri: item.planImage ? item.planImage : item.exerciseType.image
+                }}
+                //   containerStyle={styles.imageContainer}
+                style={styles.image}
+                //   {...parallaxProps}
+              />
+              <View style={styles.overlay} />
+              <BlurView
+                tint="default"
+                intensity={100}
+                style={[
+                  styles.textContainer,
+                  {
+                    borderRadius: 8,
+                    borderTopLeftRadius: 0,
+                    borderTopRightRadius: 0
+                  }
+                ]}
+              >
+                <Text style={styles.title}>{item.planTitle}</Text>
+                <Text style={styles.title}>{item.exerciseTime}</Text>
+              </BlurView>
+            </View>
           </View>
-        </View>
-      </TouchableScale>
+        </TouchableScale>
+      </Animatable.View>
     );
   };
 

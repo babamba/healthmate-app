@@ -21,7 +21,7 @@ import { stackStyles } from "./config";
 import styles from "../styles";
 import UserDetail from "../screens/UserDetail";
 import PlanDetail from "../screens/Plan/PlanDetail";
-import ChatDetail from "../components/chat/ChatDetail";
+import ChatDetail from "../components/Chat/ChatDetail";
 
 const stackFactory = (initialRoute, customConfig) =>
   createStackNavigator(

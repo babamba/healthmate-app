@@ -5,8 +5,8 @@ import gql from "graphql-tag";
 import Loader from "../../components/Loader";
 import { useQuery, useApolloClient } from "react-apollo-hooks";
 import Post from "../../components/Post";
-import HorizontalContent from "../../components/HorizontalContent";
-import SquareContent from "../../components/SquareContent";
+import HorizontalContent from "../../components/Main/HorizontalContent";
+import SquareContent from "../../components/Main/SquareContent";
 
 import { ENTRIES_NEAR, ENTRIES_CONTENT } from "../../EntryData/Entries"; // 더미 데이터
 import constants from "../../constants";

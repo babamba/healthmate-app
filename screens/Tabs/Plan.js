@@ -3,16 +3,16 @@ import gql from "graphql-tag";
 import { useQuery } from "react-apollo-hooks";
 import styled from "styled-components";
 import { ScrollView, RefreshControl } from "react-native";
-import PlanList from "../../components/plan/PlanList";
+import PlanList from "../../components/Plan/PlanList";
 import Loader from "../../components/Loader";
-import AddPlan from "../../components/plan/AddPlan";
+import AddPlan from "../../components/Plan/AddPlan";
 import constants from "../../constants";
-import CarouselItem from "../../components/plan/PlanCarouselList";
+import CarouselItem from "../../components/Plan/PlanCarouselList";
 import { SafeAreaView } from "react-navigation";
 import Weather from "../../components/Weather";
 import MainTitle from "../../components/MainTitle";
 
-import TestButton from "../../components/plan/TestButton";
+import TestButton from "../../components/Plan/TestButton";
 
 export const SEE_PLAN = gql`
   query seePlan {

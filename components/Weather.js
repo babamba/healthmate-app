@@ -13,6 +13,7 @@ import {
 } from "react-native-dotenv";
 
 import LottieView from "lottie-react-native";
+import * as Animatable from "react-native-animatable";
 
 const Container = styled.View`
   flex: 1;
@@ -31,10 +32,6 @@ const Text = styled.Text`
   color: #3b3b3b;
 `;
 
-const Content = styled.View`
-  flex-direction: row;
-`;
-
 const IconContainer = styled.View`
   padding-left: 10px;
   padding-right: 20px;
@@ -48,14 +45,15 @@ const Icon = styled.Image`
   height: 40px;
 `;
 
-const TextContainer = styled.View`
-  /* background-color: red;
-  opacity: 0.5; */
-`;
+const TextContainer = Animatable.createAnimatableComponent(styled.View``);
 
-const LoadingContainer = styled.View`
+const Content = Animatable.createAnimatableComponent(styled.View`
+  flex-direction: row;
+`);
+
+const LoadingContainer = Animatable.createAnimatableComponent(styled.View`
   align-items: center;
-`;
+`);
 
 const Weather = () => {
   const [weatherLoadComplete, setWeatherLoadComplete] = useState(false);
@@ -193,7 +191,12 @@ const Weather = () => {
   return (
     <Container>
       {weatherLoadComplete ? (
-        <Content>
+        <Content
+          animation="fadeIn"
+          easing="ease-in"
+          delay={50}
+          useNativeDriver={true}
+        >
           <IconContainer>
             <Icon source={icon} />
             {/* <LottieView
@@ -214,7 +217,7 @@ const Weather = () => {
           </TextContainer>
         </Content>
       ) : (
-        <Content>
+        <Content animation="flash" easing="ease-in" useNativeDriver={true}>
           <LoadingContainer>
             <Text>위치를 읽어들이는 중 ... </Text>
             {/* <Icon source={icon} /> */}
