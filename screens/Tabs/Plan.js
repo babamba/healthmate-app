@@ -13,6 +13,7 @@ import Weather from "../../components/Weather";
 import MainTitle from "../../components/MainTitle";
 import styles from "../../styles";
 import TestButton from "../../components/Plan/TestButton";
+import * as Animatable from "react-native-animatable";
 
 export const SEE_PLAN = gql`
   query seePlan {
@@ -98,13 +99,13 @@ const RowRight = styled.View`
   justify-content: flex-end;
 `;
 
-const AddButton = styled.View`
+const AddButton = Animatable.createAnimatableComponent(styled.View`
   justify-content: center;
   /* padding-top: 5px; */
   padding-right: 10px;
   /* background-color: green;
   opacity: 0.4; */
-`;
+`);
 
 export default ({ navigation }) => {
   const { loading, data, refetch } = useQuery(SEE_PLAN, {
@@ -163,10 +164,20 @@ export default ({ navigation }) => {
             <Weather />
           </RowLeft>
           <RowRight>
-            <AddButton>
+            <AddButton
+              animation="fadeInUp"
+              easing="ease-in-out"
+              delay={100}
+              useNativeDriver={true}
+            >
               <AddPlan size={40} />
             </AddButton>
-            <AddButton>
+            <AddButton
+              animation="fadeInUp"
+              easing="ease-in-out"
+              delay={200}
+              useNativeDriver={true}
+            >
               <TestButton size={40} />
             </AddButton>
           </RowRight>

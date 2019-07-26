@@ -3,7 +3,8 @@ import { TouchableOpacity, Alert } from "react-native";
 import { withNavigation } from "react-navigation";
 import { Marker } from "react-native-maps";
 
-const Markers = ({ marker, press }) => {
+const Markers = ({ marker }) => {
+  // const Markers = ({ marker, press }) => {
   //console.log("marker =>", marker);
   return (
     <Marker
@@ -15,7 +16,7 @@ const Markers = ({ marker, press }) => {
       }}
       pinColor={"red"}
       description={marker.bio}
-      onPress={e => press(e)}
+      // onPress={e => press(e, marker)}
     />
   );
 };

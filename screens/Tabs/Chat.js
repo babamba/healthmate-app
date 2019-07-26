@@ -112,6 +112,10 @@ const Chat = () => {
     }
   }, [data, loading, error]);
 
+  useEffect(() => {
+    console.log("Did Mount Chat Screen");
+  }, []);
+
   return (
     <SafeAreaView
       style={constants.commonStyle.safeArea}

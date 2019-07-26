@@ -12,16 +12,17 @@ import {
 import * as Animatable from "react-native-animatable";
 import { BlurView } from "expo-blur";
 import constants from "../../constants";
-import { red } from "ansi-colors";
+import MoreIcon from "../../components/Map/MoreIcon";
 
 // const { width: screenWidth } = Dimensions.get("window");
 
 const carouselWidth = constants.width / 1.36;
 const carouselHeight = constants.width / 2.4;
+const iconContainerWidth = constants.width / 10;
 
 const MapUserCarousel = props => {
   const carouselRef = useRef(null);
-  const { onSnapUser } = props;
+  const { onSnapUser, press } = props;
   //   const goForward = () => {
   //     carouselRef.current.snapToNext();
   //   };
@@ -60,6 +61,10 @@ const MapUserCarousel = props => {
             style={styles.textContainer}
             //   {...parallaxProps}
           />
+        </View>
+        <View style={styles.iconContainer}>
+          <TouchableOpacity />
+          <MoreIcon size={26} press={press} item={item} />
         </View>
 
         {/* <View style={styles.item}>
@@ -125,7 +130,14 @@ const styles = StyleSheet.create({
     position: "absolute",
     width: constants.width / 4,
     height: constants.width / 4,
-    left: 20
+    left: 20,
+
+    shadowColor: "#000",
+    shadowOpacity: 0.35,
+    shadowOffset: { width: 0, height: 5 },
+    shadowRadius: 6,
+
+    elevation: 4
   },
   image: {
     flex: 1,
@@ -137,6 +149,27 @@ const styles = StyleSheet.create({
     flex: 1,
     borderRadius: 8,
     paddingTop: 10
+  },
+  iconContainer: {
+    position: "absolute",
+    width: iconContainerWidth,
+    height: iconContainerWidth,
+    right: 0,
+
+    borderColor: "#d6d7da",
+    borderWidth: 0.5,
+    borderRadius: Math.round(iconContainerWidth),
+
+    alignItems: "center",
+
+    backgroundColor: "white",
+
+    shadowColor: "#000",
+    shadowOpacity: 0.35,
+    shadowOffset: { width: 0, height: 5 },
+    shadowRadius: 6,
+
+    elevation: 4
   },
   rightTextRow: {
     width: carouselWidth - constants.width / 4 + 60,

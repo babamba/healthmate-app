@@ -1,12 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
-import {
-  StyleSheet,
-  Alert,
-  Dimensions,
-  TouchableOpacity,
-  ActionSheetIOS
-} from "react-native";
+import { StyleSheet, Alert, Dimensions, ActivityIndicator } from "react-native";
 import MapView, {
   AnimatedRegion,
   Animated as AnimatedMap
@@ -27,6 +21,7 @@ import Markers from "../../components/Map/Markers";
 import constants from "../../constants";
 import { SafeAreaView } from "react-navigation";
 import MainTitle from "../../components/MainTitle";
+import { duration } from "moment";
 
 export const NEAR_USER = gql`
   query getNearUser {
@@ -88,6 +83,7 @@ const MapScreen = ({ navigation }) => {
   const [locationStatus, setLocationStatus] = useState(false);
 
   const [nearUser, setNearUser] = useState([]);
+  const [mapReady, setMapReady] = useState(false);
 
   const [initialRegion, setRegion] = useState({
     coords: new AnimatedRegion({
@@ -175,6 +171,9 @@ const MapScreen = ({ navigation }) => {
       ...location
     };
 
+    console.log("initialRegion", initialRegion.coords);
+    // initialRegion.timing({ latitude, longitude, duration: 1000 }).start();
+
     // map.animateToRegion(newLocationObj, 1000 * 2);
     // initialRegion.coords
     //   .timing({ latitude, longitude, duration: 1000 })
@@ -193,6 +192,7 @@ const MapScreen = ({ navigation }) => {
     if (data) {
       if (Array.isArray(data) === true) {
         tempData = data.map(profile => ({
+          id: profile.id,
           username: profile.username,
           bio: profile.bio,
           avatar: profile.avatar
@@ -204,6 +204,7 @@ const MapScreen = ({ navigation }) => {
   }
 
   const onRegionChange = region => {
+    // console.log(region);
     // setRegion({ coords: { latitude: region.latitude } });
     // coords: {
     //   accuracy: 5,
@@ -218,7 +219,7 @@ const MapScreen = ({ navigation }) => {
     // },
   };
 
-  const showActionSheet = () => {
+  const showActionSheet = data => {
     // ActionSheetIOS.showActionSheetWithOptions(
     //   {
     //     options: ["취소", "프로필 보기", "메시지 보내기"],
@@ -235,9 +236,6 @@ const MapScreen = ({ navigation }) => {
     //     }
     //   }
     // );
-    const options = ["Delete", "Save", "Cancel"];
-    const destructiveButtonIndex = 0;
-    const cancelButtonIndex = 2;
 
     actionSheet(
       {
@@ -249,7 +247,7 @@ const MapScreen = ({ navigation }) => {
         if (buttonIndex === 1) {
           /* destructive action */
           console.log("프로필 네비게이션");
-          navigation.navigate("UserDetail", { username: user.id });
+          navigation.navigate("UserDetail", { id: data.id });
         } else if (buttonIndex === 2) {
           console.log("채팅 디테일 네비게이션");
         }
@@ -258,24 +256,44 @@ const MapScreen = ({ navigation }) => {
   };
 
   const onRegionChangeComplete = region => {
-    console.log(" region : ", region);
+    console.log("onRegionChangeComplete !");
+    //console.log(" region : ", region);
   };
 
-  const handleMarkerPress = event => {
-    console.log("press marker!");
-    const markerID = event.nativeEvent;
-    console.log(markerID);
+  const handleMorePress = data => {
+    console.log("press more button! ", data);
+    // const markerID = event.nativeEvent;
+    // console.log(event);
+    // console.log(markerID);
 
-    let moveRegion = {
-      coords: {
-        latitude: markerID.coordinate.latitude,
-        longitude: markerID.coordinate.longitude
-      }
-    };
+    // let moveRegion = {
+    //   coords: {
+    //     latitude: markerID.coordinate.latitude,
+    //     longitude: markerID.coordinate.longitude
+    //   }
+    // };
 
-    locationChanged(moveRegion);
-    showActionSheet();
+    // locationChanged(moveRegion);
+    showActionSheet(data);
   };
+
+  // const handleMarkerPress = (event, marker) => {
+  //   console.log("press marker!");
+  //   const markerID = event.nativeEvent;
+  //   console.log(event);
+  //   console.log(markerID);
+  //   console.log("press marker data ? ", marker);
+
+  //   let moveRegion = {
+  //     coords: {
+  //       latitude: markerID.coordinate.latitude,
+  //       longitude: markerID.coordinate.longitude
+  //     }
+  //   };
+
+  //   locationChanged(moveRegion);
+  //   showActionSheet(marker);
+  // };
 
   const onSnapUser = async index => {
     console.log("onSnapUser");
@@ -290,6 +308,11 @@ const MapScreen = ({ navigation }) => {
     locationChanged(moveRegion);
   };
 
+  const onMapReady = () => {
+    console.log("onMapReady !");
+    setMapReady(true);
+  };
+
   useEffect(() => {
     ask();
   }, []);
@@ -300,7 +323,7 @@ const MapScreen = ({ navigation }) => {
 
   useEffect(() => {
     const onCompleted = data => {
-      console.log("onCompleted data : ", data);
+      //console.log("onCompleted data : ", data);
       setNearUser(data.getNearUser);
     };
     const onError = error => {
@@ -344,22 +367,27 @@ const MapScreen = ({ navigation }) => {
                 followsUserLocation={true}
                 zoomEnabled={true}
                 moveOnMarkerPress={true}
+                onMapReady={() => onMapReady()}
               >
-                {nearUser.length > 0 &&
-                  nearUser.map(marker => (
-                    <Markers
-                      marker={marker}
-                      key={marker.id}
-                      press={handleMarkerPress}
-                    />
-                  ))}
+                {mapReady &&
+                  nearUser.length > 0 &&
+                  nearUser.map(marker => {
+                    //console.log("nearUser marker : ", marker);
+                    return <Markers marker={marker} key={marker.id} />;
+                  })}
               </AnimatedMap>
               {/* <Icon name="add" style={styles.icon} size={20} /> */}
               <ContentContainer>
-                <CarouselItem
-                  data={rewriteProfile(nearUser)}
-                  onSnapUser={onSnapUser}
-                />
+                {mapReady ? (
+                  <CarouselItem
+                    data={rewriteProfile(nearUser)}
+                    onSnapUser={onSnapUser}
+                    // press={(event, marker) => handleMarkerPress(event, marker)}
+                    press={data => handleMorePress(data)}
+                  />
+                ) : (
+                  <ActivityIndicator />
+                )}
               </ContentContainer>
             </MapContainer>
           )
