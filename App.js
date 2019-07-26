@@ -1,6 +1,13 @@
 import React, { useState, useEffect, useRef } from "react";
 import { View } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import {
+  Ionicons,
+  AntDesign,
+  Entypo,
+  FontAwesome,
+  MaterialIcons,
+  MaterialCommunityIcons
+} from "@expo/vector-icons";
 import { AppLoading } from "expo";
 import { Asset } from "expo-asset";
 import * as Font from "expo-font";
@@ -69,7 +76,14 @@ export default function App() {
     try {
       console.log("preLoad start @@@");
       await Font.loadAsync({
+        //AntDesign, Entypo, FontAwesome, MaterialIcons , MaterialCommunityIcons
         ...Ionicons.font,
+        ...AntDesign.font,
+
+        ...FontAwesome.font,
+        ...MaterialIcons.font,
+        ...MaterialCommunityIcons.font,
+        ...Entypo.font,
         NotoSansKR_Thin: require("./assets/Fonts/NotoSansKR_Thin.ttf"),
         NotoSansKR_Black: require("./assets/Fonts/NotoSansKR_Black.ttf"),
         NotoSansKR_Bold: require("./assets/Fonts/NotoSansKR_Bold.ttf"),

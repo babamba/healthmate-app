@@ -21,7 +21,9 @@ import Markers from "../../components/Map/Markers";
 import constants from "../../constants";
 import { SafeAreaView } from "react-navigation";
 import MainTitle from "../../components/MainTitle";
-import { duration } from "moment";
+import MyLocation from "../../components/Map/MyLocation";
+import ZoomIn from "../../components/Map/ZoomIn";
+import ZoomOut from "../../components/Map/ZoomOut";
 
 export const NEAR_USER = gql`
   query getNearUser {
@@ -57,10 +59,22 @@ const ContentContainer = styled.View`
   opacity: 0.4; */
 `;
 
+const IconContainer = styled.View`
+  position: absolute;
+  top: 20;
+  right: 20;
+  flex-direction: row;
+`;
+
+const IconDivide = styled.View`
+  padding-right: 6px;
+`;
+
 const Icon = styled.View``;
 
 const MapScreen = ({ navigation }) => {
   // 1KM 내 유저 검색
+  // let tempState;
   const actionSheet = navigation.getScreenProps("actionSheet");
 
   const mapRef = useRef();
@@ -76,14 +90,21 @@ const MapScreen = ({ navigation }) => {
   };
 
   const ASPECT_RATIO = width / height;
-  const LATITUDE_DELTA = 0.02;
-  const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
+  // const LATITUDE_DELTA = ;
+  // const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
+
+  const [LATITUDE_DELTA, SET_LATITUDE_DELTA] = useState(0.03);
+  const [LONGITUDE_DELTA, SET_LONGITUDE_DELTA] = useState(
+    LATITUDE_DELTA * ASPECT_RATIO
+  );
 
   const [errorMessage, setErrorMessage] = useState("");
   const [locationStatus, setLocationStatus] = useState(false);
 
   const [nearUser, setNearUser] = useState([]);
   const [mapReady, setMapReady] = useState(false);
+
+  const [currentRegion, setCurrentRegion] = useState();
 
   const [initialRegion, setRegion] = useState({
     coords: new AnimatedRegion({
@@ -99,6 +120,21 @@ const MapScreen = ({ navigation }) => {
     }),
     timestamp: 1562826219681.7188
   });
+
+  // const [initialRegion, setRegion] = useState({
+  //   coords: new AnimatedRegion({
+  //     accuracy: 5,
+  //     altitude: 0,
+  //     altitudeAccuracy: -1,
+  //     heading: -1,
+  //     latitude: 17.785834,
+  //     longitude: 32.406417,
+  //     latitudeDelta: LATITUDE_DELTA,
+  //     longitudeDelta: LONGITUDE_DELTA,
+  //     speed: -1
+  //   }),
+  //   timestamp: 1562826219681.7188
+  // });
 
   // const [markers, setMarker] = useState([
   //   {
@@ -154,37 +190,108 @@ const MapScreen = ({ navigation }) => {
     let location = await Location.getCurrentPositionAsync({});
     await Location.watchPositionAsync(
       GEOLOCATION_OPTIONS,
-      locationChanged(location)
+      locationChanged(location),
+      setCurrentRegion(location)
     );
   };
 
   const locationChanged = location => {
     const {
-      coords: { latitude, longitude }
+      coords: { latitude: changeLat, longitude: changeLon }
     } = location;
-    //console.log("param location", location);
+    // let tempState = { ...initialRegion };
 
-    location.coords.longitudeDelta = LATITUDE_DELTA;
-    location.coords.latitudeDelta = LONGITUDE_DELTA;
+    // tempState = {
+    //   ...tempState,
+    //   coords: new AnimatedRegion({
+    //     latitude: changeLat,
+    //     longitude: changeLon,
+    //     longitudeDelta: LONGITUDE_DELTA,
+    //     latitudeDelta: LATITUDE_DELTA
+    //   })
+    // };
+    // console.log("ready : ", initialRegion);
+    animateRegion(changeLat, changeLon);
+    console.log("ready : ", initialRegion);
+    // let newLocationObj = {
+    //   ...location
+    // };
 
-    let newLocationObj = {
-      ...location
-    };
+    //console.log("location", location);
+    //console.log("newLocationObj", tempState);
 
-    console.log("initialRegion", initialRegion.coords);
-    // initialRegion.timing({ latitude, longitude, duration: 1000 }).start();
+    // console.log("initialRegion", initialRegion.coords.timing);
 
     // map.animateToRegion(newLocationObj, 1000 * 2);
     // initialRegion.coords
     //   .timing({ latitude, longitude, duration: 1000 })
     //   .start();
-    setRegion(newLocationObj);
 
-    console.log(newLocationObj);
+    //setRegion(tempState)
+
+    //setRegion({ coords: new AnimatedRegion({ ...location.coords }) })
+    // initialRegion.coords.timing().start();
+    // animateRegion(latitude, longitude).then(
+    //   setRegion({ coords: new AnimatedRegion({ ...location.coords }) })
+    // );
+
+    // console.log(newLocationObj);
+    //console.log("initialRegion", initialRegion.coords.timing);
 
     // setRegion(prevState => {
     //   return { ...prevState, coords: { latitude, longitude } };
     // });
+  };
+
+  const animateRegion = (latitude, longitude) => {
+    console.log(latitude, longitude);
+    initialRegion.coords.stopAnimation();
+    initialRegion.coords
+      .timing({
+        latitude,
+        longitude,
+        latitudeDelta: LATITUDE_DELTA,
+        longitudeDelta: LONGITUDE_DELTA,
+        duration: 300
+      })
+      .start();
+  };
+
+  const animateZoom = async (latitude, longitude, isZoomIn) => {
+    console.log(latitude, longitude);
+    initialRegion.coords.stopAnimation();
+    console.log(LATITUDE_DELTA);
+    if (isZoomIn) {
+      if (LATITUDE_DELTA > 0.014) {
+        initialRegion.coords
+          .timing({
+            latitude,
+            longitude,
+            latitudeDelta: LATITUDE_DELTA - 0.005,
+            longitudeDelta: LONGITUDE_DELTA - 0.005,
+            duration: 300
+          })
+          .start();
+
+        await SET_LATITUDE_DELTA(LATITUDE_DELTA - 0.005);
+        await SET_LONGITUDE_DELTA(LONGITUDE_DELTA - 0.005);
+      }
+    } else {
+      if (LATITUDE_DELTA < 0.059) {
+        initialRegion.coords
+          .timing({
+            latitude,
+            longitude,
+            latitudeDelta: LATITUDE_DELTA + 0.005,
+            longitudeDelta: LONGITUDE_DELTA + 0.005,
+            duration: 300
+          })
+          .start();
+
+        await SET_LATITUDE_DELTA(LATITUDE_DELTA + 0.005);
+        await SET_LONGITUDE_DELTA(LONGITUDE_DELTA + 0.005);
+      }
+    }
   };
 
   function rewriteProfile(data) {
@@ -257,6 +364,7 @@ const MapScreen = ({ navigation }) => {
 
   const onRegionChangeComplete = region => {
     console.log("onRegionChangeComplete !");
+    //setRegion(tempState);
     //console.log(" region : ", region);
   };
 
@@ -295,6 +403,49 @@ const MapScreen = ({ navigation }) => {
   //   showActionSheet(marker);
   // };
 
+  const HandleMyLocation = async () => {
+    console.log("currentRegion , ", currentRegion);
+    const {
+      coords: { latitude, longitude }
+    } = currentRegion;
+
+    animateRegion(latitude, longitude);
+  };
+
+  const HandleZoom = async isZoomIn => {
+    console.log("isZoomIn ? ", isZoomIn);
+    const {
+      coords: { latitude, longitude }
+    } = initialRegion;
+
+    // let tempState = {
+    //   ...tempState,
+    //   coords: new AnimatedRegion({
+    //     latitude,
+    //     longitude,
+    //     longitudeDelta: LONGITUDE_DELTA,
+    //     latitudeDelta: LATITUDE_DELTA
+    //   })
+    // };
+
+    //
+    // setRegion(tempState);
+
+    // if (isZoomIn) {
+    //   //console.log("Zoom In : ");
+    //   await SET_LATITUDE_DELTA(LATITUDE_DELTA - 0.02);
+    //   await SET_LONGITUDE_DELTA(LONGITUDE_DELTA - 0.02);
+    // } else {
+    //   //console.log("Zoom Out : ");
+    //   await SET_LATITUDE_DELTA(LATITUDE_DELTA + 0.02);
+    //   await SET_LONGITUDE_DELTA(LONGITUDE_DELTA + 0.02);
+    // }
+
+    // console.log("Handle Zoom : ", LATITUDE_DELTA);
+
+    animateZoom(latitude, longitude, isZoomIn);
+  };
+
   const onSnapUser = async index => {
     console.log("onSnapUser");
 
@@ -319,6 +470,7 @@ const MapScreen = ({ navigation }) => {
 
   useEffect(() => {
     onRegionChange(initialRegion.coords);
+    console.log("change state region");
   }, [initialRegion]);
 
   useEffect(() => {
@@ -360,6 +512,9 @@ const MapScreen = ({ navigation }) => {
                 rotateEnabled={false}
                 region={initialRegion.coords}
                 onRegionChange={region => onRegionChange(region)}
+                minZoomLevel={10}
+                maxZoomLevel={20}
+                zoomTapEnabled={false}
                 onRegionChangeComplete={region =>
                   onRegionChangeComplete(region)
                 }
@@ -368,6 +523,7 @@ const MapScreen = ({ navigation }) => {
                 zoomEnabled={true}
                 moveOnMarkerPress={true}
                 onMapReady={() => onMapReady()}
+                enableZoomControl={true}
               >
                 {mapReady &&
                   nearUser.length > 0 &&
@@ -377,6 +533,17 @@ const MapScreen = ({ navigation }) => {
                   })}
               </AnimatedMap>
               {/* <Icon name="add" style={styles.icon} size={20} /> */}
+              <IconContainer>
+                <IconDivide>
+                  <MyLocation press={HandleMyLocation} size={20} />
+                </IconDivide>
+                <IconDivide>
+                  <ZoomIn press={HandleZoom} size={20} />
+                </IconDivide>
+                <IconDivide>
+                  <ZoomOut press={HandleZoom} size={20} />
+                </IconDivide>
+              </IconContainer>
               <ContentContainer>
                 {mapReady ? (
                   <CarouselItem

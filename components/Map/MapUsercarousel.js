@@ -99,6 +99,13 @@ const MapUserCarousel = props => {
         renderItem={data => _renderItem(data)}
         hasParallaxImages={true}
         onSnapToItem={index => onSnapUser(index)}
+        inactiveSlideOpacity={0.7}
+        activeSlideOpacity={1}
+        activeAnimationType={"spring"}
+        activeAnimationOptions={{
+          friction: 8,
+          tension: 40
+        }}
       />
     </View>
   );
