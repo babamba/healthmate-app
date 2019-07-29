@@ -44,6 +44,7 @@
     "react-native-app-intro-slider": "^3.0.0",
     "react-native-calendars": "^1.203.0",
     "react-native-dotenv": "^0.2.0",
+    "react-native-dropdownalert": "^4.1.0",
     "react-native-gifted-chat": "^0.9.11",
     "react-native-map-clustering": "^1.3.2",
     "react-native-maps": "~0.24.0",

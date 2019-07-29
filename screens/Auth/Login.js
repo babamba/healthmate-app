@@ -16,6 +16,7 @@ import { useLogIn } from "../../AuthContext";
 import NavIcon from "../../components/NavIcon";
 import { SafeAreaView } from "react-navigation";
 import constants from "../../constants";
+import { AlertHelper } from "../../components/DropDown/AlertHelper";
 
 const View = styled.View`
   justify-content: center;
@@ -77,6 +78,7 @@ export default ({ navigation }) => {
         // console.log(dropdown);
 
         logIn(login);
+        AlertHelper.showDropAlert("success", "로그인", "로그인 하셨습니다");
       } else {
         Alert.alert("Wrong email or password!");
       }

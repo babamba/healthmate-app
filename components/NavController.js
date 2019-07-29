@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { useIsLoggedIn, useIsLaunchedApp } from "../AuthContext";
 import { useQuery } from "react-apollo-hooks";
+import { View } from "react-native";
 import gql from "graphql-tag";
 import AuthNavigation from "../navigation/AuthNavigation";
 import MainNavigation from "../navigation/MainNavigation";
@@ -10,6 +11,9 @@ import { RECOMMEND_USER } from "../screens/Tabs/Main";
 import { ME } from "../screens/Tabs/Profile";
 import { SEE_ROOMS } from "../screens/Tabs/Chat";
 import AppIntro from "../screens/Intro/Intro";
+
+import DropdownAlert from "react-native-dropdownalert";
+import { AlertHelper } from "./DropDown/AlertHelper";
 
 export default props => {
   const isLaunched = useIsLaunchedApp();
@@ -50,6 +54,18 @@ export default props => {
     fetchPolicy: "network-only"
   });
 
+  // const alert = () => {
+  //   return (
+  //     <DropdownAlert
+  //       containerStyle={{
+  //         backgroundColor: "#cc3232",
+  //         paddingTop: 50
+  //       }}
+  //       ref={ref => AlertHelper.setDropDown(ref)}
+  //     />
+  //   );
+  // };
+
   useEffect(() => {
     if (isLoggedIn) {
       console.log("log in user ");
@@ -63,10 +79,28 @@ export default props => {
       recom_loading || plan_loading || room_loading || me_loading ? (
         <Loader />
       ) : (
-        <MainNavigation screenProps={actionSheet} />
+        <View style={{ flex: 1 }}>
+          <MainNavigation screenProps={actionSheet} />
+          <DropdownAlert
+            containerStyle={{
+              backgroundColor: "#cc3232"
+            }}
+            ref={ref => AlertHelper.setDropDown(ref)}
+            closeInterval={3000}
+          />
+        </View>
       )
     ) : (
-      <AuthNavigation />
+      <View style={{ flex: 1 }}>
+        <AuthNavigation />
+        <DropdownAlert
+          containerStyle={{
+            backgroundColor: "#cc3232"
+          }}
+          ref={ref => AlertHelper.setDropDown(ref)}
+          closeInterval={3000}
+        />
+      </View>
     )
   ) : (
     <AppIntro />
