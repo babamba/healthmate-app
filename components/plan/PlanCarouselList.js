@@ -144,6 +144,7 @@ const styles = StyleSheet.create({
   item: {
     width: screenWidth - 100,
     height: screenWidth + 60,
+    paddingVertical: 20,
 
     shadowColor: "#000",
     shadowOpacity: 0.25,

@@ -70,6 +70,22 @@ const stackFactory = (initialRoute, customConfig) =>
 
 export default createBottomTabNavigator(
   {
+    Plan: {
+      screen: stackFactory(Plan, {
+        //headerRight: <MessagesLink />
+        //headerRight: <AddPlan />
+        header: null
+        // headerTitle: <NavIcon name="logo-instagram" size={36} />
+      }),
+      navigationOptions: {
+        tabBarIcon: ({ focused }) => (
+          <NavIcon
+            focused={focused}
+            name={Platform.OS === "ios" ? "ios-archive" : "md-home"}
+          />
+        )
+      }
+    },
     Map: {
       screen: stackFactory(Map, {
         header: null,
@@ -85,22 +101,6 @@ export default createBottomTabNavigator(
             focused={focused}
             size={32}
             name={Platform.OS === "ios" ? "ios-map" : "md-map"}
-          />
-        )
-      }
-    },
-    Plan: {
-      screen: stackFactory(Plan, {
-        //headerRight: <MessagesLink />
-        //headerRight: <AddPlan />
-        header: null
-        // headerTitle: <NavIcon name="logo-instagram" size={36} />
-      }),
-      navigationOptions: {
-        tabBarIcon: ({ focused }) => (
-          <NavIcon
-            focused={focused}
-            name={Platform.OS === "ios" ? "ios-archive" : "md-home"}
           />
         )
       }
