@@ -1,4 +1,4 @@
-import React, { useState, useRef, createRef } from "react";
+import React, { useState, useEffect, useRef, createRef } from "react";
 import Carousel, {
   ParallaxImage,
   Pagination
@@ -37,7 +37,7 @@ const MyCarousel = props => {
   const [carouselRef, setCarouselRef] = useState(() => createRef());
   const [activeSlide, setActiveSlide] = useState(SLIDER_1_FIRST_ITEM);
 
-  const { onSnapUser, data, navigation } = props;
+  const { onSnapUser, data, navigation, mountComplete } = props;
 
   const _renderItem = ({ item, index }, parallaxProps) => {
     //console.log("item thumbnail", item.thumbnail);

@@ -1,8 +1,8 @@
-import React, { useState, useRef } from "react";
+import React from "react";
 import gql from "graphql-tag";
 import { useQuery } from "react-apollo-hooks";
 import styled from "styled-components";
-import { ScrollView, RefreshControl, View } from "react-native";
+import { ScrollView, RefreshControl } from "react-native";
 import PlanList from "../../components/Plan/PlanList";
 import Loader from "../../components/Loader";
 import AddPlan from "../../components/Plan/AddPlan";
@@ -12,12 +12,10 @@ import { SafeAreaView } from "react-navigation";
 import Weather from "../../components/Weather";
 import MainTitle from "../../components/MainTitle";
 import styles from "../../styles";
-import ChangeFlipButton from "../../components/Plan/ChangeFlipButton";
-// import TestButton from "../../components/Plan/TestButton";
+import TestButton from "../../components/Plan/TestButton";
 import * as Animatable from "react-native-animatable";
 
-import FlipCard from "react-native-flip-card";
-import Calendar from "../../components/Plan/Calendar";
+import OpenCalendarButton from "../../components/Calendar/OpenCalendarButton";
 
 export const SEE_PLAN = gql`
   query seePlan {
@@ -56,10 +54,35 @@ const Header = styled.View`
   padding-horizontal: 20px;
   flex-direction: row;
   text-align: center;
-  /* background-color: "rgba(52, 52, 52, 0.3)"; */
   /* background-color: green;
   opacity: 0.2; */
   flex: 1;
+`;
+
+const Footer = styled.View`
+  width: ${constants.width};
+  /* background-color: yellow;
+  opacity: 0.2; */
+  flex: 1;
+  /* align-items: center; */
+  flex-direction: row;
+  padding-horizontal: 24px;
+  margin-bottom: 14px;
+`;
+
+const Content = styled.View`
+  width: ${constants.width};
+  flex: 10;
+  /* background-color: blue;
+  opacity: 0.2; */
+  align-items: center;
+  justify-content: center;
+`;
+
+const FilpButtonArea = styled.View`
+  flex: 1;
+  justify-content: flex-end;
+  align-items: flex-end;
 `;
 
 const ScreenTitle = styled.Text`
@@ -69,56 +92,6 @@ const ScreenTitle = styled.Text`
   font-family: CoreGothicD_ExtraBold;
   text-align: left;
   color: ${styles.lightGrey};
-`;
-
-const FilpButtonArea = styled.View`
-  flex: 1;
-  justify-content: flex-end;
-  align-items: flex-end;
-`;
-
-const Footer = styled.View`
-  width: ${constants.width};
-  /* background-color: yellow;
-  opacity: 0.2; */
-  flex: 1;
-  align-items: center;
-  flex-direction: row;
-  justify-content: center;
-  padding-horizontal: 24px;
-`;
-
-const FlipCardContainer = styled.View`
-  width: ${constants.width};
-  flex: 10;
-  /* background-color: blue;
-  opacity: 0.2; */
-  align-items: center;
-  justify-content: center;
-`;
-
-const Front = styled.View`
-  flex: 1;
-  /* flex: 1;
-  width: ${constants.width};
-  flex: 10;
-  background-color: blue;
-  opacity: 0.2;
-  align-items: center;
-  justify-content: center; */
-  /* background-color: blue;
-  opacity: 0.2; */
-`;
-
-const Content = styled.View`
-  padding-bottom: 30px;
-`;
-
-const Back = styled.View`
-  flex: 1;
-  align-items: center;
-  justify-content: center;
-  width: ${constants.width};
 `;
 
 const RowLeft = styled.View`
@@ -147,8 +120,6 @@ export default ({ navigation }) => {
     fetchPolicy: "network-only"
   });
   //console.log(data.seePlan);
-  const FilpContainerRef = useRef();
-  const [isFlip, setIsFlip] = useState(false);
 
   const onSnapUser = async index => {
     console.log("onSnapUser");
@@ -163,11 +134,9 @@ export default ({ navigation }) => {
     // locationChanged(moveRegion);
   };
 
-  const onPlipView = () => {
-    setTimeout(async () => {
-      await setIsFlip(!isFlip);
-    }, 300);
-  };
+  // const openCalendarView = () => {
+
+  // };
 
   return (
     <SafeAreaView
@@ -175,81 +144,59 @@ export default ({ navigation }) => {
       forceInset={{ top: "always" }}
     >
       <Container>
-        <Animatable.View
-          animation="fadeIn"
-          easing="ease-in-out"
-          useNativeDriver={true}
-        >
-          <Header>
-            <ScreenTitle>Planner </ScreenTitle>
-            <FilpButtonArea>
-              <ChangeFlipButton size={32} press={onPlipView} isFlip={isFlip} />
-            </FilpButtonArea>
-
-            {/* <MainTitle title={"Planner"} fontSize={32} /> */}
-          </Header>
-          <FlipCardContainer>
-            <FlipCard
-              flip={isFlip}
-              flipHorizontal={true}
-              flipVertical={false}
-              useNativeDriver={true}
-              clickable={false}
-              friction={10}
-              perspective={3000}
-            >
-              <Front>
-                <Content>
-                  {/* <ScrollView> */}
-                  {/* {ENTRIES_PLAN.map((data, index) => (
+        <Header>
+          <ScreenTitle>Planner </ScreenTitle>
+          <FilpButtonArea>
+            <OpenCalendarButton size={32} />
+          </FilpButtonArea>
+          {/* <MainTitle title={"Planner"} fontSize={32} /> */}
+        </Header>
+        <Content>
+          {/* <ScrollView> */}
+          {/* {ENTRIES_PLAN.map((data, index) => (
           <PlanContentList key={index} {...data} />
         ))} */}
-                  {loading ? (
-                    <Loader />
-                  ) : (
-                    data &&
-                    data.seePlan && (
-                      // data.seePlan.map((data, index) => {
-                      //   console.log("data", data);
-                      //   return <PlanList key={index} {...data} />;
-                      // })
-                      <CarouselItem
-                        data={data.seePlan}
-                        onSnapUser={onSnapUser}
-                        {...data}
-                      />
-                    )
-                  )}
-                </Content>
-                {/* </ScrollView> */}
-                <Footer>
-                  <RowLeft>
-                    <Weather />
-                  </RowLeft>
-                  <RowRight>
-                    <AddButton
-                      animation="fadeInUp"
-                      easing="ease-in-out"
-                      delay={100}
-                      useNativeDriver={true}
-                    >
-                      <AddPlan size={40} />
-                    </AddButton>
-                    <AddButton
-                      animation="fadeInUp"
-                      easing="ease-in-out"
-                      delay={200}
-                      useNativeDriver={true}
-                    />
-                  </RowRight>
-                </Footer>
-              </Front>
-              <Back>
-                <Calendar />
-              </Back>
-            </FlipCard>
-          </FlipCardContainer>
-        </Animatable.View>
+          {loading ? (
+            <Loader />
+          ) : (
+            data &&
+            data.seePlan && (
+              // data.seePlan.map((data, index) => {
+              //   console.log("data", data);
+              //   return <PlanList key={index} {...data} />;
+              // })
+              <CarouselItem
+                data={data.seePlan}
+                onSnapUser={onSnapUser}
+                {...data}
+              />
+            )
+          )}
+          {/* </ScrollView> */}
+        </Content>
+        <Footer>
+          <RowLeft>
+            <Weather />
+          </RowLeft>
+          <RowRight>
+            <AddButton
+              animation="fadeInUp"
+              easing="ease-in-out"
+              delay={100}
+              useNativeDriver={true}
+            >
+              <AddPlan size={40} />
+            </AddButton>
+            <AddButton
+              animation="fadeInUp"
+              easing="ease-in-out"
+              delay={200}
+              useNativeDriver={true}
+            >
+              <TestButton size={40} />
+            </AddButton>
+          </RowRight>
+        </Footer>
       </Container>
     </SafeAreaView>
   );

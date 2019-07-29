@@ -12,23 +12,15 @@ import TouchableScale from "react-native-touchable-scale";
 // `;
 const Container = styled.View``;
 
-const TestButton = ({ navigation, size, press, isFlip }) => {
-  // const dropdown = navigation.getScreenProps("dropdownAlert");
-
-  console.log(isFlip);
-
-  const TestAlert = () => {
-    // dropdown.current.alertWithType(
-    //   "success",
-    //   "Success",
-    //   "Fetch data is complete."
-    // );
-  };
-
+const TestButton = ({ navigation, size }) => {
   return (
-    <TouchableScale onPress={() => press()} activeScale={0.9} friction={2}>
+    <TouchableScale
+      onPress={() => navigation.navigate("Calendar")}
+      activeScale={0.9}
+      friction={2}
+    >
       <Container>
-        <AntDesign name={isFlip ? "bars" : "calendar"} size={size} />
+        <AntDesign name={"calendar"} size={size} />
       </Container>
     </TouchableScale>
   );

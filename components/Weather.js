@@ -116,7 +116,7 @@ const Weather = () => {
     )
       .then(response => response.json()) // 응답값을 json으로 변환
       .then(async json => {
-        //console.log("getName", json);
+        // console.log("getName", json);
 
         if (json) {
           if (json.meta) {

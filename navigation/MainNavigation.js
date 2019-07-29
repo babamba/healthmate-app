@@ -4,6 +4,7 @@ import PhotoNavigation from "./PhotoNavigation";
 import MessageNavigation from "./MessageNavigation";
 import PlanNavigation from "./PlanNavigation";
 import ProfileNavigation from "./ProfileNavigation";
+import CalendarNavigation from "./CalendarNavigation";
 import { stackStyles } from "./config";
 
 const MainNavigation = createStackNavigator(
@@ -12,7 +13,8 @@ const MainNavigation = createStackNavigator(
     PhotoNavigation,
     MessageNavigation,
     PlanNavigation,
-    ProfileNavigation
+    ProfileNavigation,
+    CalendarNavigation
   },
   {
     defaultNavigationOptions: {

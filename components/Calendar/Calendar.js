@@ -13,6 +13,7 @@ import {
 } from "react-native-calendars";
 import moment from "moment";
 import * as Animatable from "react-native-animatable";
+import { SafeAreaView } from "react-navigation";
 // import MaterialIcon from "../MaterialIcon";
 // import TouchableScale from "react-native-touchable-scale";
 
@@ -166,14 +167,13 @@ export default withNavigation(({ navigation }) => {
   };
 
   return (
-    <Animatable.View
-      animation="fadeIn"
-      easing="ease-in-out"
-      useNativeDriver={true}
+    <SafeAreaView
+      style={constants.commonStyle.safeArea}
+      forceInset={{ top: "always" }}
     >
       <Agenda
         items={items}
-        style={{ flex: 1, width: constants.width }}
+        style={{ flex: 1, width: constants.width, marginTop: 20 }}
         loadItemsForMonth={loadItems}
         selected={moment(new Date()).format("YYYY-MM-DD")}
         renderItem={renderItem}
@@ -193,6 +193,6 @@ export default withNavigation(({ navigation }) => {
         // theme={{calendarBackground: 'red', agendaKnobColor: 'green'}}
         //renderDay={(day, item) => (<Text>{day ? day.day: 'item'}</Text>)}
       />
-    </Animatable.View>
+    </SafeAreaView>
   );
 });
