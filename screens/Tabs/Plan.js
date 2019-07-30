@@ -23,8 +23,6 @@ export const SEE_PLAN = gql`
       id
       planTitle
       planImage
-      exerciseDate
-      exerciseTime
       user {
         username
       }
@@ -45,6 +43,7 @@ const Container = styled.View`
   justify-content: center;
   align-items: center;
   flex: 1;
+  background-color: ${styles.backgroundGreyColor};
 `;
 
 const Header = styled.View`

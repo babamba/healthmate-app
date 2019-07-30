@@ -50,8 +50,6 @@ export const USER_FRAGMENT = gql`
 export const PLAN_FRAGMENT = gql`
   fragment PlanParts on Plan {
     id
-    exerciseDate
-    exerciseTime
     user {
       ...UserParts
     }

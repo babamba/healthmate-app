@@ -10,8 +10,6 @@ const Container = styled.View`
   flex: 1;
   justify-content: center;
   align-items: center;
-  width: ${constants.width};
-  height: ${constants.height};
 `;
 
 const Loader = () => {

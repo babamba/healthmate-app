@@ -89,9 +89,9 @@ const Row = styled.View`
 const PlanList = ({
   navigation,
   planTitle,
-  id,
-  exerciseTime,
-  exerciseDate
+  id
+  // exerciseTime,
+  // exerciseDate
   // id,
   // user,
   // exerciseType,
@@ -110,9 +110,9 @@ const PlanList = ({
         <Column>
           <ContentTItle>{planTitle}</ContentTItle>
         </Column>
-        <Row>
+        {/* <Row>
           <UserName>{exerciseTime}</UserName>
-        </Row>
+        </Row> */}
       </TextContainer>
     </TouchableOpacity>
   </Conatiner>

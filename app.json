@@ -34,7 +34,10 @@
       },
       "splash": {
         "resizeMode": "cover"
-      }
+      },
+      "permissions": [
+        "ACCESS_FINE_LOCATION"
+      ]
     },
     "description": ""
   }

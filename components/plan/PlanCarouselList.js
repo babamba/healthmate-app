@@ -91,7 +91,7 @@ const MyCarousel = props => {
                 ]}
               >
                 <Text style={styles.title}>{item.planTitle}</Text>
-                <Text style={styles.title}>{item.exerciseTime}</Text>
+                {/* <Text style={styles.title}>{item.exerciseTime}</Text> */}
               </BlurView>
             </View>
           </View>

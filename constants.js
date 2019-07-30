@@ -1,5 +1,6 @@
 import { Dimensions } from "react-native";
 import { StyleSheet } from "react-native";
+import styles from "./styles";
 
 const { width, height } = Dimensions.get("screen");
 
@@ -16,7 +17,8 @@ const getToken = () => {
 const commonStyle = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: "#ffffff"
+    //backgroundColor: "#ffffff"
+    backgroundColor: styles.backgroundGreyColor
   },
   map: {
     ...StyleSheet.absoluteFillObject

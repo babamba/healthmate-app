@@ -1,6 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
-import { StyleSheet, Alert, Dimensions, ActivityIndicator } from "react-native";
+import {
+  StyleSheet,
+  Alert,
+  Dimensions,
+  ActivityIndicator,
+  TouchableOpacity
+} from "react-native";
 import MapView, {
   AnimatedRegion,
   Animated as AnimatedMap
@@ -46,9 +52,17 @@ const View = styled.View`
   flex: 1;
 `;
 
+const NotGrantText = styled.Text``;
+
 const MapContainer = styled.View({
   ...StyleSheet.absoluteFillObject
 });
+
+const NotGrantContainer = styled.View`
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+`;
 
 const ContentContainer = styled.View`
   position: absolute;
@@ -64,6 +78,16 @@ const IconContainer = styled.View`
   top: 20;
   right: 20;
   flex-direction: row;
+`;
+
+const AskButton = styled.TouchableOpacity`
+  width: ${constants.width / 2};
+  height: ${constants.width / 6};
+  border: 1px solid grey;
+`;
+
+const AskText = styled.Text`
+  font-size: 16px;
 `;
 
 const IconDivide = styled.View`
@@ -104,6 +128,8 @@ const MapScreen = ({ navigation }) => {
   const [nearUser, setNearUser] = useState([]);
   const [mapReady, setMapReady] = useState(false);
 
+  const [grantedMap, setGrantedMap] = useState(false);
+
   const [currentRegion, setCurrentRegion] = useState();
 
   const [initialRegion, setRegion] = useState({
@@ -121,58 +147,12 @@ const MapScreen = ({ navigation }) => {
     timestamp: 1562826219681.7188
   });
 
-  // const [initialRegion, setRegion] = useState({
-  //   coords: new AnimatedRegion({
-  //     accuracy: 5,
-  //     altitude: 0,
-  //     altitudeAccuracy: -1,
-  //     heading: -1,
-  //     latitude: 17.785834,
-  //     longitude: 32.406417,
-  //     latitudeDelta: LATITUDE_DELTA,
-  //     longitudeDelta: LONGITUDE_DELTA,
-  //     speed: -1
-  //   }),
-  //   timestamp: 1562826219681.7188
-  // });
-
-  // const [markers, setMarker] = useState([
-  //   {
-  //     id: 0,
-  //     amount: 99,
-  //     title: "hello 1",
-  //     description: "Description 1",
-  //     coordinate: {
-  //       latitude: 37.799839,
-  //       longitude: -122.406411
-  //     }
-  //   },
-  //   {
-  //     id: 1,
-  //     amount: 199,
-  //     title: "hello 2",
-  //     description: "Description 2",
-  //     coordinate: {
-  //       latitude: 37.795844,
-  //       longitude: -122.406417
-  //     }
-  //   },
-  //   {
-  //     id: 2,
-  //     amount: 285,
-  //     title: "hello 3",
-  //     description: "Description 3",
-  //     coordinate: {
-  //       latitude: 37.745824,
-  //       longitude: -122.406417
-  //     }
-  //   }
-  // ]);
-
-  //   const animations = markers.map((m, i) =>
-  //   console.log(markers[i])
-  //   // getMarkerState(panX, panY, scrollY, i)
-  // );
+  const askAsync = async () => {
+    const { status } = await Permissions.askAsync(Permissions.LOCATION);
+    if (status === "granted") {
+      setGrantedMap(true);
+    }
+  };
 
   const ask = async () => {
     // const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
@@ -182,17 +162,19 @@ const MapScreen = ({ navigation }) => {
     // Notifications.setBadgeNumberAsync(0);
 
     const { status } = await Permissions.askAsync(Permissions.LOCATION);
+    console.log("status : ", status);
     if (status !== "granted") {
       setErrorMessage("지도 기능 권한을 승인하지 않으면 사용 할 수 없습니다.");
       Alert.alert(errorMessage);
+    } else {
+      let location = await Location.getCurrentPositionAsync({});
+      setGrantedMap(true);
+      await Location.watchPositionAsync(
+        GEOLOCATION_OPTIONS,
+        locationChanged(location),
+        setCurrentRegion(location)
+      );
     }
-
-    let location = await Location.getCurrentPositionAsync({});
-    await Location.watchPositionAsync(
-      GEOLOCATION_OPTIONS,
-      locationChanged(location),
-      setCurrentRegion(location)
-    );
   };
 
   const locationChanged = location => {
@@ -497,67 +479,78 @@ const MapScreen = ({ navigation }) => {
     >
       <MainTitle title={"Map"} />
       <View>
-        {loading ? (
-          <Loader />
-        ) : (
-          data &&
-          data.getNearUser && (
-            <MapContainer>
-              <AnimatedMap
-                ref={mapRef}
-                provider={"google"}
-                style={constants.commonStyle.map}
-                showsUserLocation={true}
-                showCompass={true}
-                rotateEnabled={false}
-                region={initialRegion.coords}
-                onRegionChange={region => onRegionChange(region)}
-                minZoomLevel={10}
-                maxZoomLevel={20}
-                zoomTapEnabled={false}
-                onRegionChangeComplete={region =>
-                  onRegionChangeComplete(region)
-                }
-                initialRegion={initialRegion.coords}
-                followsUserLocation={true}
-                zoomEnabled={true}
-                moveOnMarkerPress={true}
-                onMapReady={() => onMapReady()}
-                enableZoomControl={true}
-              >
-                {mapReady &&
-                  nearUser.length > 0 &&
-                  nearUser.map(marker => {
-                    //console.log("nearUser marker : ", marker);
-                    return <Markers marker={marker} key={marker.id} />;
-                  })}
-              </AnimatedMap>
-              {/* <Icon name="add" style={styles.icon} size={20} /> */}
-              <IconContainer>
-                <IconDivide>
-                  <MyLocation press={HandleMyLocation} size={20} />
-                </IconDivide>
-                <IconDivide>
-                  <ZoomIn press={HandleZoom} size={20} />
-                </IconDivide>
-                <IconDivide>
-                  <ZoomOut press={HandleZoom} size={20} />
-                </IconDivide>
-              </IconContainer>
-              <ContentContainer>
-                {mapReady ? (
-                  <CarouselItem
-                    data={rewriteProfile(nearUser)}
-                    onSnapUser={onSnapUser}
-                    // press={(event, marker) => handleMarkerPress(event, marker)}
-                    press={data => handleMorePress(data)}
-                  />
-                ) : (
-                  <ActivityIndicator />
-                )}
-              </ContentContainer>
-            </MapContainer>
+        {grantedMap ? (
+          loading ? (
+            <Loader />
+          ) : (
+            data &&
+            data.getNearUser && (
+              <MapContainer>
+                <AnimatedMap
+                  ref={mapRef}
+                  provider={"google"}
+                  style={constants.commonStyle.map}
+                  showsUserLocation={true}
+                  showCompass={true}
+                  rotateEnabled={false}
+                  region={initialRegion.coords}
+                  onRegionChange={region => onRegionChange(region)}
+                  minZoomLevel={10}
+                  maxZoomLevel={20}
+                  zoomTapEnabled={false}
+                  onRegionChangeComplete={region =>
+                    onRegionChangeComplete(region)
+                  }
+                  initialRegion={initialRegion.coords}
+                  followsUserLocation={true}
+                  zoomEnabled={true}
+                  moveOnMarkerPress={true}
+                  onMapReady={() => onMapReady()}
+                  enableZoomControl={true}
+                >
+                  {mapReady &&
+                    nearUser.length > 0 &&
+                    nearUser.map(marker => {
+                      //console.log("nearUser marker : ", marker);
+                      return <Markers marker={marker} key={marker.id} />;
+                    })}
+                </AnimatedMap>
+                {/* <Icon name="add" style={styles.icon} size={20} /> */}
+                <IconContainer>
+                  <IconDivide>
+                    <MyLocation press={HandleMyLocation} size={20} />
+                  </IconDivide>
+                  <IconDivide>
+                    <ZoomIn press={HandleZoom} size={20} />
+                  </IconDivide>
+                  <IconDivide>
+                    <ZoomOut press={HandleZoom} size={20} />
+                  </IconDivide>
+                </IconContainer>
+                <ContentContainer>
+                  {mapReady ? (
+                    <CarouselItem
+                      data={rewriteProfile(nearUser)}
+                      onSnapUser={onSnapUser}
+                      // press={(event, marker) => handleMarkerPress(event, marker)}
+                      press={data => handleMorePress(data)}
+                    />
+                  ) : (
+                    <ActivityIndicator />
+                  )}
+                </ContentContainer>
+              </MapContainer>
+            )
           )
+        ) : (
+          <NotGrantContainer>
+            <NotGrantText>
+              지도 권한을 승인해 주셔야 사용 가능합니다.
+            </NotGrantText>
+            <AskButton onPress={() => askAsync()}>
+              <AskText>권한 승인 하기</AskText>
+            </AskButton>
+          </NotGrantContainer>
         )}
       </View>
     </SafeAreaView>
