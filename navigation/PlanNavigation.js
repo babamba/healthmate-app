@@ -5,7 +5,12 @@ import { stackStyles } from "./config";
 
 export default createStackNavigator(
   {
-    AddPlan,
+    AddPlan: {
+      screen: AddPlan,
+      navigationOptions: {
+        header: null
+      }
+    },
     Plan
   },
   {

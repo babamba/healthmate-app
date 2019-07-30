@@ -3,6 +3,7 @@ import styled from "styled-components";
 // import { Button, View } from "react-native";
 import DateTimePicker from "react-native-modal-datetime-picker";
 import moment from "moment";
+import { Platform } from "react-native";
 
 const View = styled.View`
   justify-content: center;
@@ -46,6 +47,7 @@ export default () => {
         confirmTextIOS={"선택"}
         mode={"datetime"}
         data={today}
+        locale={Platform.OS === "ios" ? "ko_KR" : "ko_KR"}
       />
     </View>
   );

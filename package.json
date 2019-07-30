@@ -49,6 +49,7 @@
     "react-native-gifted-chat": "^0.9.11",
     "react-native-map-clustering": "^1.3.2",
     "react-native-maps": "~0.24.0",
+    "react-native-modal": "^11.3.0",
     "react-native-modal-datetime-picker": "^7.5.0",
     "react-native-parallax-header": "^1.1.3",
     "react-native-snap-carousel": "^3.8.0",
