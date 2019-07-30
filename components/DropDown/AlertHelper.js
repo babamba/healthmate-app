@@ -16,8 +16,12 @@ export class AlertHelper {
   // }
 
   static showDropAlert(type, title, message) {
-    if (this.dropDown) {
-      this.dropDown.alertWithType(type, title, message);
+    try {
+      if (this.dropDown) {
+        this.dropDown.alertWithType(type, title, message);
+      }
+    } catch (error) {
+      console.log("error", error);
     }
   }
 

@@ -105,6 +105,7 @@ export default createBottomTabNavigator(
         )
       }
     },
+
     Main: {
       screen: stackFactory(Main, {
         header: null

@@ -13,6 +13,7 @@ import {
 } from "react-native-dotenv";
 
 import LottieView from "lottie-react-native";
+import { ANIMATION_LOADER_4 } from "../assets/AnimationLoader";
 import * as Animatable from "react-native-animatable";
 import constants from "../constants";
 import styles from "../styles";
@@ -67,7 +68,7 @@ const Weather = () => {
   const [locationName, setLocationName] = useState("---");
   const [weather, setWeather] = useState("--");
   const [icon, setIcon] = useState(weather_icon.loading);
-  const animationIcon = useRef();
+  // const animationIcon = useRef();
 
   const GEOLOCATION_OPTIONS = {
     enableHighAccuracy: true,
@@ -238,15 +239,15 @@ const Weather = () => {
             {/* <Text>위치를 읽어들이는 중 ... </Text> */}
             {/* <Icon source={icon} /> */}
             <LottieView
-              ref={animationIcon}
-              source={WEATHER.Loading}
+              // ref={animationIcon}
+              source={ANIMATION_LOADER_4}
               autoPlay={true}
               loop={true}
-              speed={4}
-              style={{
-                width: 300,
-                height: 50
-              }}
+              speed={1}
+              // style={{
+              //   width: 300,
+              //   height: 50
+              // }}
             />
           </LoadingContainer>
         </Content>

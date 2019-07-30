@@ -15,10 +15,13 @@ import {
 import TouchableScale from "react-native-touchable-scale";
 import { withNavigation } from "react-navigation";
 import { BlurView } from "expo-blur";
-import * as Animatable from "react-native-animatable";
 
-const { width: screenWidth } = Dimensions.get("window");
-const entryBorderRadius = 8;
+import * as Animatable from "react-native-animatable";
+import constants from "../../constants";
+
+// const { width: screenWidth } = Dimensions.get("window");
+
+console.log(constants.width);
 
 const MyCarousel = props => {
   //   const {
@@ -49,7 +52,7 @@ const MyCarousel = props => {
         useNativeDriver={true}
       >
         <TouchableScale
-          activeScale={0.98}
+          activeScale={1}
           tension={80}
           friction={2}
           onPress={() => {
@@ -74,7 +77,7 @@ const MyCarousel = props => {
                 style={styles.image}
                 //   {...parallaxProps}
               />
-              <View style={styles.overlay} />
+              {/* <View style={styles.overlay} /> */}
               <BlurView
                 tint="default"
                 intensity={100}
@@ -113,9 +116,9 @@ const MyCarousel = props => {
       />
       <Carousel
         ref={carouselRef}
-        sliderWidth={screenWidth}
-        sliderHeight={screenWidth}
-        itemWidth={screenWidth - 80}
+        sliderWidth={constants.width}
+        sliderHeight={constants.height / 2}
+        itemWidth={constants.width * 0.8}
         data={data}
         renderItem={data => _renderItem(data)}
         hasParallaxImages={false}
@@ -139,32 +142,34 @@ export default withNavigation(MyCarousel);
 const styles = StyleSheet.create({
   container: {
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
+    paddingVertical: 20
   },
   item: {
-    width: screenWidth - 100,
-    height: screenWidth + 60,
-    paddingVertical: 20,
+    marginLeft: 14,
+    width: constants.width - 100,
+    height: constants.height / 2,
 
     shadowColor: "#000",
     shadowOpacity: 0.25,
     shadowOffset: { width: 0, height: 5 },
     shadowRadius: 6,
 
-    elevation: 4,
+    elevation: 8,
 
-    borderRadius: 8,
-    marginLeft: 10,
-    marginTop: 10
+    paddingVertical: 10
+
+    // marginLeft: 10,
+    // marginTop: 10,
   },
   imageContainer: {
-    flex: 1,
+    flex: 1
     //     marginBottom: Platform.select({ ios: 0, android: 1 }), // Prevent a random Android rendering issue
-    backgroundColor: "white",
-    borderRadius: 8
   },
   image: {
     flex: 1,
+    // width: constants.width - 100,
+    // height: constants.height / 1.8,
     resizeMode: "cover",
     borderRadius: 8,
     marginBottom: Platform.select({ ios: 0, android: -1 }) // Prevent a random Android rendering issue
@@ -186,7 +191,7 @@ const styles = StyleSheet.create({
     // paddingHorizontal: 16,
     paddingHorizontal: 16,
     paddingVertical: 20,
-    width: screenWidth - 100,
+    width: constants.width - 100,
     alignItems: "center",
     justifyContent: "center",
     overflow: "hidden"
@@ -197,11 +202,11 @@ const styles = StyleSheet.create({
   //   borderBottomLeftRadius: entryBorderRadius,
   //   borderBottomRightRadius: entryBorderRadius
   // },
-  overlay: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: "rgba(0,0,0,0.1)",
-    borderRadius: entryBorderRadius
-  },
+  // overlay: {
+  //   ...StyleSheet.absoluteFillObject,
+  //   backgroundColor: "rgba(0,0,0,0.1)",
+  //   borderRadius: entryBorderRadius
+  // },
   title: {
     color: "white",
     fontSize: 16,
