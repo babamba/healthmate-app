@@ -33,6 +33,7 @@ import { ApolloLink, split, concat } from "apollo-link";
 import { WebSocketLink } from "apollo-link-ws";
 import { HttpLink } from "apollo-link-http";
 import { getMainDefinition, toIdValue } from "apollo-utilities";
+import * as MagicMove from "react-native-magic-move";
 import {
   ActionSheetProvider,
   connectActionSheet
@@ -84,6 +85,10 @@ export default function App() {
         ...MaterialIcons.font,
         ...MaterialCommunityIcons.font,
         ...Entypo.font,
+        NanumBarunGothic: require("./assets/Fonts/NanumBarunGothic.ttf"),
+        NanumBarunGothicBold: require("./assets/Fonts/NanumBarunGothicBold.ttf"),
+        NanumBarunGothicLight: require("./assets/Fonts/NanumBarunGothicLight.ttf"),
+        NanumBarunGothicUltraLight: require("./assets/Fonts/NanumBarunGothicUltraLight.ttf"),
         NotoSansKR_Thin: require("./assets/Fonts/NotoSansKR_Thin.ttf"),
         NotoSansKR_Black: require("./assets/Fonts/NotoSansKR_Black.ttf"),
         NotoSansKR_Bold: require("./assets/Fonts/NotoSansKR_Bold.ttf"),
@@ -388,7 +393,9 @@ export default function App() {
           client={client}
         >
           <ActionSheetProvider>
-            <ConnectionNavController />
+            <MagicMove.Provider>
+              <ConnectionNavController />
+            </MagicMove.Provider>
           </ActionSheetProvider>
         </AuthProvider>
       </ThemeProvider>

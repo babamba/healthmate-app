@@ -13,10 +13,10 @@ import TouchableScale from "react-native-touchable-scale";
 
 const Container = styled.View``;
 
-export default withNavigation(({ navigation, size }) => (
+export default withNavigation(({ navigation, size, refetch }) => (
   <Container>
     <TouchableScale
-      onPress={() => navigation.navigate("PlanNavigation")}
+      onPress={() => navigation.navigate("PlanNavigation", { refetch })}
       style={{ color: "#3b3b3b" }}
       activeScale={0.85}
     >

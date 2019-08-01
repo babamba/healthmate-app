@@ -3,6 +3,8 @@ import { StyleSheet } from "react-native";
 import styles from "./styles";
 
 const { width, height } = Dimensions.get("screen");
+const boxShadow = "0px 3px 6px rgba(0, 0, 0, 0.1)";
+const bigBoxShadow = "0px 6px 6px rgba(0, 0, 0, 0.3)";
 
 let AUTH_TOKEN = "";
 
@@ -25,4 +27,12 @@ const commonStyle = StyleSheet.create({
   }
 });
 
-export default { width, height, setToken, getToken, commonStyle };
+export default {
+  width,
+  height,
+  setToken,
+  getToken,
+  commonStyle,
+  boxShadow,
+  bigBoxShadow
+};

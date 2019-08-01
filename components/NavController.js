@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useIsLoggedIn, useIsLaunchedApp } from "../AuthContext";
 import { useQuery } from "react-apollo-hooks";
-import { View } from "react-native";
+import { View, Platform } from "react-native";
 import gql from "graphql-tag";
 import AuthNavigation from "../navigation/AuthNavigation";
 import MainNavigation from "../navigation/MainNavigation";
@@ -83,7 +83,8 @@ export default props => {
           <MainNavigation screenProps={actionSheet} />
           <DropdownAlert
             containerStyle={{
-              backgroundColor: "#cc3232"
+              backgroundColor: "#cc3232",
+              paddingTop: Platform.OS === "android" ? 20 : 0
             }}
             ref={ref => AlertHelper.setDropDown(ref)}
             closeInterval={3000}

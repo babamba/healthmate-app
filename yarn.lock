@@ -3651,6 +3651,11 @@ locate-path@^3.0.0:
     p-locate "^3.0.0"
     path-exists "^3.0.0"
 
+lodash.findlast@^4.6.0:
+  version "4.6.0"
+  resolved "https://registry.yarnpkg.com/lodash.findlast/-/lodash.findlast-4.6.0.tgz#ea8bb78cf2e7e7804fc8aeb7d1953e07fe31fbc8"
+  integrity sha1-6ou3jPLn54BPyK630ZU+B/4x+8g=
+
 lodash.pad@^4.1.0:
   version "4.5.1"
   resolved "https://registry.yarnpkg.com/lodash.pad/-/lodash.pad-4.5.1.tgz#4330949a833a7c8da22cc20f6a26c4d59debba70"
@@ -5023,6 +5028,13 @@ react-native-lightbox@^0.7.0:
   dependencies:
     prop-types "^15.5.10"
 
+react-native-magic-move@^0.6.2:
+  version "0.6.2"
+  resolved "https://registry.yarnpkg.com/react-native-magic-move/-/react-native-magic-move-0.6.2.tgz#a5c0790d6e6300e3bead4bccb26ab98bfd2460d3"
+  integrity sha512-Br4pVaMPbKJJ8OBApGQ/vtbjPpenhQiimaKLj/nSPsovQHPmtWY2oLr/Ahk2DF8pCqJVwN6wfm6pZnLtNtylpw==
+  dependencies:
+    lodash.findlast "^4.6.0"
+
 react-native-map-clustering@^1.3.2:
   version "1.3.2"
   resolved "https://registry.yarnpkg.com/react-native-map-clustering/-/react-native-map-clustering-1.3.2.tgz#38f72dc8a57b08cf8b2a4ac693541b2036078b0f"
@@ -5049,10 +5061,18 @@ react-native-modal-datetime-picker@^7.5.0:
     prop-types "^15.7.2"
     react-native-modal "^11.0.2"
 
-react-native-modal@^11.0.2, react-native-modal@^11.3.0:
+react-native-modal@^11.0.2:
   version "11.3.0"
   resolved "https://registry.yarnpkg.com/react-native-modal/-/react-native-modal-11.3.0.tgz#b80406025dd0af06e6ce5e007981ab2f4a6b2ae7"
   integrity sha512-574hg0dF/gKY0jICg+D4j10F4fKQR8/u88DcVx82LU9QkuYokHr5Rn4E+BoaOUNf3BdNi1z9vzItMQEZa3M8rQ==
+  dependencies:
+    prop-types "^15.6.2"
+    react-native-animatable "^1.3.1"
+
+react-native-modal@^11.3.1:
+  version "11.3.1"
+  resolved "https://registry.yarnpkg.com/react-native-modal/-/react-native-modal-11.3.1.tgz#9f67728b36fdc299f97d3da1d131190a0337b89b"
+  integrity sha512-3rRuXwvObknVijVNS8iamjMXWLjlb9xK90o+WtEcJ3C7HKuR2SOH578SoltIC6ZmVjO3vZwOApGVdSfR3LtPQg==
   dependencies:
     prop-types "^15.6.2"
     react-native-animatable "^1.3.1"
@@ -5253,6 +5273,11 @@ react-navigation-drawer@~1.2.1:
   integrity sha512-T2kaBjY2c4/3I6noWFnaf/c18ntNH5DsST38i+pdc2NPxn5Yi5lkK+ZZTeKuHSFD4a7G0jWY9OGf1iRkHWLMAQ==
   dependencies:
     react-native-tab-view "^1.2.0"
+
+react-navigation-magic-move@^0.4.1:
+  version "0.4.1"
+  resolved "https://registry.yarnpkg.com/react-navigation-magic-move/-/react-navigation-magic-move-0.4.1.tgz#20ab093b409ac03b87c5cc6c26be4e45ce8a61b4"
+  integrity sha512-b92wb5n+L/vafUY+Fdhp/0faTRqsq19c/QDpBOyKn/zuqrr/SQpsv6RrZxqBVNPpQVjXhMG3wUL49Sy8qsSEUw==
 
 react-navigation-stack@~1.4.0:
   version "1.4.0"

@@ -174,9 +174,7 @@ export default ({ navigation }) => {
           {/* </ScrollView> */}
         </Content>
         <Footer>
-          <RowLeft>
-            <Weather />
-          </RowLeft>
+          <RowLeft>{/* <Weather /> */}</RowLeft>
           <RowRight>
             <AddButton
               animation="fadeInUp"
@@ -184,7 +182,7 @@ export default ({ navigation }) => {
               delay={100}
               useNativeDriver={true}
             >
-              <AddPlan size={40} />
+              <AddPlan size={40} refetch={refetch} />
             </AddButton>
             <AddButton
               animation="fadeInUp"

@@ -18,10 +18,12 @@ import { BlurView } from "expo-blur";
 
 import * as Animatable from "react-native-animatable";
 import constants from "../../constants";
+// import * as MagicMove from "react-native-magic-move";
 
 // const { width: screenWidth } = Dimensions.get("window");
 
 console.log(constants.width);
+const entryBorderRadius = 8;
 
 const MyCarousel = props => {
   //   const {
@@ -45,6 +47,7 @@ const MyCarousel = props => {
   const _renderItem = ({ item, index }, parallaxProps) => {
     //console.log("item thumbnail", item.thumbnail);
     return (
+      // <MagicMove.View id={"scene1"}>
       <Animatable.View
         animation="fadeInUp"
         easing="ease-in-out"
@@ -68,6 +71,7 @@ const MyCarousel = props => {
             fadeDuration={300}
             {...parallaxProps}
           /> */}
+
             <View style={styles.imageContainer}>
               <Image
                 source={{
@@ -77,7 +81,7 @@ const MyCarousel = props => {
                 style={styles.image}
                 //   {...parallaxProps}
               />
-              {/* <View style={styles.overlay} /> */}
+              <View style={styles.overlay} />
               <BlurView
                 tint="default"
                 intensity={100}
@@ -97,6 +101,7 @@ const MyCarousel = props => {
           </View>
         </TouchableScale>
       </Animatable.View>
+      // </MagicMove.View>
     );
   };
 
@@ -155,7 +160,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 5 },
     shadowRadius: 6,
 
-    elevation: 8,
+    elevation: 12,
 
     paddingVertical: 10
 
@@ -171,7 +176,7 @@ const styles = StyleSheet.create({
     // width: constants.width - 100,
     // height: constants.height / 1.8,
     resizeMode: "cover",
-    borderRadius: 8,
+    borderRadius: entryBorderRadius,
     marginBottom: Platform.select({ ios: 0, android: -1 }) // Prevent a random Android rendering issue
   },
   paginationContainer: {
@@ -196,17 +201,11 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     overflow: "hidden"
   },
-  // overlay: {
-  //   ...StyleSheet.absoluteFillObject,
-  //   backgroundColor: "rgba(0,0,0,0.2)",
-  //   borderBottomLeftRadius: entryBorderRadius,
-  //   borderBottomRightRadius: entryBorderRadius
-  // },
-  // overlay: {
-  //   ...StyleSheet.absoluteFillObject,
-  //   backgroundColor: "rgba(0,0,0,0.1)",
-  //   borderRadius: entryBorderRadius
-  // },
+  overlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: "rgba(0,0,0,0.1)",
+    borderRadius: entryBorderRadius
+  },
   title: {
     color: "white",
     fontSize: 16,

@@ -7,5 +7,7 @@ export default {
   blueColor: "#3897f0",
   darkBlueColor: "#003569",
   lightGrey: "#4f4f4f",
-  backgroundGreyColor: "#f0f0f0"
+  backgroundGreyColor: "#f0f0f0",
+
+  neonGreen: "#4AD991"
 };

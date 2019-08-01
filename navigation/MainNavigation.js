@@ -5,6 +5,7 @@ import MessageNavigation from "./MessageNavigation";
 import PlanNavigation from "./PlanNavigation";
 import ProfileNavigation from "./ProfileNavigation";
 import CalendarNavigation from "./CalendarNavigation";
+import Scene1 from "../screens/Test/Scene1";
 import { stackStyles } from "./config";
 
 const MainNavigation = createStackNavigator(
@@ -14,7 +15,8 @@ const MainNavigation = createStackNavigator(
     MessageNavigation,
     PlanNavigation,
     ProfileNavigation,
-    CalendarNavigation
+    CalendarNavigation,
+    Scene1
   },
   {
     defaultNavigationOptions: {

@@ -9,6 +9,8 @@ import Main from "../screens/Tabs/Main";
 import Plan from "../screens/Tabs/Plan";
 import Chat from "../screens/Tabs/Chat";
 
+import Test from "../screens/Test/Test";
+
 import Search from "../screens/Tabs/Search";
 import Notifications from "../screens/Tabs/Notifications";
 import Map from "../screens/Tabs/Map";
@@ -55,6 +57,7 @@ const stackFactory = (initialRoute, customConfig) =>
       PlanDetail: {
         screen: PlanDetail,
         navigationOptions: ({ navigation }) => ({
+          header: null
           // title: navigation.getParam("username")
         })
       }
@@ -135,6 +138,22 @@ export default createBottomTabNavigator(
         )
       }
     }
+    // Test: {
+    //   screen: stackFactory(Test, {
+    //     //headerRight: <MessagesLink />
+    //     //headerRight: <AddPlan />
+    //     header: null
+    //     // headerTitle: <NavIcon name="logo-instagram" size={36} />
+    //   }),
+    //   navigationOptions: {
+    //     tabBarIcon: ({ focused }) => (
+    //       <NavIcon
+    //         focused={focused}
+    //         name={Platform.OS === "ios" ? "ios-paper-plane" : "md-paper-plane"}
+    //       />
+    //     )
+    //   }
+    // }
 
     // Home: {
     //   screen: stackFactory(Home, {
