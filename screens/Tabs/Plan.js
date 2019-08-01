@@ -174,7 +174,9 @@ export default ({ navigation }) => {
           {/* </ScrollView> */}
         </Content>
         <Footer>
-          <RowLeft>{/* <Weather /> */}</RowLeft>
+          <RowLeft>
+            <Weather />
+          </RowLeft>
           <RowRight>
             <AddButton
               animation="fadeInUp"
