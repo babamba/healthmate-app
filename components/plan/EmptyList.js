@@ -11,7 +11,7 @@ const testAlert = id => {
 
 const Conatiner = styled.View`
   padding-vertical: 8;
-  padding-horizontal: 20;
+  padding-horizontal: 40;
   border-radius: 10;
   margin-left: 10;
   margin-left: 10;
@@ -68,16 +68,15 @@ const Row = styled.View`
   justify-content: flex-end;
 `;
 
-const ActivityList = ({ navigation, id, title, second, count }) => {
+const EmptyList = ({ navigation }) => {
   return (
     <Conatiner>
       {/* <TouchableOpacity onPress={() => navigation.navigate("Detail", { id })}> */}
       {/* <Image source={{ uri }} /> */}
       <TextContainer>
         <Column>
-          <ContentTItle>{title}</ContentTItle>
+          <ContentTItle>활동 목록이 없어요 :(</ContentTItle>
         </Column>
-        <Row />
       </TextContainer>
     </Conatiner>
   );
@@ -93,4 +92,4 @@ const ActivityList = ({ navigation, id, title, second, count }) => {
 //   id: PropTypes.string.isRequired
 // };
 
-export default withNavigation(ActivityList);
+export default withNavigation(EmptyList);

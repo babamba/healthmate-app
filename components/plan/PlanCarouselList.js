@@ -55,9 +55,9 @@ const MyCarousel = props => {
         useNativeDriver={true}
       >
         <TouchableScale
-          activeScale={1}
-          tension={80}
-          friction={2}
+          activeScale={0.99}
+          // tension={80}
+          // friction={2}
           onPress={() => {
             navigation.navigate("PlanDetail", { planId: item.id });
           }}
@@ -251,7 +251,7 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 16,
     letterSpacing: 0.5,
-    fontFamily: "NanumBarunGothicLight"
+    fontFamily: "NanumBarunGothicUltraLight"
   },
   subtitle: {
     color: "white",

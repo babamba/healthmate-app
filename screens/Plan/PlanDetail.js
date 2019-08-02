@@ -8,6 +8,8 @@ import ActivitList from "../../components/Plan/ActivityList";
 import { SafeAreaView } from "react-navigation";
 import constants from "../../constants";
 import NavIcon from "../../components/NavIcon";
+import MainTitle from "../../components/MainTitle";
+import EmptyList from "../../components/Plan/EmptyList";
 
 // import * as MagicMove from "react-native-magic-move";
 // import * as Animatable from "react-native-animatable";
@@ -30,8 +32,16 @@ const View = styled.View`
 `;
 
 const Text = styled.Text``;
+const HeaderArea = styled.View`
+  flex-direction: row;
+  justify-content: center;
+  width: ${constants.width};
+`;
 const BackContainer = styled.TouchableOpacity`
-  padding: 10px;
+  padding-left: 30px;
+  padding-top: 4px;
+  justify-content: center;
+  align-items: center;
 `;
 
 export default ({ navigation }) => {
@@ -47,21 +57,25 @@ export default ({ navigation }) => {
       style={constants.commonStyle.safeArea}
       forceInset={{ top: "always" }}
     >
-      <BackContainer onPress={() => navigation.goBack(null)}>
-        <NavIcon
-          name={Platform.OS === "ios" ? "ios-arrow-back" : "md-arrow-back"}
-        />
-      </BackContainer>
+      <HeaderArea>
+        <BackContainer onPress={() => navigation.goBack(null)}>
+          <NavIcon
+            name={Platform.OS === "ios" ? "ios-arrow-back" : "md-arrow-back"}
+          />
+        </BackContainer>
+
+        <MainTitle title={"Activity"} fontSize={42} />
+      </HeaderArea>
       <ScrollView>
         {loading ? (
           <Loader />
-        ) : (
-          data &&
-          data.seeActivity &&
+        ) : data && data.seeActivity && data.seeActivity.length > 0 ? (
           data.seeActivity.map((data, index) => {
             console.log("data", data);
             return <ActivitList key={index} {...data} />;
           })
+        ) : (
+          <EmptyList />
         )}
       </ScrollView>
     </SafeAreaView>
