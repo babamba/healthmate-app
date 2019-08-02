@@ -335,7 +335,7 @@ export default withNavigation(({ navigation }) => {
 
       if (addPlan) {
         AlertHelper.showDropAlert("success", "목록생성", "되었습니다");
-        navigation.navigate("AddActivity", { id: addPlan.id });
+        navigation.navigate("AddActivity", { planId: addPlan.id });
       }
     } catch (e) {
       console.log(e);

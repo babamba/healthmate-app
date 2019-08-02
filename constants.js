@@ -27,6 +27,11 @@ const commonStyle = StyleSheet.create({
   }
 });
 
+const Actions = {
+  DELETE: "DELETE",
+  UPDATE: "UPDATE"
+};
+
 export default {
   width,
   height,
@@ -34,5 +39,6 @@ export default {
   getToken,
   commonStyle,
   boxShadow,
-  bigBoxShadow
+  bigBoxShadow,
+  Actions
 };

@@ -3,27 +3,15 @@ import { View, TouchableOpacity, Alert, Platform } from "react-native";
 import { withNavigation } from "react-navigation";
 import PropTypes from "prop-types";
 import styled from "styled-components";
+import globalStyles from "../../styles";
 import constants from "../../constants";
-
-const testAlert = id => {
-  Alert.alert("id : ", id);
-};
-
-const Conatiner = styled.View`
-  padding-vertical: 8;
-  padding-horizontal: 20;
-  border-radius: 10;
-  margin-left: 10;
-  margin-left: 10;
-  /* shadow-opacity: 0.75;
-  shadow-radius: 5px;
-  shadow-color: #000;
-  shadow-offset: 0px 0px; */
-`;
+import * as Animatable from "react-native-animatable";
+import Swipeout from "react-native-swipeout";
 
 const TextContainer = styled.View`
   flex: 1;
   margin-top: 10px;
+  justify-content: center;
   flex-direction: row;
 `;
 
@@ -37,8 +25,17 @@ const ContentTItle = styled.Text`
   color: black;
   text-align: left;
   font-weight: 600;
+  font-size: 24px;
+  font-family: NanumBarunGothicLight;
+`;
+
+const ContentInfo = styled.Text`
+  color: black;
+  text-align: left;
+  font-weight: 600;
   font-size: 18px;
-  font-family: NotoSansKR_Regular;
+  font-family: NanumBarunGothicUltraLight;
+  padding-horizontal: 5px;
 `;
 
 const Introduction = styled.Text`
@@ -60,26 +57,95 @@ const UserName = styled.Text`
 const Column = styled.View`
   flex: 1;
   flex-direction: column;
+  justify-content: center;
 `;
 
 const Row = styled.View`
-  flex: 1;
   flex-direction: row;
-  justify-content: flex-end;
+  justify-content: center;
+  align-items: center;
+`;
+const Conatiner = styled.View`
+  padding-vertical: 8;
+  padding-horizontal: 20;
+  border-radius: 10;
+  margin-left: 10;
+  margin-left: 10;
+  /* shadow-opacity: 0.75;
+  shadow-radius: 5px;
+  shadow-color: #000;
+  shadow-offset: 0px 0px; */
+`;
+const Divider = styled.View`
+  border: 1px solid lightgrey;
+  width: 1px;
 `;
 
-const ActivityList = ({ navigation, id, title, second, count }) => {
+const ActivityList = ({ navigation, id, title, second, count, set }) => {
+  console.log("title : ", title);
+  console.log("second : ", second);
+  console.log("count : ", count);
+  console.log("set : ", set);
+
+  const testAlert = id => {
+    // Alert.alert("id : ", id);
+  };
+
+  const confirm = () => {
+    Alert.alert(
+      title,
+      "삭제 하시겠습니까?",
+      [
+        {
+          text: "삭제",
+          style: "destructive",
+          onPress: () => console.log("OK Pressed")
+        },
+        {
+          text: "취소",
+          onPress: () => console.log("Cancel Pressed"),
+          style: "cancel"
+        }
+      ],
+      { cancelable: true }
+    );
+  };
+
+  const swipeoutBtns = [
+    {
+      text: "수정",
+      type: "primary",
+      onPress: () => testAlert()
+    },
+    {
+      text: "삭제",
+      type: "delete",
+      onPress: () => confirm()
+    }
+  ];
+
   return (
-    <Conatiner>
-      {/* <TouchableOpacity onPress={() => navigation.navigate("Detail", { id })}> */}
-      {/* <Image source={{ uri }} /> */}
-      <TextContainer>
-        <Column>
-          <ContentTItle>{title}</ContentTItle>
-        </Column>
-        <Row />
-      </TextContainer>
-    </Conatiner>
+    <Swipeout
+      right={swipeoutBtns}
+      // backgroundColor={"#ffffff"}
+      backgroundColor={globalStyles.backgroundGreyColor}
+      autoClose={true}
+    >
+      <Conatiner>
+        {/* <TouchableOpacity onPress={() => navigation.navigate("Detail", { id })}> */}
+        {/* <Image source={{ uri }} /> */}
+        <TextContainer>
+          <Column>
+            <ContentTItle>{title}</ContentTItle>
+          </Column>
+          <Row>
+            {second > 0 && <ContentInfo>{second} 분</ContentInfo>}
+            {count > 0 && <ContentInfo>{count} 초</ContentInfo>}
+            {set > 0 && <ContentInfo>{set} 세트</ContentInfo>}
+          </Row>
+        </TextContainer>
+      </Conatiner>
+    </Swipeout>
   );
 };
 

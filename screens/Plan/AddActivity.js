@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import styles from "../../styles";
 import constants from "../../constants";
@@ -8,8 +8,20 @@ import { Feather } from "@expo/vector-icons";
 import MainTitle from "../../components/MainTitle";
 import useInput from "../../hooks/useInput";
 import NavIcon from "../../components/NavIcon";
+import SubmitButton from "../../components/SubmitButton";
 import gql from "graphql-tag";
 import { useMutation } from "react-apollo-hooks";
+
+export const CREATE_ACTIVITY = gql`
+  mutation addActivity($items: Array!) {
+    addActivity(items: $items) {
+      activity {
+        id
+        title
+      }
+    }
+  }
+`;
 
 const View = styled.View`
   flex: 1;
@@ -44,10 +56,44 @@ const BodyArea = styled.View`
   padding-right: 10px;
 `;
 
-export default withNavigation(({ navigation }) => {
-  const id = navigation.getParam("id"); //메인 목록 조회
+const ButtonArea = styled.View`
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+`;
 
-  console.log("id : ", id);
+export default withNavigation(({ navigation }) => {
+  const [items, setItems] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  const planId = navigation.getParam("planId"); //메인 목록 조회
+  const titleInput = useInput();
+  const secondInput = useInput();
+  const countInput = useInput();
+  const setInput = useInput();
+
+  const createActivity = useMutation(CREATE_ACTIVITY, {
+    refetchQueries: () => [{ query: SEE_ACTIVITY, variables: { planId } }]
+  });
+
+  const handleSubmit = async () => {
+    AlertHelper.showDropAlert("success", "목록생성", "되었습니다");
+    navigation.navigate("TabNavigation");
+  };
+  /* 
+    items:[
+      { 
+        planId:"cjypje3v0im860b72ph8hyjgf", 
+        title:"addAct1", 
+        second:10, 
+        count:0, 
+        set:""
+      }
+      ,{},{}
+    ]
+  */
+
+  console.log("planId : ", planId);
 
   return (
     <SafeAreaView
@@ -58,7 +104,7 @@ export default withNavigation(({ navigation }) => {
         <View>
           <HeaderArea>
             <RowLeft>
-              <MainTitle title={"Add Activity"} fontSize={52} />
+              <MainTitle title={"Add Activity"} fontSize={42} />
             </RowLeft>
             <RowRight>
               <BackButton
@@ -76,6 +122,14 @@ export default withNavigation(({ navigation }) => {
             <Text>Add Activity</Text>
           </BodyArea>
         </View>
+        <ButtonArea>
+          <SubmitButton
+            bgColor={styles.neonGreen}
+            loading={loading}
+            onPress={() => handleSubmit()}
+            text="제출"
+          />
+        </ButtonArea>
       </ScrollView>
     </SafeAreaView>
   );
