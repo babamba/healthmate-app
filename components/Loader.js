@@ -1,10 +1,14 @@
 import React, { useEffect } from "react";
-import { ActivityIndicator, StyleSheet, Platform } from "react-native";
+import {
+  ActivityIndicator,
+  StyleSheet,
+  Platform,
+  YellowBox
+} from "react-native";
 import styled from "styled-components";
 import { ANIMATION_LOADER_4 } from "../assets/AnimationLoader";
 import constants from "../constants";
 import LottieView from "lottie-react-native";
-import { YellowBox } from "react-native";
 
 const Container = styled.View`
   flex: 1;

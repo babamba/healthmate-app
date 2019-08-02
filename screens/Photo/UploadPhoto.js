@@ -77,7 +77,8 @@ export default ({ navigation }) => {
       setIsLoading(true);
       const {
         data: { location }
-      } = await axios.post("http://localhost:4000/api/upload", formData, {
+        //} = await axios.post("http://localhost:4000/api/upload", formData, {
+      } = await Axios.post("http://hellojw.net:9333/api/upload", formData, {
         headers: {
           "content-type": "multipart/form-data"
         }

@@ -49,7 +49,7 @@ const MyCarousel = props => {
     return (
       // <MagicMove.View id={"scene1"}>
       <Animatable.View
-        animation="fadeInUp"
+        animation="fadeIn"
         easing="ease-in-out"
         delay={50 * (index * 3)}
         useNativeDriver={true}
@@ -81,8 +81,18 @@ const MyCarousel = props => {
                 style={styles.image}
                 //   {...parallaxProps}
               />
-              <View style={styles.overlay} />
-              <BlurView
+              {/* <View style={styles.overlay} /> */}
+
+              <View style={styles.overlayTextConatiner}>
+                <View style={styles.overlayHeaderTextConatiner}>
+                  <Text style={styles.headerTitle}>
+                    {item.exerciseType.title}
+                  </Text>
+                </View>
+
+                <Text style={styles.title}>{item.planTitle}</Text>
+              </View>
+              {/* <BlurView
                 tint="default"
                 intensity={100}
                 style={[
@@ -95,8 +105,7 @@ const MyCarousel = props => {
                 ]}
               >
                 <Text style={styles.title}>{item.planTitle}</Text>
-                {/* <Text style={styles.title}>{item.exerciseTime}</Text> */}
-              </BlurView>
+              </BlurView> */}
             </View>
           </View>
         </TouchableScale>
@@ -180,12 +189,38 @@ const styles = StyleSheet.create({
     marginBottom: Platform.select({ ios: 0, android: -1 }) // Prevent a random Android rendering issue
   },
   paginationContainer: {
-    paddingVertical: 20
+    width: constants.width,
+    justifyContent: "center",
+    alignItems: "center",
+    paddingVertical: 20,
+    paddingHorizontal: constants.width / 1.5
   },
   paginationDot: {
-    width: 15,
+    width: 14,
     height: 8,
-    borderRadius: 4
+    borderRadius: 7
+  },
+  overlayHeaderTextConatiner: {
+    position: "absolute",
+    top: 0,
+    alignItems: "flex-end",
+    justifyContent: "flex-start",
+    overflow: "hidden",
+    paddingHorizontal: 16,
+    paddingVertical: 16,
+    width: constants.width - 100
+  },
+  overlayTextConatiner: {
+    ...StyleSheet.absoluteFillObject,
+    position: "absolute",
+    alignItems: "flex-start",
+    justifyContent: "flex-end",
+    overflow: "hidden",
+
+    backgroundColor: "rgba(0,0,0,0.35)",
+    borderRadius: entryBorderRadius,
+    paddingBottom: 16,
+    paddingHorizontal: 20
   },
   textContainer: {
     position: "absolute",
@@ -201,16 +236,22 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     overflow: "hidden"
   },
-  overlay: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: "rgba(0,0,0,0.1)",
-    borderRadius: entryBorderRadius
-  },
+  // overlay: {
+  //   ...StyleSheet.absoluteFillObject,
+  //   backgroundColor: "rgba(0,0,0,0.3)",
+  //   borderRadius: entryBorderRadius
+  // },
   title: {
+    color: "white",
+    fontSize: 36,
+    letterSpacing: 0.5,
+    fontFamily: "NanumBarunGothicLight"
+  },
+  headerTitle: {
     color: "white",
     fontSize: 16,
     letterSpacing: 0.5,
-    fontFamily: "NotoSansKR_Medium"
+    fontFamily: "NanumBarunGothicLight"
   },
   subtitle: {
     color: "white",

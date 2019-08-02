@@ -25,6 +25,8 @@ import Modal from "react-native-modal";
 import * as ImagePicker from "expo-image-picker";
 import * as Permissions from "expo-permissions";
 import ExerciseList from "../../components/Plan/ExerciseList";
+import { SEE_PLAN } from "../Tabs/Plan";
+import Axios from "axios";
 
 export const CREATE_PLAN = gql`
   mutation addPlan(
@@ -32,7 +34,14 @@ export const CREATE_PLAN = gql`
     $exerciseType: String!
     $planImage: String!
   ) {
-    addPlan(planTitle: $planTitle, exerciseType: $exerciseType, String: $String)
+    addPlan(
+      planTitle: $planTitle
+      exerciseType: $exerciseType
+      planImage: $planImage
+    ) {
+      id
+      planTitle
+    }
   }
 `;
 
@@ -207,19 +216,10 @@ export default withNavigation(({ navigation }) => {
     null
   );
   const [visibleModal, setVisibleModal] = useState(false);
-
-  const refetch = navigation.getParam("refetch"); //메인 목록 조회
   const planTitleInput = useInput("");
 
   const createPlan = useMutation(CREATE_PLAN, {
-    variables: {
-      planTitle: planTitleInput.value
-      // username: usernameInput.value,
-      // email: emailInput.value,
-      // // firstName: fNameInput.value,
-      // // lastName: lNameInput.value,
-      // password: passwordInput.value
-    }
+    refetchQueries: () => [{ query: SEE_PLAN }]
   });
 
   const pickImage = async () => {
@@ -233,7 +233,6 @@ export default withNavigation(({ navigation }) => {
       setHasCamaraRollPermissions(cameraRoll.status == "granted");
     }
 
-    console.log("pickImage");
     if (camera.status === "granted" && cameraRoll.status === "granted") {
       let result = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: "Images",
@@ -244,8 +243,8 @@ export default withNavigation(({ navigation }) => {
       });
 
       if (!result.cancelled) {
-        setPickedPhoto(result.uri);
-        console.log(pickedPhoto);
+        setPickedPhoto(result);
+        console.log("pickImage", result);
       }
     } else if (camera.status !== "granted") {
       AlertHelper.showDropAlert("warning", "카메라 권한을", "승인해주세요");
@@ -295,28 +294,62 @@ export default withNavigation(({ navigation }) => {
       return AlertHelper.showDropAlert("warning", "제목을", "입력해주세요");
     }
 
-    // try {
-    //   setLoading(true);
-    //   const {
-    //     data: { addPlan }
-    //   } = await createPlan();
-    //   if (addPlan) {
-    //     AlertHelper.showDropAlert("success", "목록생성", "되었습니다");
-    //     navigation.goBack(null);
-    //   }
-    // } catch (e) {
-    //   console.log(e);
-    //   AlertHelper.showDropAlert("warning", "목록생성", "실패");
-    //   // navigation.navigate("Login", { email });
-    // } finally {
-    //   setLoading(false);
-    // }
+    const formData = new FormData();
+    //console.log("picked photo : ", pickedPhoto);
+    // const name = pickedPhoto.filename;
+    let filename = pickedPhoto.uri.split("/").pop();
+    const [, type] = filename.split(".");
+
+    console.log("picked photo : ", filename, " / ", type);
+
+    formData.append("file", {
+      name: filename,
+      type: type.toLowerCase(),
+      uri: pickedPhoto.uri
+    });
+
+    try {
+      setLoading(true);
+      const {
+        data: { location }
+      } = await Axios.post("http://hellojw.net:9333/api/upload", formData, {
+        // } = await Axios.post("http://localhost:4000/api/upload", formData, {
+        headers: {
+          "content-type": "multipart/form-data"
+        }
+      });
+
+      console.log("planImage : ", typeof location);
+      console.log("planTitle : ", typeof planTitleInput.value);
+      console.log("exerciseType : ", typeof pickedExercise.id);
+
+      const {
+        data: { addPlan }
+      } = await createPlan({
+        variables: {
+          planImage: location,
+          planTitle: planTitleInput.value,
+          exerciseType: pickedExercise.id
+        }
+      });
+
+      if (addPlan) {
+        AlertHelper.showDropAlert("success", "목록생성", "되었습니다");
+        navigation.navigate("AddActivity", { id: addPlan.id });
+      }
+    } catch (e) {
+      console.log(e);
+      AlertHelper.showDropAlert("warning", "목록생성", "실패");
+      // navigation.navigate("Login", { email });
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleScroll = event => {
     if (Math.abs(event.nativeEvent.contentOffset.y) > 170) {
-      console.log("close ");
-      navigation.goBack(null);
+      console.log("close ? ", Math.abs(event.nativeEvent.contentOffset.y));
+      //navigation.goBack(null);
     }
   };
 
@@ -377,7 +410,7 @@ export default withNavigation(({ navigation }) => {
                   </EmptyImageArea>
                 </EmptyArea>
               ) : (
-                <ImageCover source={{ uri: pickedPhoto }} />
+                <ImageCover source={{ uri: pickedPhoto.uri }} />
               )}
             </ImageArea>
 
@@ -422,7 +455,7 @@ export default withNavigation(({ navigation }) => {
           <ButtonArea>
             <SubmitButton
               bgColor={styles.neonGreen}
-              loading={false}
+              loading={loading}
               onPress={() => handlePlanSubmit()}
               text="제출"
             />

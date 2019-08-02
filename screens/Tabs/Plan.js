@@ -184,7 +184,7 @@ export default ({ navigation }) => {
               delay={100}
               useNativeDriver={true}
             >
-              <AddPlan size={40} refetch={refetch} />
+              <AddPlan size={40} />
             </AddButton>
             <AddButton
               animation="fadeInUp"
