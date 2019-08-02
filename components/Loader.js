@@ -2,9 +2,9 @@ import React, { useEffect } from "react";
 import { ActivityIndicator, StyleSheet, Platform } from "react-native";
 import styled from "styled-components";
 import { ANIMATION_LOADER_4 } from "../assets/AnimationLoader";
-// import AnimatedLoader from "react-native-animated-loader";
-import LottieView from "lottie-react-native";
 import constants from "../constants";
+import LottieView from "lottie-react-native";
+import { YellowBox } from "react-native";
 
 const Container = styled.View`
   flex: 1;
@@ -13,6 +13,9 @@ const Container = styled.View`
 `;
 
 const Loader = () => {
+  YellowBox.ignoreWarnings([
+    "ReactNative.NativeModules.LottieAnimationView.getConstants"
+  ]);
   useEffect(() => {
     console.log("loader mount play..");
     return () => {
@@ -25,9 +28,8 @@ const Loader = () => {
       <LottieView
         // ref={animationIconRef}
         source={ANIMATION_LOADER_4}
-        autoPlay={true}
-        loop={true}
-        speed={1}
+        autoPlay
+        loop
         style={{
           width: constants.width / 2,
           height: constants.height / 6
