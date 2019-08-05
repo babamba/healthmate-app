@@ -14,17 +14,6 @@ import { AlertHelper } from "../../components/DropDown/AlertHelper";
 import gql from "graphql-tag";
 import { useMutation } from "react-apollo-hooks";
 
-const CREATE_ACTIVITY = gql`
-  mutation addActivity($items: [LineItem]!) {
-    addActivity(items: $items) {
-      activity {
-        id
-        title
-      }
-    }
-  }
-`;
-
 const Conatiner = styled.View`
   flex: 1;
   flex-direction: column;
@@ -58,17 +47,15 @@ const KeyboardAvoiding = styled.KeyboardAvoidingView`
   justify-content: center;
 `;
 
-const InputActivity = ({ navigation, planId, toggle, handleRefetch }) => {
+const InputActivity = ({ navigation, planId, toggle, handleCreate }) => {
   console.log("planId", planId);
   console.log("toggle", toggle);
-  console.log("fetch", handleRefetch);
+  console.log("handleCreate", handleCreate);
   const [loading, setLoading] = useState(false);
   const titleInput = useInput("");
   const secondInput = useInput("");
   const countInput = useInput("");
   const setInput = useInput("");
-
-  const createActivity = useMutation(CREATE_ACTIVITY);
 
   const handleSubmit = async () => {
     const { value: title } = titleInput;
@@ -93,17 +80,17 @@ const InputActivity = ({ navigation, planId, toggle, handleRefetch }) => {
       setLoading(true);
 
       console.log("items : ", items);
+      const result = handleCreate(items);
 
-      const {
-        data: { addActivity }
-      } = await createActivity({
-        variables: {
-          items
-        }
-      });
+      //  const {
+      //    data: { addActivity }
+      //  } = await createActivity({
+      //    variables: {
+      //      items
+      //    }
+      //  });
 
-      if (addActivity) {
-        handleRefetch();
+      if (result) {
         toggle();
         AlertHelper.showDropAlert("success", "목록생성", "되었습니다");
       }

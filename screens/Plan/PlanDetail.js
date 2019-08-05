@@ -19,6 +19,17 @@ import { AlertHelper } from "../../components/DropDown/AlertHelper";
 // import * as MagicMove from "react-native-magic-move";
 // import * as Animatable from "react-native-animatable";
 
+const CREATE_ACTIVITY = gql`
+  mutation addActivity($items: [LineItem]!) {
+    addActivity(items: $items) {
+      activity {
+        id
+        title
+      }
+    }
+  }
+`;
+
 export const SEE_ACTIVITY = gql`
   query seeActivity($planId: String!) {
     seeActivity(planId: $planId) {
@@ -139,6 +150,10 @@ export default ({ navigation }) => {
     refetchQueries: () => [{ query: SEE_ACTIVITY, variables: { planId } }]
   });
 
+  const createActivity = useMutation(CREATE_ACTIVITY, {
+    refetchQueries: () => [{ query: SEE_ACTIVITY, variables: { planId } }]
+  });
+
   // const {
   //   data: { updateActivity }
   // } = await editActivity({
@@ -162,6 +177,20 @@ export default ({ navigation }) => {
 
   const handleRefetch = async () => {
     await refetch({ planId });
+  };
+
+  const handleCreate = async items => {
+    console.log("handleCreate ");
+
+    const {
+      data: { addActivity }
+    } = await createActivity({
+      variables: {
+        items
+      }
+    });
+
+    return addActivity;
   };
 
   const handleDelete = async activityId => {
@@ -284,7 +313,7 @@ export default ({ navigation }) => {
           <InputActivity
             planId={planId}
             toggle={toggleModal}
-            handleRefetch={handleRefetch}
+            handleCreate={handleCreate}
           />
         </ModalInnerView>
       </Modal>
