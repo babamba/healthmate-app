@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import gql from "graphql-tag";
 import { ScrollView, Alert, Platform, StyleSheet } from "react-native";
-import { useQuery } from "react-apollo-hooks";
+import { useQuery, useMutation } from "react-apollo-hooks";
 import styled from "styled-components";
 import Loader from "../../components/Loader";
 import ActivityList from "../../components/Plan/ActivityList";
@@ -14,6 +14,7 @@ import styles from "../../styles";
 import InputActivity from "../../components/Plan/InputActivity";
 
 import Modal from "react-native-modal";
+import { AlertHelper } from "../../components/DropDown/AlertHelper";
 
 // import * as MagicMove from "react-native-magic-move";
 // import * as Animatable from "react-native-animatable";
@@ -37,7 +38,7 @@ const DELETE_ACTIVITY = gql`
     $second: Int
     $count: Int
     $set: Int
-    $action: String
+    $action: ACTIONS!
   ) {
     updateActivity(
       activityId: $activityId
@@ -99,6 +100,10 @@ const ListArea = styled.View`
   flex: 9;
 `;
 
+const Scroll = styled.ScrollView`
+  flex: 9;
+`;
+
 const ModalInnerView = styled.View`
   flex: 1;
   background-color: white;
@@ -129,9 +134,10 @@ export default ({ navigation }) => {
   });
 
   const [activityList, setActivityList] = useState([]);
-  // const editActivity = useMutation(DELETE_ACTIVITY, {
-  //   refetchQueries: () => [{ query: SEE_ACTIVITY, variables: { planId }}]
-  // });
+
+  const deleteActivity = useMutation(DELETE_ACTIVITY, {
+    refetchQueries: () => [{ query: SEE_ACTIVITY, variables: { planId } }]
+  });
 
   // const {
   //   data: { updateActivity }
@@ -156,6 +162,28 @@ export default ({ navigation }) => {
 
   const handleRefetch = async () => {
     await refetch({ planId });
+  };
+
+  const handleDelete = async activityId => {
+    console.log("handleDelete !", activityId);
+
+    try {
+      const {
+        data: { updateActivity }
+      } = await deleteActivity({
+        variables: {
+          activityId,
+          action: constants.Actions.DELETE
+        }
+      });
+
+      if (updateActivity) {
+        AlertHelper.showDropAlert("success", "목록이 삭제", "되었습니다");
+      }
+    } catch (error) {
+      console.log(error);
+      AlertHelper.showDropAlert("warning", "삭제", "실패");
+    }
   };
 
   useEffect(() => {
@@ -207,20 +235,27 @@ export default ({ navigation }) => {
         </HeaderArea>
       </Container>
 
-      <ListArea>
-        <ScrollView>
-          {loading ? (
-            <Loader />
-          ) : data && data.seeActivity && data.seeActivity.length > 0 ? (
+      <Scroll>
+        {loading ? (
+          <Loader />
+        ) : (
+          data &&
+          data.seeActivity &&
+          (data.seeActivity.length > 0 ? (
             data.seeActivity.map((data, index) => {
-              console.log("index", index, " / ", "title : ", data.title);
-              return <ActivityList key={index} {...data} />;
+              return (
+                <ActivityList
+                  key={index}
+                  {...data}
+                  handleDelete={handleDelete}
+                />
+              );
             })
           ) : (
             <EmptyList />
-          )}
-        </ScrollView>
-      </ListArea>
+          ))
+        )}
+      </Scroll>
 
       <Modal
         isVisible={visibleInput}

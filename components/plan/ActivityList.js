@@ -80,11 +80,8 @@ const Divider = styled.View`
   width: 1px;
 `;
 
-const ActivityList = ({ navigation, id, title, second, count, set }) => {
-  // console.log("title : ", title);
-  // console.log("second : ", second);
-  // console.log("count : ", count);
-  // console.log("set : ", set);
+const ActivityList = ({ id, title, second, count, set, handleDelete }) => {
+  console.log("title id: ", id);
 
   const confirm = () => {
     Alert.alert(
@@ -94,7 +91,7 @@ const ActivityList = ({ navigation, id, title, second, count, set }) => {
         {
           text: "삭제",
           style: "destructive",
-          onPress: () => console.log("OK Pressed")
+          onPress: () => handleDelete(id)
         },
         {
           text: "취소",
@@ -127,8 +124,6 @@ const ActivityList = ({ navigation, id, title, second, count, set }) => {
       autoClose={true}
     >
       <Conatiner>
-        {/* <TouchableOpacity onPress={() => navigation.navigate("Detail", { id })}> */}
-        {/* <Image source={{ uri }} /> */}
         <TextContainer>
           <Column>
             <ContentTItle>{title}</ContentTItle>
@@ -154,4 +149,4 @@ const ActivityList = ({ navigation, id, title, second, count, set }) => {
 //   id: PropTypes.string.isRequired
 // };
 
-export default withNavigation(ActivityList);
+export default ActivityList;
