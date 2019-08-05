@@ -12,6 +12,7 @@ import { ENTRIES_NEAR, ENTRIES_CONTENT } from "../../EntryData/Entries"; // 더�
 import constants from "../../constants";
 import { SafeAreaView } from "react-navigation";
 import MainTitle from "../../components/MainTitle";
+import BigBanner from "../../components/Main/BigBanner";
 //import { POST_FRAGMENT } from "../../fragments";
 
 // export const FEED_QUERY = gql`
@@ -87,6 +88,10 @@ export default () => {
     flex-direction: row;
   `;
 
+  const BannerArea = styled.View`
+    padding-vertical: 20px;
+  `;
+
   const SubTitle = styled.Text`
     flex: 1;
     color: black;
@@ -138,6 +143,9 @@ export default () => {
         //    }
         >
           <Container>
+            <BannerArea>
+              <BigBanner />
+            </BannerArea>
             <SubTitleArea>
               <SubTitle>근처 친구들</SubTitle>
             </SubTitleArea>
@@ -165,13 +173,11 @@ export default () => {
               <SubTitle>7월 추천</SubTitle>
             </SubTitleArea>
 
-            <ScrollView>
-              <Row>
-                {ENTRIES_CONTENT.map((data, index) => (
-                  <SquareContent key={index} {...data} />
-                ))}
-              </Row>
-            </ScrollView>
+            <Row>
+              {ENTRIES_CONTENT.map((data, index) => (
+                <SquareContent key={index} {...data} />
+              ))}
+            </Row>
           </Container>
 
           {/* {loading ? (

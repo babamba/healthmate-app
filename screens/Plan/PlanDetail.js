@@ -1,21 +1,24 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import gql from "graphql-tag";
-import { ScrollView, Alert, Platform } from "react-native";
+import { ScrollView, Alert, Platform, StyleSheet } from "react-native";
 import { useQuery } from "react-apollo-hooks";
 import styled from "styled-components";
 import Loader from "../../components/Loader";
-import ActivitList from "../../components/Plan/ActivityList";
+import ActivityList from "../../components/Plan/ActivityList";
 import { SafeAreaView } from "react-navigation";
 import constants from "../../constants";
 import NavIcon from "../../components/NavIcon";
 import MainTitle from "../../components/MainTitle";
 import EmptyList from "../../components/Plan/EmptyList";
 import styles from "../../styles";
+import InputActivity from "../../components/Plan/InputActivity";
+
+import Modal from "react-native-modal";
 
 // import * as MagicMove from "react-native-magic-move";
 // import * as Animatable from "react-native-animatable";
 
-const SEE_ACTIVITY = gql`
+export const SEE_ACTIVITY = gql`
   query seeActivity($planId: String!) {
     seeActivity(planId: $planId) {
       id
@@ -96,13 +99,36 @@ const ListArea = styled.View`
   flex: 9;
 `;
 
+const ModalInnerView = styled.View`
+  flex: 1;
+  background-color: white;
+  justify-content: center;
+  align-items: center;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+  padding: 22px;
+  margin-top: ${constants.height / 3};
+`;
+
+const Overlay = styled.View`
+  flex: 9;
+  background-color: "rgba(0,0,0,0.3)";
+`;
+// const Overlay = styled.View({
+//   ...StyleSheet.absoluteFillObject,
+//   backgroundColor: "rgba(0,0,0,0.3)"
+// });
+
 export default ({ navigation }) => {
+  const [visibleInput, setVisibleInput] = useState(false);
+
   const planId = navigation.getParam("planId");
-  const { loading, data } = useQuery(SEE_ACTIVITY, {
+  const { loading, data, error, refetch } = useQuery(SEE_ACTIVITY, {
     variables: { planId },
     fetchPolicy: "network-only"
   });
 
+  const [activityList, setActivityList] = useState([]);
   // const editActivity = useMutation(DELETE_ACTIVITY, {
   //   refetchQueries: () => [{ query: SEE_ACTIVITY, variables: { planId }}]
   // });
@@ -123,6 +149,31 @@ export default ({ navigation }) => {
   // }
 
   //console.log(data.seeActivity);
+
+  const toggleModal = () => {
+    setVisibleInput(!visibleInput);
+  };
+
+  const handleRefetch = async () => {
+    await refetch({ planId });
+  };
+
+  useEffect(() => {
+    const onCompleted = data => {
+      //console.log("onCompleted data : ", data);
+      setActivityList(data.seeActivity);
+    };
+    const onError = error => {
+      console.log("error initial load data : ", error);
+    };
+    if (onCompleted || onError) {
+      if (onCompleted && !loading && !error) {
+        onCompleted(data);
+      } else if (onError && !loading && error) {
+        onError(error);
+      }
+    }
+  }, [data, loading, error]);
 
   return (
     <SafeAreaView
@@ -147,33 +198,61 @@ export default ({ navigation }) => {
 
           <AddContainer>
             <TouchableOpacity
-              onPress={() => navigation.navigate("AddActivity", { planId })}
+              // onPress={() => navigation.navigate("AddActivity", { planId })}
+              onPress={() => toggleModal()}
             >
               <NavIcon name={Platform.OS === "ios" ? "ios-add" : "md-add"} />
             </TouchableOpacity>
           </AddContainer>
         </HeaderArea>
       </Container>
+
       <ListArea>
         <ScrollView>
           {loading ? (
             <Loader />
           ) : data && data.seeActivity && data.seeActivity.length > 0 ? (
             data.seeActivity.map((data, index) => {
-              console.log("data", data);
-              return <ActivitList key={index} {...data} />;
+              console.log("index", index, " / ", "title : ", data.title);
+              return <ActivityList key={index} {...data} />;
             })
           ) : (
             <EmptyList />
           )}
         </ScrollView>
       </ListArea>
+
+      <Modal
+        isVisible={visibleInput}
+        avoidKeyboard={true}
+        animationIn={"slideInUp"}
+        animationOut={"slideOutDown"}
+        deviceWidth={constants.width}
+        deviceHeight={constants.height}
+        style={{
+          justifyContent: "flex-end",
+          margin: 0
+        }}
+        backdropColor={"grey"}
+        backdropOpacity={0.6}
+        onBackButtonPress={() => toggleModal()}
+        onBackdropPress={() => toggleModal()}
+        onSwipeComplete={() => toggleModal()}
+        swipeDirection={["down"]}
+        swipeThreshold={10}
+      >
+        {/* <ModalContent>
+              <Text>Test</Text>
+              
+            </ModalContent> */}
+        <ModalInnerView>
+          <InputActivity
+            planId={planId}
+            toggle={toggleModal}
+            handleRefetch={handleRefetch}
+          />
+        </ModalInnerView>
+      </Modal>
     </SafeAreaView>
   );
 };
-
-// export default ({ navigation, props }) => (
-//   <View>
-//     <Text>Plan Detail {props}</Text>
-//   </View>
-// );

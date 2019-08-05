@@ -1,7 +1,6 @@
 import React from "react";
-import { View, TouchableOpacity, Alert, Platform } from "react-native";
+import { Alert } from "react-native";
 import { withNavigation } from "react-navigation";
-import PropTypes from "prop-types";
 import styled from "styled-components";
 import globalStyles from "../../styles";
 import constants from "../../constants";
@@ -82,14 +81,10 @@ const Divider = styled.View`
 `;
 
 const ActivityList = ({ navigation, id, title, second, count, set }) => {
-  console.log("title : ", title);
-  console.log("second : ", second);
-  console.log("count : ", count);
-  console.log("set : ", set);
-
-  const testAlert = id => {
-    // Alert.alert("id : ", id);
-  };
+  // console.log("title : ", title);
+  // console.log("second : ", second);
+  // console.log("count : ", count);
+  // console.log("set : ", set);
 
   const confirm = () => {
     Alert.alert(

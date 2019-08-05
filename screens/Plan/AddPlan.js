@@ -347,9 +347,12 @@ export default withNavigation(({ navigation }) => {
   };
 
   const handleScroll = event => {
-    if (Math.abs(event.nativeEvent.contentOffset.y) > 170) {
-      console.log("close ? ", Math.abs(event.nativeEvent.contentOffset.y));
-      //navigation.goBack(null);
+    console.log("handle scroll");
+    const y = Math.round(event.nativeEvent.contentOffset.y);
+    console.log(y);
+    if (y <= -170) {
+      console.log("close ! ");
+      navigation.navigate("TabNavigation");
     }
   };
 
@@ -364,7 +367,7 @@ export default withNavigation(({ navigation }) => {
     >
       <ScrollView
         ref={scrollView}
-        onScrollEndDrag={event => handleScroll(event)}
+        onScroll={event => handleScroll(event)}
         scrollEventThrottle={160}
       >
         <View>

@@ -13,7 +13,7 @@ import gql from "graphql-tag";
 import { useMutation } from "react-apollo-hooks";
 
 export const CREATE_ACTIVITY = gql`
-  mutation addActivity($items: Array!) {
+  mutation addActivity($items: [LineItem]) {
     addActivity(items: $items) {
       activity {
         id
@@ -67,10 +67,10 @@ export default withNavigation(({ navigation }) => {
   const [loading, setLoading] = useState(false);
 
   const planId = navigation.getParam("planId"); //메인 목록 조회
-  const titleInput = useInput();
-  const secondInput = useInput();
-  const countInput = useInput();
-  const setInput = useInput();
+  const titleInput = useInput("");
+  const secondInput = useInput("");
+  const countInput = useInput("");
+  const setInput = useInput("");
 
   const createActivity = useMutation(CREATE_ACTIVITY, {
     refetchQueries: () => [{ query: SEE_ACTIVITY, variables: { planId } }]

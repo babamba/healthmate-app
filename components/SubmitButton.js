@@ -10,7 +10,7 @@ const Container = styled.View`
   background-color: ${props =>
     props.bgColor ? props.bgColor : props.theme.blueColor};
   padding: 10px;
-  margin: 0px 50px;
+
   border-radius: 4px;
   width: ${constants.width / 1.7};
   box-shadow: ${constants.boxShadow};

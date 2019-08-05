@@ -7,6 +7,7 @@ import ProfileNavigation from "./ProfileNavigation";
 import CalendarNavigation from "./CalendarNavigation";
 import Scene1 from "../screens/Test/Scene1";
 import { stackStyles } from "./config";
+import BannerNavigation from "./BannerNavigation";
 
 const MainNavigation = createStackNavigator(
   {
@@ -16,7 +17,7 @@ const MainNavigation = createStackNavigator(
     PlanNavigation,
     ProfileNavigation,
     CalendarNavigation,
-    Scene1
+    BannerNavigation
   },
   {
     defaultNavigationOptions: {
