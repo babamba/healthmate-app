@@ -42,14 +42,14 @@ export const ENTRIES_CONTENT = [
     id: "cjxtpze1muyu30b42ilp7ixf6",
     title: "이런강좌1",
     username: "박보영",
-    intro: "이렇게하는거래",
+    intro: "목동 헬스장에서 같이 운동해요",
     uri: "http://www.xhift.co.kr/wp-content/uploads/2018/09/team_08.png"
   }),
   (data = {
     id: "cjy8c55pqz0jl0b19scqhbvc8",
     title: "이런강좌1",
     username: "이철호",
-    intro: "스쿼트강좌",
+    intro: "스쿼트 강좌",
     uri: "http://www.xhift.co.kr/wp-content/uploads/2018/09/team_01.png"
   }),
   (data = {
@@ -63,7 +63,7 @@ export const ENTRIES_CONTENT = [
     id: "cjy8bzbbfcqnv0b06k49278pe",
     title: "이런강좌1",
     username: "이보미",
-    intro: "이렇게하는거래",
+    intro: "잔잔하게 요가하실분 찾아요",
     uri: "http://www.xhift.co.kr/wp-content/uploads/2018/09/team_11.png"
   })
 ];

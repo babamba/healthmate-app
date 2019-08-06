@@ -147,7 +147,7 @@ export default () => {
               <BigBanner />
             </BannerArea>
             <SubTitleArea>
-              <SubTitle>근처 친구들</SubTitle>
+              <SubTitle>헬린이를 소개해요</SubTitle>
             </SubTitleArea>
             <ScrollView
               horizontal={true}
@@ -170,7 +170,7 @@ export default () => {
 
           <Container>
             <SubTitleArea>
-              <SubTitle>7월 추천</SubTitle>
+              <SubTitle>함께 운동해요!</SubTitle>
             </SubTitleArea>
 
             <Row>

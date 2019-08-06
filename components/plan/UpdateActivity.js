@@ -47,15 +47,23 @@ const KeyboardAvoiding = styled.KeyboardAvoidingView`
   justify-content: center;
 `;
 
-const InputActivity = ({ navigation, planId, toggle, handleCreate }) => {
+const UpdateActivity = ({ navigation, planId, toggle, handleUpdate, data }) => {
   // console.log("planId", planId);
+  // console.log("Acitvity Id : ", data.id);
   // console.log("toggle", toggle);
-  // console.log("handleCreate", handleCreate);
+  // console.log("handleUpdate", handleUpdate);
+  // console.log("updateData ? : ", data);
   const [loading, setLoading] = useState(false);
-  const titleInput = useInput("");
-  const secondInput = useInput("");
-  const countInput = useInput("");
-  const setInput = useInput("");
+  const titleInput = useInput(
+    data.title && data.title !== "" ? data.title : ""
+  );
+  const secondInput = useInput(
+    data.second && data.second > 0 ? String(data.second) : ""
+  );
+  const countInput = useInput(
+    data.count && data.count > 0 ? String(data.count) : ""
+  );
+  const setInput = useInput(data.set && data.set !== "" ? data.set : "");
 
   const handleSubmit = async () => {
     const { value: title } = titleInput;
@@ -63,14 +71,17 @@ const InputActivity = ({ navigation, planId, toggle, handleCreate }) => {
     const { value: count } = countInput;
     const { value: set } = setInput;
 
-    let items = [];
-    items.push({
-      planId,
+    console.log("title : ", title);
+    console.log("second : ", second);
+    console.log("count : ", count);
+    console.log("set : ", set);
+
+    let item = {
       title,
       second: Number(second),
       count: Number(count),
       set
-    });
+    };
 
     if (title === "") {
       return AlertHelper.showDropAlert("warning", "제목을", "입력해주세요");
@@ -79,27 +90,19 @@ const InputActivity = ({ navigation, planId, toggle, handleCreate }) => {
     try {
       setLoading(true);
 
-      console.log("items : ", items);
-      const result = await handleCreate(items);
-
-      //  const {
-      //    data: { addActivity }
-      //  } = await createActivity({
-      //    variables: {
-      //      items
-      //    }
-      //  });
+      console.log("item : ", item);
+      const result = await handleUpdate(item, data.id);
 
       if (result) {
         toggle();
-        AlertHelper.showDropAlert("success", "목록이 생성 되었습니다 :)");
+        AlertHelper.showDropAlert("success", "목록이 수정되었습니다 :)");
       } else {
         toggle();
-        AlertHelper.showDropAlert("warning", "목록 생성을 실패하였습니다 :(");
+        AlertHelper.showDropAlert("warning", "목록 수정을 실패하였습니다 :(");
       }
     } catch (e) {
       console.log(e);
-      AlertHelper.showDropAlert("warning", "목록 생성을 실패하였습니다 :(");
+      AlertHelper.showDropAlert("warning", "목록 수정을 실패하였습니다 :(");
     } finally {
       setLoading(false);
     }
@@ -160,7 +163,7 @@ const InputActivity = ({ navigation, planId, toggle, handleCreate }) => {
           bgColor={styles.neonGreen}
           loading={loading}
           onPress={() => handleSubmit()}
-          text="추가하기"
+          text="수정하기"
         />
       </ButtonArea>
     </Conatiner>
@@ -177,4 +180,4 @@ const InputActivity = ({ navigation, planId, toggle, handleCreate }) => {
 //   id: PropTypes.string.isRequired
 // };
 
-export default withNavigation(InputActivity);
+export default withNavigation(UpdateActivity);

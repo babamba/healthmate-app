@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from "react";
 import gql from "graphql-tag";
-import { ScrollView, Alert, Platform, StyleSheet } from "react-native";
+import {
+  ScrollView,
+  Alert,
+  Platform,
+  StyleSheet,
+  Keyboard
+} from "react-native";
 import { useQuery, useMutation } from "react-apollo-hooks";
 import styled from "styled-components";
 import Loader from "../../components/Loader";
@@ -15,6 +21,7 @@ import InputActivity from "../../components/Plan/InputActivity";
 
 import Modal from "react-native-modal";
 import { AlertHelper } from "../../components/DropDown/AlertHelper";
+import UpdateActivity from "../../components/Plan/UpdateActivity";
 
 // import * as MagicMove from "react-native-magic-move";
 // import * as Animatable from "react-native-animatable";
@@ -42,13 +49,13 @@ export const SEE_ACTIVITY = gql`
   }
 `;
 
-const DELETE_ACTIVITY = gql`
+const UPDATE_DELETE_ACTIVITY = gql`
   mutation updateActivity(
     $activityId: String!
     $title: String
     $second: Int
     $count: Int
-    $set: Int
+    $set: String
     $action: ACTIONS!
   ) {
     updateActivity(
@@ -118,12 +125,14 @@ const Scroll = styled.ScrollView`
 const ModalInnerView = styled.View`
   flex: 1;
   background-color: white;
+  /* background-color: red; */
   justify-content: center;
   align-items: center;
-  border-top-left-radius: 20px;
-  border-top-right-radius: 20px;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
   padding: 22px;
-  margin-top: ${constants.height / 3};
+  padding-top: ${constants.height / 9};
+  margin-bottom: ${constants.height / 5};
 `;
 
 const Overlay = styled.View`
@@ -137,6 +146,8 @@ const Overlay = styled.View`
 
 export default ({ navigation }) => {
   const [visibleInput, setVisibleInput] = useState(false);
+  const [visibleEdit, setVisibleEdit] = useState(false);
+  const [updateData, setUpdateData] = useState(null);
 
   const planId = navigation.getParam("planId");
   const { loading, data, error, refetch } = useQuery(SEE_ACTIVITY, {
@@ -146,7 +157,7 @@ export default ({ navigation }) => {
 
   const [activityList, setActivityList] = useState([]);
 
-  const deleteActivity = useMutation(DELETE_ACTIVITY, {
+  const updateDeleteActivity = useMutation(UPDATE_DELETE_ACTIVITY, {
     refetchQueries: () => [{ query: SEE_ACTIVITY, variables: { planId } }]
   });
 
@@ -171,26 +182,70 @@ export default ({ navigation }) => {
 
   //console.log(data.seeActivity);
 
-  const toggleModal = () => {
+  const toggleInsertModal = () => {
     setVisibleInput(!visibleInput);
+    if (!visibleInput) {
+      Keyboard.dismiss();
+    }
+  };
+
+  const toggleUpdateModal = async data => {
+    console.log("Edit data : ", data);
+
+    if (visibleEdit) {
+      //await setUpdateData(null);
+      await setVisibleEdit(false);
+    } else {
+      await setUpdateData(data);
+      await setVisibleEdit(true);
+    }
+    console.log("setState", updateData);
   };
 
   const handleRefetch = async () => {
     await refetch({ planId });
   };
 
-  const handleCreate = async items => {
-    console.log("handleCreate ");
+  const handleUpdate = async (item, activityId) => {
+    console.log("item !", item);
+    console.log("handleUpdate !", activityId);
 
-    const {
-      data: { addActivity }
-    } = await createActivity({
+    let success = false;
+
+    await updateDeleteActivity({
       variables: {
-        items
+        ...item,
+        activityId,
+        action: constants.Actions.UPDATE
+      }
+    }).then(async result => {
+      console.log("then result", result);
+      if (result.data) {
+        //handleRefetch();
+        success = true;
       }
     });
 
-    return addActivity;
+    return success;
+  };
+
+  const handleCreate = async items => {
+    console.log("handle Create ");
+    let success = false;
+
+    await createActivity({
+      variables: {
+        items
+      }
+    }).then(async result => {
+      console.log("then result", result);
+      if (result.data) {
+        //handleRefetch();
+        success = true;
+      }
+    });
+
+    return success;
   };
 
   const handleDelete = async activityId => {
@@ -199,7 +254,7 @@ export default ({ navigation }) => {
     try {
       const {
         data: { updateActivity }
-      } = await deleteActivity({
+      } = await updateDeleteActivity({
         variables: {
           activityId,
           action: constants.Actions.DELETE
@@ -217,7 +272,7 @@ export default ({ navigation }) => {
 
   useEffect(() => {
     const onCompleted = data => {
-      //console.log("onCompleted data : ", data);
+      //console.log("onCompleted activity data : ", data);
       setActivityList(data.seeActivity);
     };
     const onError = error => {
@@ -256,7 +311,7 @@ export default ({ navigation }) => {
           <AddContainer>
             <TouchableOpacity
               // onPress={() => navigation.navigate("AddActivity", { planId })}
-              onPress={() => toggleModal()}
+              onPress={() => toggleInsertModal()}
             >
               <NavIcon name={Platform.OS === "ios" ? "ios-add" : "md-add"} />
             </TouchableOpacity>
@@ -265,6 +320,25 @@ export default ({ navigation }) => {
       </Container>
 
       <Scroll>
+        {loading ? (
+          <Loader />
+        ) : (
+          data &&
+          data.seeActivity &&
+          (data.seeActivity.length > 0 ? (
+            <ActivityList
+              data={data.seeActivity}
+              handleDelete={handleDelete}
+              handleUpdate={handleUpdate}
+              toggleUpdateModal={toggleUpdateModal}
+            />
+          ) : (
+            <EmptyList />
+          ))
+        )}
+      </Scroll>
+
+      {/* <Scroll>
         {loading ? (
           <Loader />
         ) : (
@@ -284,13 +358,13 @@ export default ({ navigation }) => {
             <EmptyList />
           ))
         )}
-      </Scroll>
+      </Scroll> */}
 
       <Modal
         isVisible={visibleInput}
         avoidKeyboard={true}
-        animationIn={"slideInUp"}
-        animationOut={"slideOutDown"}
+        animationIn={"slideInDown"}
+        animationOut={"slideOutUp"}
         deviceWidth={constants.width}
         deviceHeight={constants.height}
         style={{
@@ -299,10 +373,10 @@ export default ({ navigation }) => {
         }}
         backdropColor={"grey"}
         backdropOpacity={0.6}
-        onBackButtonPress={() => toggleModal()}
-        onBackdropPress={() => toggleModal()}
-        onSwipeComplete={() => toggleModal()}
-        swipeDirection={["down"]}
+        onBackButtonPress={() => toggleInsertModal()}
+        onBackdropPress={() => toggleInsertModal()}
+        onSwipeComplete={() => toggleInsertModal()}
+        swipeDirection={["up"]}
         swipeThreshold={10}
       >
         {/* <ModalContent>
@@ -312,8 +386,41 @@ export default ({ navigation }) => {
         <ModalInnerView>
           <InputActivity
             planId={planId}
-            toggle={toggleModal}
+            toggle={toggleInsertModal}
             handleCreate={handleCreate}
+          />
+        </ModalInnerView>
+      </Modal>
+
+      <Modal
+        isVisible={visibleEdit}
+        avoidKeyboard={true}
+        animationIn={"slideInDown"}
+        animationOut={"slideOutUp"}
+        deviceWidth={constants.width}
+        deviceHeight={constants.height}
+        style={{
+          justifyContent: "flex-end",
+          margin: 0
+        }}
+        backdropColor={"grey"}
+        backdropOpacity={0.6}
+        onBackButtonPress={() => toggleUpdateModal()}
+        onBackdropPress={() => toggleUpdateModal()}
+        onSwipeComplete={() => toggleUpdateModal()}
+        swipeDirection={["up"]}
+        swipeThreshold={10}
+      >
+        {/* <ModalContent>
+              <Text>Test</Text>
+              
+            </ModalContent> */}
+        <ModalInnerView>
+          <UpdateActivity
+            planId={planId}
+            data={updateData}
+            toggle={toggleUpdateModal}
+            handleUpdate={handleUpdate}
           />
         </ModalInnerView>
       </Modal>

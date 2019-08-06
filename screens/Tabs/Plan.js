@@ -5,7 +5,7 @@ import styled from "styled-components";
 import { ScrollView, RefreshControl } from "react-native";
 import PlanList from "../../components/Plan/PlanList";
 import Loader from "../../components/Loader";
-import AddPlan from "../../components/Plan/AddPlan";
+import AddPlan from "../../components/Plan/AddPlanButton";
 import constants from "../../constants";
 import CarouselItem from "../../components/Plan/PlanCarouselList";
 import { SafeAreaView } from "react-navigation";
@@ -174,9 +174,7 @@ export default ({ navigation }) => {
           {/* </ScrollView> */}
         </Content>
         <Footer>
-          <RowLeft>
-            <Weather />
-          </RowLeft>
+          <RowLeft>{/* <Weather /> */}</RowLeft>
           <RowRight>
             <AddButton
               animation="fadeInUp"

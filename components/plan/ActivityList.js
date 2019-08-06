@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, createRef, useRef } from "react";
 import { Alert } from "react-native";
 import { withNavigation } from "react-navigation";
 import styled from "styled-components";
@@ -80,63 +80,136 @@ const Divider = styled.View`
   width: 1px;
 `;
 
-const ActivityList = ({ id, title, second, count, set, handleDelete }) => {
-  console.log("title id: ", id);
+const View = styled.View``;
 
-  const confirm = () => {
-    Alert.alert(
-      title,
-      "삭제 하시겠습니까?",
-      [
-        {
-          text: "삭제",
-          style: "destructive",
-          onPress: () => handleDelete(id)
-        },
-        {
-          text: "취소",
-          onPress: () => console.log("Cancel Pressed"),
-          style: "cancel"
-        }
-      ],
-      { cancelable: true }
+const ActivityList = ({
+  data,
+  handleDelete,
+  handleUpdate,
+  toggleUpdateModal
+}) => {
+  //console.log("title data: ", data);
+  //const [swipeRef, setSwipeRef] = useState(() => createRef());
+  // const itemsRef = useRef([]);
+  //const swipeRef = useRef();
+  //const itemsRef = useRef(data.map(() => createRef()));
+  let currentRowId = null;
+  let prevRowId = null;
+
+  const ListItem = props => {
+    const itemRef = useRef();
+    const item = props.item;
+    const index = props.index;
+
+    const testAlert = () => {
+      console.log("data ? : ", itemRef.current.props._data);
+    };
+
+    const confirm = () => {
+      Alert.alert(
+        itemRef.current.props._data.title,
+        "삭제 하시겠습니까?",
+        [
+          {
+            text: "삭제",
+            style: "destructive",
+            onPress: () => handleDelete(itemRef.current.props._data.id)
+          },
+          {
+            text: "취소",
+            onPress: () => console.log("Cancel Pressed"),
+            style: "cancel"
+          }
+        ],
+        { cancelable: true }
+      );
+    };
+
+    const swipeoutBtns = [
+      {
+        text: "수정",
+        type: "primary",
+        onPress: () => toggleUpdateModal(itemRef.current.props._data)
+      },
+      {
+        text: "삭제",
+        type: "delete",
+        onPress: () => confirm()
+      }
+    ];
+
+    return (
+      <Swipeout
+        ref={itemRef}
+        right={swipeoutBtns}
+        rowID={index}
+        // backgroundColor={"#ffffff"}
+        backgroundColor={globalStyles.backgroundGreyColor}
+        autoClose={true}
+        _data={item}
+        close={prevRowId !== currentRowId}
+        onOpen={(sectionID, rowID) => {
+          console.log("currentRowId : ", currentRowId);
+          console.log("prevRowId : ", prevRowId);
+          prevRowId = currentRowId;
+          currentRowId = rowID;
+          console.log("currentRowId : ", currentRowId);
+        }}
+      >
+        <Conatiner>
+          <TextContainer>
+            <Column>
+              <ContentTItle>{item.title}</ContentTItle>
+            </Column>
+            <Row>
+              {item.second > 0 && <ContentInfo>{item.second} 분</ContentInfo>}
+              {item.count > 0 && <ContentInfo>{item.count} 초</ContentInfo>}
+              {item.set > 0 && item.set !== "" && (
+                <ContentInfo>{item.set} 세트</ContentInfo>
+              )}
+            </Row>
+          </TextContainer>
+        </Conatiner>
+      </Swipeout>
     );
   };
 
-  const swipeoutBtns = [
-    {
-      text: "수정",
-      type: "primary",
-      onPress: () => testAlert()
-    },
-    {
-      text: "삭제",
-      type: "delete",
-      onPress: () => confirm()
-    }
-  ];
+  const RenderList = props => {
+    const data = props.data;
+    const listItems = data.map((item, index) => (
+      <ListItem key={index} item={item} index={index} />
+    ));
 
-  return (
-    <Swipeout
-      right={swipeoutBtns}
-      // backgroundColor={"#ffffff"}
-      backgroundColor={globalStyles.backgroundGreyColor}
-      autoClose={true}
-    >
-      <Conatiner>
-        <TextContainer>
-          <Column>
-            <ContentTItle>{title}</ContentTItle>
-          </Column>
-          <Row>
-            {second > 0 && <ContentInfo>{second} 분</ContentInfo>}
-            {count > 0 && <ContentInfo>{count} 초</ContentInfo>}
-            {set > 0 && <ContentInfo>{set} 세트</ContentInfo>}
-          </Row>
-        </TextContainer>
-      </Conatiner>
-    </Swipeout>
-  );
+    return <View>{listItems}</View>;
+  };
+
+  return <RenderList data={data} />;
+
+  // data.map((item, index) => {
+  //   return (
+  //     <Swipeout
+  //       right={swipeoutBtns}
+  //       // backgroundColor={"#ffffff"}
+  //       backgroundColor={globalStyles.backgroundGreyColor}
+  //       autoClose={true}
+  //     >
+  //       <Conatiner>
+  //         <TextContainer>
+  //           <Column>
+  //             <ContentTItle>{item.title}</ContentTItle>
+  //           </Column>
+  //           <Row>
+  //             {item.second > 0 && <ContentInfo>{item.second} 분</ContentInfo>}
+  //             {item.count > 0 && <ContentInfo>{item.count} 초</ContentInfo>}
+  //             {item.set > 0 && item.set !== "" && (
+  //               <ContentInfo>{item.set} 세트</ContentInfo>
+  //             )}
+  //           </Row>
+  //         </TextContainer>
+  //       </Conatiner>
+  //     </Swipeout>
+  //   );
+  // });
 };
 
 // PlanContentList.propTypes = {

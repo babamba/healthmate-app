@@ -1,5 +1,5 @@
 import { createStackNavigator } from "react-navigation";
-import Plan from "../screens/Plan/Plan";
+import Plan from "../screens/Plan/PlanTest";
 import AddPlan from "../screens/Plan/AddPlan";
 import AddActivity from "../screens/Plan/AddActivity";
 import { stackStyles } from "./config";

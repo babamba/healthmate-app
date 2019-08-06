@@ -14,8 +14,8 @@ import {
 import moment from "moment";
 import * as Animatable from "react-native-animatable";
 import { SafeAreaView } from "react-navigation";
-import AddPlan from "../../components/Plan/AddPlan";
-import DeletePlan from "../Plan/DeletePlan";
+import AddPlan from "../../components/Plan/AddPlanButton";
+import DeletePlan from "../Plan/DeletePlanButton";
 
 import Swipeout from "react-native-swipeout";
 import { Feather } from "@expo/vector-icons";
