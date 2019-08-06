@@ -1,10 +1,12 @@
 import { createStackNavigator } from "react-navigation";
-import Calendar from "../components/Calendar/Calendar";
+//import Calendar from "../components/Calendar/Calendar";
+import Schedule from "../components/Calendar/TimeLine";
 import { stackStyles } from "./config";
 
 export default createStackNavigator(
   {
-    Calendar
+    //Calendar,
+    Schedule
   },
   {
     defaultNavigationOptions: {

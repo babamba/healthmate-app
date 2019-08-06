@@ -163,7 +163,7 @@ const ActivityList = ({
             </Column>
             <Row>
               {item.second > 0 && <ContentInfo>{item.second} 분</ContentInfo>}
-              {item.count > 0 && <ContentInfo>{item.count} 초</ContentInfo>}
+              {item.count > 0 && <ContentInfo>{item.count} 회</ContentInfo>}
               {item.set > 0 && item.set !== "" && (
                 <ContentInfo>{item.set} 세트</ContentInfo>
               )}

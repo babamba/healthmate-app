@@ -12,10 +12,10 @@ import TouchableScale from "react-native-touchable-scale";
 // `;
 const Container = styled.View``;
 
-const TestButton = ({ navigation, size }) => {
+const OpenCalendarButton = ({ navigation, size }) => {
   return (
     <TouchableScale
-      onPress={() => navigation.navigate("Calendar")}
+      onPress={() => navigation.navigate("Schedule")}
       activeScale={0.9}
       friction={2}
     >
@@ -26,4 +26,4 @@ const TestButton = ({ navigation, size }) => {
   );
 };
 
-export default withNavigation(TestButton);
+export default withNavigation(OpenCalendarButton);

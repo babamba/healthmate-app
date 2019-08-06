@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "healthmate-app1",
-    "slug": "healthmate-app1",
+    "name": "healthmate-app",
+    "slug": "healthmate-app",
     "privacy": "public",
     "sdkVersion": "34.0.0",
     "platforms": [

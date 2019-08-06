@@ -12,18 +12,84 @@ import {
   Text,
   Image
 } from "react-native";
+import styled from "styled-components";
 import TouchableScale from "react-native-touchable-scale";
-import { withNavigation } from "react-navigation";
+import { withNavigation, Header } from "react-navigation";
 import { BlurView } from "expo-blur";
 
 import * as Animatable from "react-native-animatable";
 import constants from "../../constants";
+import { Feather } from "@expo/vector-icons";
 // import * as MagicMove from "react-native-magic-move";
 
 // const { width: screenWidth } = Dimensions.get("window");
 
 console.log(constants.width);
 const entryBorderRadius = 8;
+const moreButtonWidth = constants.width / 11.5;
+
+const Container = styled.View`
+  justify-content: center;
+  align-items: center;
+  padding-vertical: 20px;
+`;
+
+const Item = styled.View`
+  margin-left: 14px;
+  width: ${constants.width - 100};
+  height: ${constants.height / 2};
+  box-shadow: ${constants.boxShadow};
+  padding-vertical: 10px;
+`;
+
+const ImageContainer = styled.View`
+  flex: 1;
+`;
+
+const ImageItem = styled.Image`
+  flex: 1;
+  border-radius: ${entryBorderRadius};
+  margin-bottom: ${Platform.select({ ios: 0, android: -1 })};
+  /* Prevent a random Android rendering issue */
+`;
+
+const Title = styled.Text`
+  color: white;
+  font-size: 36px;
+  letter-spacing: 0.5;
+  font-family: NanumBarunGothicLight;
+`;
+
+const HeaderTitle = styled.Text`
+  color: white;
+  font-size: 16px;
+  letter-spacing: 0.5;
+  font-family: NanumBarunGothicUltraLight;
+`;
+
+const OverlayHeaderTextConatiner = styled.View`
+  position: absolute;
+  top: 0;
+  align-items: flex-start;
+  justify-content: flex-start;
+  overflow: hidden;
+  padding-horizontal: 16px;
+  padding-vertical: 16px;
+  width: ${constants.width - 100};
+`;
+
+const MoreContainer = styled.View`
+  position: absolute;
+  top: 0;
+  right: 0;
+  background-color: white;
+  width: ${moreButtonWidth};
+  height: ${moreButtonWidth};
+  border-radius: ${moreButtonWidth / 2};
+  z-index: 3;
+  align-items: center;
+  justify-content: center;
+`;
 
 const MyCarousel = props => {
   //   const {
@@ -42,10 +108,16 @@ const MyCarousel = props => {
   const [carouselRef, setCarouselRef] = useState(() => createRef());
   const [activeSlide, setActiveSlide] = useState(SLIDER_1_FIRST_ITEM);
 
-  const { onSnapUser, data, navigation, mountComplete } = props;
+  const {
+    onSnapUser,
+    data,
+    navigation,
+    mountComplete,
+    showActionSheet
+  } = props;
 
   const _renderItem = ({ item, index }, parallaxProps) => {
-    //console.log("item thumbnail", item.thumbnail);
+    //console.log("item thumbnail", item);
     return (
       // <MagicMove.View id={"scene1"}>
       <Animatable.View
@@ -55,6 +127,17 @@ const MyCarousel = props => {
         useNativeDriver={true}
       >
         <TouchableScale
+          activeScale={0.97}
+          style={{ zIndex: 3 }}
+          onPress={() => {
+            showActionSheet(item);
+          }}
+        >
+          <MoreContainer>
+            <Feather name={"more-horizontal"} size={20} />
+          </MoreContainer>
+        </TouchableScale>
+        <TouchableScale
           activeScale={0.99}
           // tension={80}
           // friction={2}
@@ -62,52 +145,21 @@ const MyCarousel = props => {
             navigation.navigate("PlanDetail", { planId: item.id });
           }}
         >
-          <View style={styles.item}>
-            {/* <ParallaxImage
-            source={{ uri: item.thumbnail }}
-            containerStyle={styles.imageContainer}
-            style={styles.image}
-            parallaxFactor={0.4}
-            fadeDuration={300}
-            {...parallaxProps}
-          /> */}
-
-            <View style={styles.imageContainer}>
-              <Image
+          <Item>
+            <ImageContainer>
+              <ImageItem
                 source={{
                   uri: item.planImage ? item.planImage : item.exerciseType.image
                 }}
-                //   containerStyle={styles.imageContainer}
-                style={styles.image}
-                //   {...parallaxProps}
               />
-              {/* <View style={styles.overlay} /> */}
-
               <View style={styles.overlayTextConatiner}>
-                <View style={styles.overlayHeaderTextConatiner}>
-                  <Text style={styles.headerTitle}>
-                    {item.exerciseType.title}
-                  </Text>
-                </View>
-
-                <Text style={styles.title}>{item.planTitle}</Text>
+                <OverlayHeaderTextConatiner>
+                  <HeaderTitle>{item.exerciseType.title}</HeaderTitle>
+                </OverlayHeaderTextConatiner>
+                <Title>{item.planTitle}</Title>
               </View>
-              {/* <BlurView
-                tint="default"
-                intensity={100}
-                style={[
-                  styles.textContainer,
-                  {
-                    borderRadius: 8,
-                    borderTopLeftRadius: 0,
-                    borderTopRightRadius: 0
-                  }
-                ]}
-              >
-                <Text style={styles.title}>{item.planTitle}</Text>
-              </BlurView> */}
-            </View>
-          </View>
+            </ImageContainer>
+          </Item>
         </TouchableScale>
       </Animatable.View>
       // </MagicMove.View>
@@ -115,7 +167,7 @@ const MyCarousel = props => {
   };
 
   return (
-    <View style={styles.container}>
+    <Container>
       <Pagination
         dotsLength={props.data.length}
         activeDotIndex={activeSlide}
@@ -147,47 +199,13 @@ const MyCarousel = props => {
           tension: 80
         }}
       />
-    </View>
+    </Container>
   );
 };
 
 export default withNavigation(MyCarousel);
 
 const styles = StyleSheet.create({
-  container: {
-    justifyContent: "center",
-    alignItems: "center",
-    paddingVertical: 20
-  },
-  item: {
-    marginLeft: 14,
-    width: constants.width - 100,
-    height: constants.height / 2,
-
-    shadowColor: "#000",
-    shadowOpacity: 0.25,
-    shadowOffset: { width: 0, height: 5 },
-    shadowRadius: 6,
-
-    elevation: 12,
-
-    paddingVertical: 10
-
-    // marginLeft: 10,
-    // marginTop: 10,
-  },
-  imageContainer: {
-    flex: 1
-    //     marginBottom: Platform.select({ ios: 0, android: 1 }), // Prevent a random Android rendering issue
-  },
-  image: {
-    flex: 1,
-    // width: constants.width - 100,
-    // height: constants.height / 1.8,
-    resizeMode: "cover",
-    borderRadius: entryBorderRadius,
-    marginBottom: Platform.select({ ios: 0, android: -1 }) // Prevent a random Android rendering issue
-  },
   paginationContainer: {
     width: constants.width,
     justifyContent: "center",
@@ -199,16 +217,6 @@ const styles = StyleSheet.create({
     width: 14,
     height: 8,
     borderRadius: 7
-  },
-  overlayHeaderTextConatiner: {
-    position: "absolute",
-    top: 0,
-    alignItems: "flex-end",
-    justifyContent: "flex-start",
-    overflow: "hidden",
-    paddingHorizontal: 16,
-    paddingVertical: 16,
-    width: constants.width - 100
   },
   overlayTextConatiner: {
     ...StyleSheet.absoluteFillObject,
