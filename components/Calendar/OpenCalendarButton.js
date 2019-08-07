@@ -15,7 +15,7 @@ const Container = styled.View``;
 const OpenCalendarButton = ({ navigation, size }) => {
   return (
     <TouchableScale
-      onPress={() => navigation.navigate("Schedule")}
+      onPress={() => navigation.navigate("Calendar")}
       activeScale={0.9}
       friction={2}
     >

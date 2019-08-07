@@ -69,6 +69,7 @@ const ContentContainer = styled.View`
   flex: 0.3;
   justify-content: flex-end;
   bottom: 14;
+  z-index: 3;
   /* background-color: red;
   opacity: 0.4; */
 `;

@@ -2,7 +2,7 @@ import React from "react";
 import gql from "graphql-tag";
 import { useQuery, useMutation } from "react-apollo-hooks";
 import styled from "styled-components";
-import { ScrollView, RefreshControl, Alert } from "react-native";
+import { ScrollView, RefreshControl, Alert, StatusBar } from "react-native";
 import PlanList from "../../components/Plan/PlanList";
 import Loader from "../../components/Loader";
 import AddPlan from "../../components/Plan/AddPlanButton";
@@ -228,6 +228,11 @@ export default ({ navigation }) => {
       style={constants.commonStyle.safeArea}
       forceInset={{ top: "always" }}
     >
+      <StatusBar
+        barStyle="dark-content"
+        backgroundColor={"transparent"}
+        translucent={true}
+      />
       <Container>
         <Header>
           <ScreenTitle>Planner </ScreenTitle>
