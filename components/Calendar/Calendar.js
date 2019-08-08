@@ -146,7 +146,6 @@ const View = styled.View``;
 const Text = styled.Text``;
 const Image = styled.Image``;
 const Item = styled.View`
-  border-radius: 5px;
   padding: 15px;
   height: ${constants.height / 8};
   flex-direction: column;
@@ -154,7 +153,6 @@ const Item = styled.View`
 `;
 
 const EmptyItem = styled.View`
-  border-radius: 5px;
   padding: 15px;
   height: ${constants.height / 10};
   flex-direction: column;
@@ -209,7 +207,6 @@ const TypeText = styled.Text`
 `;
 const PlanDateText = styled.Text`
   color: white;
-  text-align: center;
   font-size: 18px;
   font-family: NanumBarunGothicLight;
 `;
@@ -245,6 +242,8 @@ const EmptyDate = styled.View`
   padding: 15px;
   height: ${constants.height / 12};
 `;
+
+const AnimateView = Animatable.createAnimatableComponent(styled.View``);
 
 export default withNavigation(({ navigation }) => {
   //console.log("press", press);
@@ -362,59 +361,75 @@ export default withNavigation(({ navigation }) => {
     //console.log("emprty item : ");
 
     return (
-      <Swipeout
-        autoClose={true}
-        right={emptyOutBtns}
-        backgroundColor={"#c7c7c7"}
-        //onOpen={sectionID => allowScroll(sectionID)}
-        scroll={event => allowScroll(event, item)}
-        style={{
-          marginVertical: 10,
-          marginHorizontal: 10
-        }}
+      <AnimateView
+        animation="fadeInRight"
+        easing="ease-in-out"
+        delay={100}
+        useNativeDriver={true}
       >
-        <EmptyItem>
-          <ItemBodyArea>
-            <EmptyText>일정 없음 :(</EmptyText>
-          </ItemBodyArea>
-        </EmptyItem>
-      </Swipeout>
+        <Swipeout
+          autoClose={true}
+          right={emptyOutBtns}
+          backgroundColor={"#c7c7c7"}
+          //onOpen={sectionID => allowScroll(sectionID)}
+          scroll={event => allowScroll(event, item)}
+          style={{
+            marginVertical: 10,
+            marginHorizontal: 10
+          }}
+        >
+          <EmptyItem>
+            <ItemBodyArea>
+              <EmptyText>일정 없음 :(</EmptyText>
+            </ItemBodyArea>
+          </EmptyItem>
+        </Swipeout>
+      </AnimateView>
     );
   };
 
   const renderItem = item => {
     //console.log("item ", item);
     return (
-      <Swipeout
-        autoClose={true}
-        rowID={item.rowIndex}
-        // close={item.rowIndex !== rowIndex}
-        // scroll={event => allowScroll(event)}
-        // scroll={event => console.log(rowIndex)}
-        right={swipeoutRightBtns}
-        // left={swipeoutLeftBtns}
-        backgroundColor={"white"}
-        style={{
-          marginVertical: 10,
-          marginHorizontal: 10
-        }}
+      <AnimateView
+        animation="fadeInRight"
+        easing="ease-in-out"
+        delay={100}
+        useNativeDriver={true}
       >
-        <PlanImage source={{ uri: item.image ? item.image : item.typeImage }} />
+        <Swipeout
+          autoClose={true}
+          rowID={item.rowIndex}
+          // close={item.rowIndex !== rowIndex}
+          // scroll={event => allowScroll(event)}
+          // scroll={event => console.log(rowIndex)}
+          right={swipeoutRightBtns}
+          // left={swipeoutLeftBtns}
+          backgroundColor={"white"}
+          style={{
+            marginVertical: 10,
+            marginHorizontal: 10
+          }}
+        >
+          <PlanImage
+            source={{ uri: item.image ? item.image : item.typeImage }}
+          />
 
-        <Item>
-          <ItemHeaderArea>
-            <Left>
-              <PlanDateText>{item.dateString}</PlanDateText>
-            </Left>
-            <Right>
-              <TypeText>{item.typeName}</TypeText>
-            </Right>
-          </ItemHeaderArea>
-          <ItemBodyArea>
-            <PlanText>{item.name}</PlanText>
-          </ItemBodyArea>
-        </Item>
-      </Swipeout>
+          <Item>
+            <ItemHeaderArea>
+              <Left>
+                <PlanDateText>{item.dateString}</PlanDateText>
+              </Left>
+              <Right>
+                <TypeText>{item.typeName}</TypeText>
+              </Right>
+            </ItemHeaderArea>
+            <ItemBodyArea>
+              <PlanText>{item.name}</PlanText>
+            </ItemBodyArea>
+          </Item>
+        </Swipeout>
+      </AnimateView>
     );
   };
 
@@ -644,7 +659,7 @@ export default withNavigation(({ navigation }) => {
         }}
       >
         <CloseArea>
-          <Feather name={"chevrons-down"} size={32} />
+          <Feather name={"chevron-down"} size={26} />
         </CloseArea>
       </TouchableOpacity>
       {loading ? (
@@ -713,7 +728,7 @@ export default withNavigation(({ navigation }) => {
         )
       )}
 
-      <ButtonArea>
+      {/* <ButtonArea>
         <TouchableScale
           onPress={() => console.log("test")}
           activeScale={0.96}
@@ -726,7 +741,7 @@ export default withNavigation(({ navigation }) => {
         >
           <Feather name={"plus"} size={32} />
         </TouchableScale>
-      </ButtonArea>
+      </ButtonArea> */}
       <AddPlanToScheduleModal
         togglePlanModal={() => togglePlanModal()}
         visiblePlanModal={visiblePlanModal}

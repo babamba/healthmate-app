@@ -83,11 +83,10 @@ export default props => {
           <MainNavigation screenProps={actionSheet} />
           <DropdownAlert
             containerStyle={{
-              backgroundColor: "#cc3232",
-              paddingTop: Platform.OS === "android" ? 20 : 0
+              paddingTop: Platform.OS === "android" ? 40 : 0
             }}
             ref={ref => AlertHelper.setDropDown(ref)}
-            closeInterval={3000}
+            closeInterval={1000}
           />
         </View>
       )
@@ -96,10 +95,10 @@ export default props => {
         <AuthNavigation />
         <DropdownAlert
           containerStyle={{
-            backgroundColor: "#cc3232"
+            paddingTop: Platform.OS === "android" ? 40 : 0
           }}
           ref={ref => AlertHelper.setDropDown(ref)}
-          closeInterval={3000}
+          closeInterval={1000}
         />
       </View>
     )

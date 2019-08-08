@@ -16,8 +16,7 @@ const OpenCalendarButton = ({ navigation, size }) => {
   return (
     <TouchableScale
       onPress={() => navigation.navigate("Calendar")}
-      activeScale={0.9}
-      friction={2}
+      activeScale={0.95}
     >
       <Container>
         <AntDesign name={"calendar"} size={size} />

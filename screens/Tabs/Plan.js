@@ -228,17 +228,12 @@ export default ({ navigation }) => {
       style={constants.commonStyle.safeArea}
       forceInset={{ top: "always" }}
     >
-      <StatusBar
-        barStyle="dark-content"
-        backgroundColor={"transparent"}
-        translucent={true}
-      />
       <Container>
         <Header>
           <ScreenTitle>Planner </ScreenTitle>
-          <FilpButtonArea>
+          {/* <FilpButtonArea>
             <OpenCalendarButton size={32} />
-          </FilpButtonArea>
+          </FilpButtonArea> */}
           {/* <MainTitle title={"Planner"} fontSize={32} /> */}
         </Header>
         <Content>
@@ -276,16 +271,24 @@ export default ({ navigation }) => {
               delay={100}
               useNativeDriver={true}
             >
-              <AddPlan size={40} />
+              <OpenCalendarButton size={36} />
             </AddButton>
             <AddButton
+              animation="fadeInUp"
+              easing="ease-in-out"
+              delay={150}
+              useNativeDriver={true}
+            >
+              <AddPlan size={36} />
+            </AddButton>
+            {/* <AddButton
               animation="fadeInUp"
               easing="ease-in-out"
               delay={200}
               useNativeDriver={true}
             >
               <TestButton size={40} />
-            </AddButton>
+            </AddButton> */}
           </RowRight>
         </Footer>
       </Container>

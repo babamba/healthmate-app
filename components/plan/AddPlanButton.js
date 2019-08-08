@@ -4,7 +4,8 @@ import styled from "styled-components";
 import { Ionicons } from "@expo/vector-icons";
 import { withNavigation } from "react-navigation";
 import styles from "../../styles";
-import NavIcon from "../NavIcon";
+// import NavIcon from "../NavIcon";
+import { AntDesign } from "@expo/vector-icons";
 import TouchableScale from "react-native-touchable-scale";
 
 // const Container = styled.TouchableScale`
@@ -18,16 +19,9 @@ export default withNavigation(({ navigation, size, refetch }) => (
     <TouchableScale
       onPress={() => navigation.navigate("PlanNavigation", { refetch })}
       style={{ color: "#3b3b3b" }}
-      activeScale={0.85}
+      activeScale={0.95}
     >
-      <NavIcon
-        name={
-          Platform.OS === "ios"
-            ? "ios-add-circle-outline"
-            : "md-add-circle-outline"
-        }
-        size={size}
-      />
+      <AntDesign name={"pluscircleo"} size={size} color={"#3fbf7f"} />
     </TouchableScale>
   </Container>
 ));
