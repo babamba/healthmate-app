@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, createRef } from "react";
 import { TouchableOpacity } from "react-native";
 import styled from "styled-components";
 // import { Feather } from "@expo/vector-icons";
@@ -23,6 +23,9 @@ import { Feather } from "@expo/vector-icons";
 import gql from "graphql-tag";
 import { useQuery, useMutation } from "react-apollo-hooks";
 import Loader from "../Loader";
+import { AlertHelper } from "../../components/DropDown/AlertHelper";
+import TouchableScale from "react-native-touchable-scale";
+import AddPlanToScheduleModal from "./AddPlanToScheduleModal";
 // import MaterialIcon from "../MaterialIcon";
 // import TouchableScale from "react-native-touchable-scale";
 
@@ -41,18 +44,18 @@ import Loader from "../Loader";
 
 LocaleConfig.locales["ko_KR"] = {
   monthNames: [
-    "1월",
-    "2월",
-    "3월",
-    "4월",
-    "7월",
-    "6월",
-    "7월",
-    "8월",
-    "9월",
-    "10월",
-    "11월",
-    "12월"
+    "1 월",
+    "2 월",
+    "3 월",
+    "4 월",
+    "7 월",
+    "6 월",
+    "7 월",
+    "8 월",
+    "9 월",
+    "10 월",
+    "11 월",
+    "12 월"
   ],
   monthNamesShort: [
     "1월",
@@ -89,6 +92,12 @@ export const SEE_SCHEDULE = gql`
       plan {
         id
         planTitle
+        planImage
+        exerciseType {
+          id
+          title
+          image
+        }
       }
       user {
         username
@@ -131,15 +140,84 @@ const minDate = moment(today)
 // console.log(today);
 // console.log("minDate", maxDate);
 // console.log("minDate", minDate);
-
+const ButtonSize = constants.width / 10;
 const View = styled.View``;
-const EmptyView = styled.View``;
+
 const Text = styled.Text``;
+const Image = styled.Image``;
 const Item = styled.View`
   border-radius: 5px;
   padding: 15px;
   height: ${constants.height / 8};
-  /* flex-direction: row; */
+  flex-direction: column;
+  background-color: rgba(0, 0, 0, 0.5);
+`;
+
+const EmptyItem = styled.View`
+  border-radius: 5px;
+  padding: 15px;
+  height: ${constants.height / 10};
+  flex-direction: column;
+  background-color: rgba(0, 0, 0, 0.05);
+`;
+
+const ItemBodyArea = styled.View`
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+`;
+const ItemHeaderArea = styled.View`
+  flex: 1;
+  align-items: flex-start;
+  padding-bottom: 8px;
+  flex-direction: row;
+`;
+
+// const Overlay = styled.View`
+//   width: 100%;
+//   height: auto;
+//   position: absolute;
+// `;
+const Left = styled.View`
+  flex: 1;
+  justify-content: center;
+  align-self: flex-start;
+`;
+const Right = styled.View`
+  flex: 1;
+  justify-content: center;
+  align-items: flex-end;
+`;
+
+const EmptyText = styled.Text`
+  color: white;
+  text-align: center;
+  font-size: 18px;
+  font-family: NanumBarunGothicLight;
+`;
+const PlanText = styled.Text`
+  color: white;
+  text-align: center;
+  font-size: 24px;
+  font-family: NanumBarunGothic;
+`;
+const TypeText = styled.Text`
+  justify-content: center;
+  color: white;
+  font-size: 18px;
+  font-family: NanumBarunGothicLight;
+`;
+const PlanDateText = styled.Text`
+  color: white;
+  text-align: center;
+  font-size: 18px;
+  font-family: NanumBarunGothicLight;
+`;
+const PlanImage = styled.Image`
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  /* opacity: 0.3; */
 `;
 
 const CloseArea = styled.View`
@@ -149,17 +227,17 @@ const CloseArea = styled.View`
 
 const CloseButton = styled.View``;
 
-const Title = styled.View`
-  flex: 3;
-  /* background-color: aliceblue; */
-`;
-
-const AddButton = styled.View`
-  flex: 1;
-  /* background-color: red; */
-  justify-content: flex-start;
-  align-items: flex-end;
-  flex-direction: row;
+const ButtonArea = styled.View`
+  position: absolute;
+  width: ${ButtonSize};
+  height: ${ButtonSize};
+  border-radius: ${ButtonSize / 2};
+  z-index: 3;
+  bottom: 40;
+  right: 40;
+  box-shadow: ${constants.bigBoxShadow};
+  background-color: white;
+  opacity: 0.8;
 `;
 
 const EmptyDate = styled.View`
@@ -171,14 +249,16 @@ const EmptyDate = styled.View`
 export default withNavigation(({ navigation }) => {
   //console.log("press", press);
   let rewriteData = {};
-
   const agenda = useRef();
+  const [swipeDate, setSwipeDate] = useState(null);
   const [onInit, setInit] = useState(false);
   const [locked, setLocked] = useState(false);
   const [items, setItems] = useState({});
   const [schedule, setSchedule] = useState({});
   //const [schedule, setSchedule] = useState(null);
   const [filterDataLoaded, setFilterDataLoaded] = useState(false);
+  const [visiblePlanModal, setVisiblePlanModal] = useState(false);
+
   let timeout;
 
   const removePlan = () => {
@@ -197,8 +277,12 @@ export default withNavigation(({ navigation }) => {
   //   setswipeScrollEnabled(swipeScrollEnabled);
   // };
 
-  const allowScroll = event => {
-    console.log(event);
+  const allowScroll = (event, item) => {
+    if (event) {
+      console.log("did open ", event);
+
+      setSwipeDate(item);
+    }
   };
 
   const swipeoutRightBtns = [
@@ -209,28 +293,18 @@ export default withNavigation(({ navigation }) => {
     }
   ];
 
-  const swipeoutLeftBtns = [
-    {
-      text: "수정",
-      type: "primary",
-      onPress: () => updatePlan()
-    }
-  ];
-
-  const emptyOutBtns = [
-    {
-      text: "운동 추가",
-      type: "secondary",
-      onPress: () => addPlan()
-    }
-  ];
+  // const swipeoutLeftBtns = [
+  //   {
+  //     text: "수정",
+  //     type: "primary",
+  //     onPress: () => updatePlan()
+  //   }
+  // ];
 
   useEffect(() => {
-    // console.log("didmount calendar");
-    // console.log("agenda.current; ", agenda.current);
     return () => {
       console.log("unmount calendar");
-      // closeTimeOut();
+      closeTimeOut();
     };
   }, []);
 
@@ -249,6 +323,10 @@ export default withNavigation(({ navigation }) => {
   const { loading, data, error, refetch } = useQuery(SEE_SCHEDULE, {
     fetchPolicy: "network-only"
   });
+
+  const togglePlanModal = () => {
+    setVisiblePlanModal(!visiblePlanModal);
+  };
 
   useEffect(() => {
     const onCompleted = data => {
@@ -271,27 +349,35 @@ export default withNavigation(({ navigation }) => {
     }
   }, [data, loading, error]);
 
+  const emptyOutBtns = [
+    {
+      text: "운동 추가",
+      type: "secondary",
+      onPress: () => togglePlanModal()
+      //onPress: () => console.log(itemRef.current.props._data)
+    }
+  ];
+
   const renderEmptyDate = item => {
-    //console.log("emprty item : ", item);
+    //console.log("emprty item : ");
+
     return (
       <Swipeout
         autoClose={true}
         right={emptyOutBtns}
         backgroundColor={"#c7c7c7"}
-        onOpen={sectionID => allowScroll(sectionID)}
-        scroll={event => allowScroll(event)}
+        //onOpen={sectionID => allowScroll(sectionID)}
+        scroll={event => allowScroll(event, item)}
         style={{
           marginVertical: 10,
           marginHorizontal: 10
         }}
       >
-        <EmptyDate>
-          <Text>일정이 없으시네요!</Text>
-          {/* <AddButton>
-            <AddPlan size={34} />
-            <DeletePlan size={34} press={removePlan} />
-          </AddButton> */}
-        </EmptyDate>
+        <EmptyItem>
+          <ItemBodyArea>
+            <EmptyText>일정 없음 :(</EmptyText>
+          </ItemBodyArea>
+        </EmptyItem>
       </Swipeout>
     );
   };
@@ -306,21 +392,27 @@ export default withNavigation(({ navigation }) => {
         // scroll={event => allowScroll(event)}
         // scroll={event => console.log(rowIndex)}
         right={swipeoutRightBtns}
-        left={swipeoutLeftBtns}
+        // left={swipeoutLeftBtns}
         backgroundColor={"white"}
         style={{
           marginVertical: 10,
           marginHorizontal: 10
         }}
       >
+        <PlanImage source={{ uri: item.image ? item.image : item.typeImage }} />
+
         <Item>
-          <Title>
-            <Text>{item.name}</Text>
-          </Title>
-          {/* <AddButton>
-            <AddPlan size={34} />
-            <DeletePlan size={34} press={removePlan} />
-          </AddButton> */}
+          <ItemHeaderArea>
+            <Left>
+              <PlanDateText>{item.dateString}</PlanDateText>
+            </Left>
+            <Right>
+              <TypeText>{item.typeName}</TypeText>
+            </Right>
+          </ItemHeaderArea>
+          <ItemBodyArea>
+            <PlanText>{item.name}</PlanText>
+          </ItemBodyArea>
         </Item>
       </Swipeout>
     );
@@ -343,11 +435,16 @@ export default withNavigation(({ navigation }) => {
               rewriteData[data[i].date].push({
                 //name: "Item for " + data[i].date,
                 name: data[i].plan[j].planTitle,
+                image: data[i].plan[j].planImage,
+                typeName: data[i].plan[j].exerciseType.title,
+                typeImage: data[i].plan[j].exerciseType.image,
                 time: data[i].time,
                 originDate: data[i].exerciseDate,
                 isChecked: data[i].isChecked,
                 height: constants.height / 6,
+                dateString: moment(data[i].exerciseDate).format("YYYY-MM-DD"),
                 rowIndex: j
+
                 //height: Math.max(50, Math.floor(Math.random() * 150))
               });
             }
@@ -615,6 +712,26 @@ export default withNavigation(({ navigation }) => {
           />
         )
       )}
+
+      <ButtonArea>
+        <TouchableScale
+          onPress={() => console.log("test")}
+          activeScale={0.96}
+          friction={2}
+          style={{
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "center"
+          }}
+        >
+          <Feather name={"plus"} size={32} />
+        </TouchableScale>
+      </ButtonArea>
+      <AddPlanToScheduleModal
+        togglePlanModal={() => togglePlanModal()}
+        visiblePlanModal={visiblePlanModal}
+        swipeDate={swipeDate}
+      />
     </SafeAreaView>
   );
 });

@@ -9,8 +9,8 @@ import {
   StyleSheet,
   Platform,
   TouchableOpacity,
-  Text,
-  Image
+  Image,
+  Alert
 } from "react-native";
 import styled from "styled-components";
 import TouchableScale from "react-native-touchable-scale";
@@ -20,6 +20,11 @@ import { BlurView } from "expo-blur";
 import * as Animatable from "react-native-animatable";
 import constants from "../../constants";
 import { Feather } from "@expo/vector-icons";
+import { useQuery } from "react-apollo-hooks";
+import { SEE_PLAN } from "../../screens/Tabs/Plan";
+import moment from "moment";
+
+import Loader from "../Loader";
 // import * as MagicMove from "react-native-magic-move";
 
 // const { width: screenWidth } = Dimensions.get("window");
@@ -28,10 +33,17 @@ console.log(constants.width);
 const entryBorderRadius = 8;
 const moreButtonWidth = constants.width / 11.5;
 
+const TempView = styled.View`
+  justify-content: center;
+  align-items: center;
+`;
 const Container = styled.View`
   justify-content: center;
   align-items: center;
   padding-vertical: 10px;
+  width: ${constants.width};
+  flex: 1;
+  z-index: 10;
 `;
 
 const Item = styled.View`
@@ -61,16 +73,10 @@ const Title = styled.Text`
 `;
 
 const HeaderTitle = styled.Text`
-  color: lightgrey;
+  color: white;
   font-size: 16px;
   letter-spacing: 0.5;
   font-family: NanumBarunGothicUltraLight;
-`;
-
-const PlanTitleArea = styled.View`
-  border: 1px solid white;
-  padding: 8px;
-  border-radius: 8px;
 `;
 
 const OverlayHeaderTextConatiner = styled.View`
@@ -86,15 +92,15 @@ const OverlayHeaderTextConatiner = styled.View`
 
 const MoreContainer = styled.View`
   position: absolute;
+  top: 0;
+  right: 0;
+  background-color: white;
   width: ${moreButtonWidth};
   height: ${moreButtonWidth};
   border-radius: ${moreButtonWidth / 2};
   z-index: 3;
-  top: 0;
-  right: 0;
-  box-shadow: ${constants.bigBoxShadow};
-  background-color: white;
-  opacity: 0.8;
+  align-items: center;
+  justify-content: center;
 `;
 
 const MyCarousel = props => {
@@ -110,17 +116,37 @@ const MyCarousel = props => {
   //console.log(props);
   const SLIDER_1_FIRST_ITEM = 0;
 
-  //   let carouselRef = useRef();
+  const { loading, data, error } = useQuery(SEE_PLAN, {
+    fetchPolicy: "network-only"
+  });
+
   const [carouselRef, setCarouselRef] = useState(() => createRef());
   const [activeSlide, setActiveSlide] = useState(SLIDER_1_FIRST_ITEM);
 
-  const {
-    onSnapUser,
-    data,
-    navigation,
-    mountComplete,
-    showActionSheet
-  } = props;
+  const { navigation, selectDate } = props;
+
+  const confirm = item => {
+    console.log("SelectDate : ");
+    const convertDate = moment(selectDate).format("YYYY년 MM월 DD일");
+    const confirmText = `${convertDate} / ${item.planTitle}`;
+    Alert.alert(
+      confirmText,
+      "추가 하시겠습니까?",
+      [
+        {
+          text: "스케쥴 추가",
+          style: "destructive",
+          onPress: () => console.log("OK Pressed")
+        },
+        {
+          text: "취소",
+          onPress: () => console.log("Cancel Pressed"),
+          style: "cancel"
+        }
+      ],
+      { cancelable: true }
+    );
+  };
 
   const _renderItem = ({ item, index }, parallaxProps) => {
     //console.log("item thumbnail", item);
@@ -132,28 +158,13 @@ const MyCarousel = props => {
         delay={50 * (index * 3)}
         useNativeDriver={true}
       >
-        <MoreContainer>
-          <TouchableScale
-            activeScale={0.97}
-            onPress={() => {
-              showActionSheet(item);
-            }}
-            style={{
-              flex: 1,
-              justifyContent: "center",
-              alignItems: "center"
-            }}
-          >
-            <Feather name={"more-horizontal"} size={20} />
-          </TouchableScale>
-        </MoreContainer>
-
         <TouchableScale
           activeScale={0.99}
           // tension={80}
           // friction={2}
           onPress={() => {
-            navigation.navigate("PlanDetail", { planId: item.id });
+            confirm(item);
+            // navigation.navigate("PlanDetail", { planId: item.id });
           }}
         >
           <Item>
@@ -167,9 +178,7 @@ const MyCarousel = props => {
                 <OverlayHeaderTextConatiner>
                   <HeaderTitle>{item.exerciseType.title}</HeaderTitle>
                 </OverlayHeaderTextConatiner>
-                <PlanTitleArea>
-                  <Title>{item.planTitle}</Title>
-                </PlanTitleArea>
+                <Title>{item.planTitle}</Title>
               </View>
             </ImageContainer>
           </Item>
@@ -181,37 +190,46 @@ const MyCarousel = props => {
 
   return (
     <Container>
-      <Pagination
-        dotsLength={props.data.length}
-        activeDotIndex={activeSlide}
-        containerStyle={styles.paginationContainer}
-        dotColor={"rgba(130, 130, 130, 0.92)"}
-        dotStyle={styles.paginationDot}
-        inactiveDotColor={"rgba(196, 196, 196, 0.92)"}
-        inactiveDotOpacity={0.4}
-        inactiveDotScale={0.6}
-        tappableDots={!!carouselRef}
-        carouselRef={carouselRef}
-      />
-      <Carousel
-        ref={carouselRef}
-        sliderWidth={constants.width}
-        sliderHeight={constants.height / 2}
-        itemWidth={constants.width * 0.8}
-        data={data}
-        renderItem={data => _renderItem(data)}
-        hasParallaxImages={false}
-        //    onSnapToItem={index => onSnapUser(index)}
-        onSnapToItem={index => setActiveSlide(index)}
-        enableMomentum={false}
-        activeAnimationType={"spring"}
-        activeSlideAlignment={"center"}
-        inactiveSlideScale={0.97}
-        activeAnimationOptions={{
-          friction: 8,
-          tension: 80
-        }}
-      />
+      {loading ? (
+        <Loader />
+      ) : (
+        data &&
+        data.seePlan && (
+          <TempView>
+            <Pagination
+              dotsLength={data.seePlan.length}
+              activeDotIndex={activeSlide}
+              containerStyle={styles.paginationContainer}
+              dotColor={"rgba(130, 130, 130, 0.92)"}
+              dotStyle={styles.paginationDot}
+              inactiveDotColor={"rgba(196, 196, 196, 0.92)"}
+              inactiveDotOpacity={0.4}
+              inactiveDotScale={0.6}
+              tappableDots={!!carouselRef}
+              carouselRef={carouselRef}
+            />
+            <Carousel
+              ref={carouselRef}
+              sliderWidth={constants.width}
+              sliderHeight={constants.height / 2}
+              itemWidth={constants.width * 0.8}
+              data={data.seePlan}
+              renderItem={data => _renderItem(data)}
+              hasParallaxImages={false}
+              //    onSnapToItem={index => onSnapUser(index)}
+              onSnapToItem={index => setActiveSlide(index)}
+              enableMomentum={false}
+              activeAnimationType={"spring"}
+              activeSlideAlignment={"center"}
+              inactiveSlideScale={0.97}
+              activeAnimationOptions={{
+                friction: 8,
+                tension: 80
+              }}
+            />
+          </TempView>
+        )
+      )}
     </Container>
   );
 };
@@ -223,7 +241,7 @@ const styles = StyleSheet.create({
     width: constants.width,
     justifyContent: "center",
     alignItems: "center",
-    paddingVertical: 20,
+    paddingVertical: 10,
     paddingHorizontal: constants.width / 1.5
   },
   paginationDot: {
