@@ -171,11 +171,14 @@ const EmptyDate = styled.View`
 export default withNavigation(({ navigation }) => {
   //console.log("press", press);
   let rewriteData = {};
+
   const agenda = useRef();
+  const [onInit, setInit] = useState(false);
   const [locked, setLocked] = useState(false);
   const [items, setItems] = useState({});
+  const [schedule, setSchedule] = useState({});
   //const [schedule, setSchedule] = useState(null);
-  // const [dataLoaded, setDataLoaded] = useState(false);
+  const [filterDataLoaded, setFilterDataLoaded] = useState(false);
   let timeout;
 
   const removePlan = () => {
@@ -239,7 +242,7 @@ export default withNavigation(({ navigation }) => {
 
   const timeToString = time => {
     const date = moment(new Date(time));
-    console.log("timeToString : ", date);
+    //console.log("timeToString : ", date);
     return date.toISOString().split("T")[0];
   };
 
@@ -250,7 +253,10 @@ export default withNavigation(({ navigation }) => {
   useEffect(() => {
     const onCompleted = data => {
       console.log("on load Completed schedule data ");
-      //setDataLoaded(true);
+
+      filterProduct(data.getSchedule).then(() => {
+        setFilterDataLoaded(true);
+      });
     };
     const onError = error => {
       console.log("error initial load data : ", error);
@@ -347,12 +353,14 @@ export default withNavigation(({ navigation }) => {
             }
           }
         }
-        //console.log("rewriteData : ", rewriteData);
-        //await setSchedule(rewriteData);
+        console.log("setSchedule : ", schedule);
+        await setSchedule(rewriteData);
+        console.log(schedule);
+        //
       }
     }
 
-    return rewriteData;
+    //return rewriteData;
     //query data
     // [
     //   Object {
@@ -398,67 +406,80 @@ export default withNavigation(({ navigation }) => {
   };
 
   const loadItems = async day => {
-    console.log("loadItems today : ", day); //오늘 날짜.
-    const { getSchedule } = data;
+    console.log("loadItems today : ", day.dateString); //오늘 날짜.
+    // const { getSchedule } = data;
     closeTimeOut();
     //const filterData = await filterProduct(getSchedule);
-    filterProduct(getSchedule).then(result => {
-      //console.log("result : ", result);
+    //filterProduct(getSchedule).then(scheduleData => {
+    //console.log("result : ", result);
+    //console.log("result : ", scheduleData);
+    //달력 만드는 부분(YYYY-MM-DD)
+    timeout = setTimeout(() => {
+      for (let i = -15; i < 30; i++) {
+        // 오늘날짜 기준 - 15일
+        const strTime = moment(day)
+          .add(i, "d")
+          .subtract(1, "M")
+          .format("YYYY-MM-DD");
 
-      //달력 만드는 부분(YYYY-MM-DD)
-      timeout = setTimeout(() => {
-        for (let i = 0; i < 15; i++) {
-          // 오늘날짜 기준 - 15일
-          const strTime = moment(day)
-            .add(i, "d")
-            .subtract(1, "M")
-            .format("YYYY-MM-DD");
+        const strTimeToMonth = moment(day).month();
 
-          const strTimeToMonth = moment(day).month();
+        //const strTime = day.dateString;
+        // const strTime = String(
+        //   moment(day)
+        //     .add(i, "d")
+        //     .subtract(1, "months")
+        //     .format("YYYY-MM-DD")
+        // );
+        console.log("strTime", strTime);
+        //console.log("tempDate : ", tempDate);
+        //console.log("strTimeToMonth : ", strTimeToMonth);
 
-          //const strTime = day.dateString;
-          // const strTime = String(
-          //   moment(day)
-          //     .add(i, "d")
-          //     .subtract(1, "months")
-          //     .format("YYYY-MM-DD")
-          // );
-          console.log("strTime", strTime);
-          //console.log("tempDate : ", tempDate);
-          //console.log("strTimeToMonth : ", strTimeToMonth);
+        // console.log("items : ", items);
+        // 해당날짜에 아이템 삽입
+        //console.log("result[strTime]", result[strTime]);
 
-          // console.log("items : ", items);
-          // 해당날짜에 아이템 삽입
-          //console.log("result[strTime]", result[strTime]);
+        // for (let key in scheduleData) {
+        //   if (strTime === key) {
+        //     console.log("same", strTime, " / ", key);
+        //     tempData[strTime] = scheduleData[key];
+        //   }
+        // }
+        console.log("state schedule", schedule);
+        if (
+          !schedule[strTime] ||
+          schedule[strTime] === null ||
+          schedule[strTime] === undefined
+        ) {
+          items[strTime] = [];
+          //tempData[strTime] = [];
 
-          if (
-            !result[strTime] ||
-            result[strTime] === null ||
-            result[strTime] === undefined
-          ) {
-            result[strTime] = [];
+          //하루 데이터에 배열로 정보 노출
+          // for (let j = 0; j < getSchedule.length; j++) {
+          //   items[strTime].push({
+          //     name: "Item for " + strTime,
+          //     rowIndex: i
 
-            //하루 데이터에 배열로 정보 노출
-            // for (let j = 0; j < getSchedule.length; j++) {
-            //   items[strTime].push({
-            //     name: "Item for " + strTime,
-            //     rowIndex: i
-
-            //     //height: Math.max(50, Math.floor(Math.random() * 150))
-            //   });
-            // }
-          }
+          //     //height: Math.max(50, Math.floor(Math.random() * 150))
+          //   });
+          // }
+        } else {
+          items[strTime] = schedule[strTime];
         }
-        console.log("result : ", result);
+      }
 
-        const newItems = {};
-        Object.keys(result).forEach(key => {
-          newItems[key] = result[key];
-        });
-        console.log("newItems : ", newItems);
-        setItems(newItems);
-      }, 1000);
-    });
+      const newItems = {};
+      // Object.keys(items).forEach(key => {
+      //   newItems[key] = items[key];
+      // });
+      Object.keys(items).forEach(key => {
+        newItems[key] = items[key];
+      });
+      console.log("newItems : ", newItems);
+      // console.log("temp : ", tempData);
+      setItems(newItems);
+      //setItems({ ...tempData });
+    }, 1000);
 
     // setItems(filterData);
     //console.log("getSchedule : ", getSchedule);
@@ -501,12 +522,12 @@ export default withNavigation(({ navigation }) => {
     // console.log("r1 : ", r1);
     // console.log("r2 : ", r2);
     //console.log(agenda.current);
-    console.log("rowHasChanged", r1, "/", r2);
+    //console.log("rowHasChanged", r1, "/", r2);
     return r1.name !== r2.name;
   };
 
   const onDayChange = day => {
-    console.log("onDayChange : ", day);
+    console.log("onDayChange : ", day.dateString);
   };
 
   const dayChange = day => {
@@ -533,7 +554,8 @@ export default withNavigation(({ navigation }) => {
         <Loader />
       ) : (
         data &&
-        data.getSchedule && (
+        data.getSchedule &&
+        filterDataLoaded && (
           <Agenda
             ref={agenda}
             items={items}
@@ -546,8 +568,18 @@ export default withNavigation(({ navigation }) => {
             //     dayChange(day);
             //   }
             // }}
-            loadItemsForMonth={month => {
-              console.log("trigger items loading :", month);
+            loadItemsForMonth={async day => {
+              if (!onInit) {
+                //자동으로 60일전으로 다시 트리거되는 버그가 있어서 첫시작때만 실행되도록
+                console.log("trigger items loading on Init screen :", day);
+                // filterProduct(data.getSchedule).then(() => {
+                //   loadItems(day);
+                // });
+                loadItems(day);
+
+                // dayChange(data);
+                setInit(true);
+              }
             }}
             selected={today}
             onDayChange={day => dayChange(day)}
@@ -557,10 +589,13 @@ export default withNavigation(({ navigation }) => {
             renderItem={renderItem}
             renderEmptyDate={renderEmptyDate}
             rowHasChanged={rowHasChanged}
-            pastScrollRange={50}
-            futureScrollRange={50}
-            pastScrollRange={50}
-            futureScrollRange={50}
+            markingType={"simple"}
+            monthFormat={"yyyy"}
+            //theme={{ calendarBackground: "white", agendaKnobColor: "green" }}
+            // pastScrollRange={15}
+            // futureScrollRange={15}
+            // pastScrollRange={15}
+            // futureScrollRange={15}
             // onScroll={() => console.log("scroll start")}
             // scrollingEnabled={swipeScrollEnabled}
 
