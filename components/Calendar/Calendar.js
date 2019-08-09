@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, createRef } from "react";
-import { TouchableOpacity } from "react-native";
+import { TouchableOpacity, Alert, ActivityIndicator } from "react-native";
 import styled from "styled-components";
 // import { Feather } from "@expo/vector-icons";
 import { withNavigation } from "react-navigation";
@@ -110,19 +110,52 @@ export const SEE_SCHEDULE = gql`
   }
 `;
 
-export const ADD_SCHEDULE = gql`
-  mutation addSchedule($plans: Array!, $exerciseDate: String!) {
-    addSchedule(plans: $plans, exerciseDate: $exerciseDate) {
+export const DELETE_SCHEDULE = gql`
+  mutation deleteSchedule($scheduleId: String!, $planId: String!) {
+    deleteSchedule(scheduleId: $scheduleId, planId: $planId) {
       id
-      user {
-        username
-      }
       plan {
         id
         planTitle
+        planImage
+        exerciseType {
+          id
+          title
+          image
+        }
+      }
+      user {
+        username
       }
       exerciseDate
       isChecked
+      date
+      time
+    }
+  }
+`;
+
+export const ADD_SCHEDULE = gql`
+  mutation addSchedule($plans: [String!]!, $exerciseDate: String!) {
+    addSchedule(plans: $plans, exerciseDate: $exerciseDate) {
+      id
+      plan {
+        id
+        planTitle
+        planImage
+        exerciseType {
+          id
+          title
+          image
+        }
+      }
+      user {
+        username
+      }
+      exerciseDate
+      isChecked
+      date
+      time
     }
   }
 `;
@@ -248,6 +281,7 @@ const AnimateView = Animatable.createAnimatableComponent(styled.View``);
 export default withNavigation(({ navigation }) => {
   //console.log("press", press);
   let rewriteData = {};
+  let timeout;
   const agenda = useRef();
   const [swipeDate, setSwipeDate] = useState(null);
   const [onInit, setInit] = useState(false);
@@ -257,48 +291,35 @@ export default withNavigation(({ navigation }) => {
   //const [schedule, setSchedule] = useState(null);
   const [filterDataLoaded, setFilterDataLoaded] = useState(false);
   const [visiblePlanModal, setVisiblePlanModal] = useState(false);
+  const [deleteLoading, setDeleteLoading] = useState(false);
 
-  let timeout;
-
-  const removePlan = () => {
-    console.log("remove Item ");
-  };
-
-  const updatePlan = () => {
-    console.log("update Item ");
-  };
-
-  const addPlan = () => {
-    console.log("addPlan Item ");
-  };
-
-  // const allowScroll = swipeScrollEnabled => {
-  //   setswipeScrollEnabled(swipeScrollEnabled);
-  // };
-
-  const allowScroll = (event, item) => {
+  const allowAddScroll = (event, item) => {
     if (event) {
       console.log("did open ", event);
-
+      console.log("add swipe item : ", item);
       setSwipeDate(item);
     }
   };
 
-  const swipeoutRightBtns = [
-    {
-      text: "삭제",
-      type: "delete",
-      onPress: () => removePlan()
-    }
-  ];
-
-  // const swipeoutLeftBtns = [
-  //   {
-  //     text: "수정",
-  //     type: "primary",
-  //     onPress: () => updatePlan()
-  //   }
-  // ];
+  const deleteConfirm = item => {
+    Alert.alert(
+      item.name,
+      "삭제 하시겠습니까?",
+      [
+        {
+          text: "삭제",
+          onPress: () => handleDeleteSchedule(item.scheduleId, item.planId),
+          style: "destructive"
+        },
+        {
+          text: "취소",
+          onPress: () => console.log("Cancel Pressed"),
+          style: "cancel"
+        }
+      ],
+      { cancelable: true }
+    );
+  };
 
   useEffect(() => {
     return () => {
@@ -323,8 +344,17 @@ export default withNavigation(({ navigation }) => {
     fetchPolicy: "network-only"
   });
 
+  const createSchedule = useMutation(ADD_SCHEDULE, {
+    refetchQueries: () => [{ query: SEE_SCHEDULE }]
+  });
+
+  const removeSchedule = useMutation(DELETE_SCHEDULE, {
+    refetchQueries: () => [{ query: SEE_SCHEDULE }]
+  });
+
   const togglePlanModal = () => {
     setVisiblePlanModal(!visiblePlanModal);
+    console.log("toggle!");
   };
 
   useEffect(() => {
@@ -362,7 +392,7 @@ export default withNavigation(({ navigation }) => {
 
     return (
       <AnimateView
-        animation="fadeInRight"
+        animation="fadeIn"
         easing="ease-in-out"
         delay={100}
         useNativeDriver={true}
@@ -372,7 +402,7 @@ export default withNavigation(({ navigation }) => {
           right={emptyOutBtns}
           backgroundColor={"#c7c7c7"}
           //onOpen={sectionID => allowScroll(sectionID)}
-          scroll={event => allowScroll(event, item)}
+          scroll={event => allowAddScroll(event, item)}
           style={{
             marginVertical: 10,
             marginHorizontal: 10
@@ -389,10 +419,17 @@ export default withNavigation(({ navigation }) => {
   };
 
   const renderItem = item => {
+    const swipeoutRightBtns = [
+      {
+        text: "삭제",
+        type: "delete",
+        onPress: () => deleteConfirm(item)
+      }
+    ];
     //console.log("item ", item);
     return (
       <AnimateView
-        animation="fadeInRight"
+        animation="fadeIn"
         easing="ease-in-out"
         delay={100}
         useNativeDriver={true}
@@ -400,9 +437,6 @@ export default withNavigation(({ navigation }) => {
         <Swipeout
           autoClose={true}
           rowID={item.rowIndex}
-          // close={item.rowIndex !== rowIndex}
-          // scroll={event => allowScroll(event)}
-          // scroll={event => console.log(rowIndex)}
           right={swipeoutRightBtns}
           // left={swipeoutLeftBtns}
           backgroundColor={"white"}
@@ -449,6 +483,8 @@ export default withNavigation(({ navigation }) => {
             for (let j = 0; j < data[i].plan.length; j++) {
               rewriteData[data[i].date].push({
                 //name: "Item for " + data[i].date,
+                scheduleId: data[i].id,
+                planId: data[i].plan[j].id,
                 name: data[i].plan[j].planTitle,
                 image: data[i].plan[j].planImage,
                 typeName: data[i].plan[j].exerciseType.title,
@@ -465,66 +501,122 @@ export default withNavigation(({ navigation }) => {
             }
           }
         }
-        console.log("setSchedule : ", schedule);
+
         await setSchedule(rewriteData);
-        console.log(schedule);
+
         //
       }
     }
+  };
 
-    //return rewriteData;
-    //query data
-    // [
-    //   Object {
-    //     "__typename": "Schedule",
-    //     "date": "2019-08-07",
-    //     "exerciseDate": "2019-08-04T06:15:08.421Z",
-    //     "id": "cjyph1r5jiekr0b72wust08hw",
-    //     "isChecked": false,
-    //     "plan": Array [
-    //       Object {
-    //         "__typename": "Plan",
-    //         "id": "cjxpppaifhifl0b423hxqgwon",
-    //         "planTitle": "상체뿌수기",
-    //       },
-    //     ],
-    //     "time": "00:00",
-    //     "user": Object {
-    //       "__typename": "User",
-    //       "username": "babamba88",
-    //     },
-    //   },
-    // ],
-    //rewrite data;
-    // Object {
-    //   "2019-07-23": Array [
-    //     Object {
-    //       "name": "Item for 2019-07-23",
-    //       "rowIndex": -15,
-    //     },
-    //   ],
-    //   "2019-07-24": Array [],
-    //   "2019-07-24": Array [],
-    // }
+  const filterData = async data => {
+    if (data) {
+      let returnData = {};
+      console.log("filterData start");
+      returnData[data.date] = [];
 
-    // rewriteData :  Object {
-    //   "2019-08-07": Array [
-    //     Object {
-    //       "name": "Item for 2019-08-07",
-    //       "rowIndex": 2,
-    //     },
-    //   ],
-    // }
+      if (data.plan.length > 0) {
+        for (let j = 0; j < data.plan.length; j++) {
+          returnData[data.date].push({
+            //name: "Item for " + data[i].date,
+            scheduleId: data.id,
+            planId: data.plan[j].id,
+            name: data.plan[j].planTitle,
+            image: data.plan[j].planImage,
+            typeName: data.plan[j].exerciseType.title,
+            typeImage: data.plan[j].exerciseType.image,
+            time: data.time,
+            originDate: data.exerciseDate,
+            isChecked: data.isChecked,
+            height: constants.height / 6,
+            dateString: moment(data.exerciseDate).format("YYYY-MM-DD"),
+            rowIndex: j
+
+            //height: Math.max(50, Math.floor(Math.random() * 150))
+          });
+        }
+      }
+      return returnData;
+    }
+  };
+
+  const handleDeleteSchedule = async (scheduleId, planId) => {
+    try {
+      const {
+        data: { deleteSchedule }
+      } = await removeSchedule({
+        variables: {
+          scheduleId,
+          planId
+        }
+      });
+
+      if (deleteSchedule) {
+        //let tempItem = { ...items };
+        // let schedule = tempItem[deleteSchedule.date];
+        //tempItem.deleteSchedule.date;
+        //console.log();
+        // if (deleteSchedule.plan.length > 0) {
+        //   const result = await refreshRemainData(planId, schedule);
+        //   schedule = result;
+        // } else {
+        //   schedule = [];
+        // }
+
+        console.log("deleteSchedule : ", deleteSchedule);
+        filterData(deleteSchedule).then(async result => {
+          console.log("result", result);
+          let tempItem = { ...items, ...result };
+          console.log("tempItem : ", tempItem);
+          await setItems(tempItem);
+          AlertHelper.showDropAlert("success", "스케줄이 삭제되었습니다 :D");
+        });
+
+        // await setItems({ ...tempItem });
+        // AlertHelper.showDropAlert("success", "스케줄이 삭제되었습니다 :D");
+      }
+    } catch (error) {
+      AlertHelper.showDropAlert("warning", "스케쥴 삭제 실패 :(");
+      console.log("error : ", error);
+    } finally {
+      console.log("finally");
+    }
+  };
+
+  const handleAddSchedule = async (plans, exerciseDate) => {
+    try {
+      const {
+        data: { addSchedule }
+      } = await createSchedule({
+        variables: {
+          plans,
+          exerciseDate: exerciseDate
+        }
+      });
+
+      if (addSchedule) {
+        console.log("toggle first");
+        togglePlanModal();
+        setTimeout(() => {
+          console.log("set");
+          filterData(addSchedule).then(async result => {
+            let tempItem = { ...items, ...result };
+            await setItems(tempItem);
+            AlertHelper.showDropAlert(
+              "success",
+              "운동 스케줄이 등록되었습니다 :D"
+            );
+          });
+        }, 1000);
+      }
+    } catch (error) {
+      AlertHelper.showDropAlert("warning", "스케쥴 등록 실패 :(");
+      console.log("error : ", error);
+    }
   };
 
   const loadItems = async day => {
-    console.log("loadItems today : ", day.dateString); //오늘 날짜.
-    // const { getSchedule } = data;
     closeTimeOut();
-    //const filterData = await filterProduct(getSchedule);
-    //filterProduct(getSchedule).then(scheduleData => {
-    //console.log("result : ", result);
-    //console.log("result : ", scheduleData);
     //달력 만드는 부분(YYYY-MM-DD)
     timeout = setTimeout(() => {
       for (let i = -15; i < 30; i++) {
@@ -533,101 +625,23 @@ export default withNavigation(({ navigation }) => {
           .add(i, "d")
           .subtract(1, "M")
           .format("YYYY-MM-DD");
-
-        const strTimeToMonth = moment(day).month();
-
-        //const strTime = day.dateString;
-        // const strTime = String(
-        //   moment(day)
-        //     .add(i, "d")
-        //     .subtract(1, "months")
-        //     .format("YYYY-MM-DD")
-        // );
-        console.log("strTime", strTime);
-        //console.log("tempDate : ", tempDate);
-        //console.log("strTimeToMonth : ", strTimeToMonth);
-
-        // console.log("items : ", items);
-        // 해당날짜에 아이템 삽입
-        //console.log("result[strTime]", result[strTime]);
-
-        // for (let key in scheduleData) {
-        //   if (strTime === key) {
-        //     console.log("same", strTime, " / ", key);
-        //     tempData[strTime] = scheduleData[key];
-        //   }
-        // }
-        console.log("state schedule", schedule);
         if (
           !schedule[strTime] ||
           schedule[strTime] === null ||
           schedule[strTime] === undefined
         ) {
           items[strTime] = [];
-          //tempData[strTime] = [];
-
-          //하루 데이터에 배열로 정보 노출
-          // for (let j = 0; j < getSchedule.length; j++) {
-          //   items[strTime].push({
-          //     name: "Item for " + strTime,
-          //     rowIndex: i
-
-          //     //height: Math.max(50, Math.floor(Math.random() * 150))
-          //   });
-          // }
         } else {
           items[strTime] = schedule[strTime];
         }
       }
 
       const newItems = {};
-      // Object.keys(items).forEach(key => {
-      //   newItems[key] = items[key];
-      // });
       Object.keys(items).forEach(key => {
         newItems[key] = items[key];
       });
-      console.log("newItems : ", newItems);
-      // console.log("temp : ", tempData);
       setItems(newItems);
-      //setItems({ ...tempData });
     }, 1000);
-
-    // setItems(filterData);
-    //console.log("getSchedule : ", getSchedule);
-
-    //console.log(items);
-
-    // timeout = setTimeout(() => {
-    //   //달력 만드는 부분(YYYY-MM-DD)
-    //   for (let i = -15; i < 30; i++) {
-    //     const time = day.timestamp + i * 24 * 60 * 60 * 1000;
-    //     const strTime = timeToString(time);
-
-    //     // 해당날짜에 아이템 삽입
-    //     if (!items[strTime]) {
-    //       items[strTime] = [];
-    //       const numItems = Math.floor(Math.random() * 3);
-
-    //       for (let j = 0; j < numItems; j++) {
-    //         items[strTime].push({
-    //           name: "Item for " + strTime,
-    //           rowIndex: i
-
-    //           //height: Math.max(50, Math.floor(Math.random() * 150))
-    //         });
-    //       }
-    //     }
-    //   }
-    //   //console.log(this.state.items);
-    //   const newItems = {};
-    //   Object.keys(items).forEach(key => {
-    //     newItems[key] = items[key];
-    //   });
-    //   setItems(newItems);
-    //   console.log(items);
-    // }, 1000);
-    // console.log(`Load Items for ${day.year}-${day.month}`);
   };
 
   const rowHasChanged = (r1, r2) => {
@@ -644,7 +658,8 @@ export default withNavigation(({ navigation }) => {
 
   const dayChange = day => {
     const { year, month, dateString } = day;
-    console.log("dayChange : ", year, month, dateString);
+    console.log(agenda.current.props);
+    //console.log("dayChange : ", year, month, dateString);
     loadItems(day);
   };
 
@@ -662,7 +677,7 @@ export default withNavigation(({ navigation }) => {
           <Feather name={"chevron-down"} size={26} />
         </CloseArea>
       </TouchableOpacity>
-      {loading ? (
+      {loading && !filterDataLoaded ? (
         <Loader />
       ) : (
         data &&
@@ -746,6 +761,7 @@ export default withNavigation(({ navigation }) => {
         togglePlanModal={() => togglePlanModal()}
         visiblePlanModal={visiblePlanModal}
         swipeDate={swipeDate}
+        handleAddSchedule={handleAddSchedule}
       />
     </SafeAreaView>
   );

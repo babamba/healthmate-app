@@ -49,7 +49,8 @@ export default ({
   navigation,
   togglePlanModal,
   visiblePlanModal,
-  swipeDate
+  swipeDate,
+  handleAddSchedule
 }) => {
   // const [visibleModal, setVisibleModal] = useState(false);
   // const toggleModal = () => {
@@ -75,11 +76,12 @@ export default ({
       swipeThreshold={10}
     >
       <ModalContent>
-        <TextArea>
-          <Text>운동을 골라주세요 :D</Text>
-        </TextArea>
         <ContentArea>
-          <AddPlanCarouselList selectDate={swipeDate} />
+          <AddPlanCarouselList
+            selectDate={swipeDate}
+            handleAddSchedule={handleAddSchedule}
+            togglePlanModal={togglePlanModal}
+          />
         </ContentArea>
       </ModalContent>
     </Modal>

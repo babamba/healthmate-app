@@ -103,6 +103,17 @@ const MoreContainer = styled.View`
   justify-content: center;
 `;
 
+const TextArea = styled.View`
+  padding-top: 20px;
+`;
+const Text = styled.Text`
+  padding-bottom: 16px;
+  color: black;
+  text-align: center;
+  font-size: 18px;
+  font-family: NanumBarunGothicLight;
+`;
+
 const MyCarousel = props => {
   //   const {
   //     navigation,
@@ -116,6 +127,8 @@ const MyCarousel = props => {
   //console.log(props);
   const SLIDER_1_FIRST_ITEM = 0;
 
+  const [AddLoading, setAddLoading] = useState(false);
+
   const { loading, data, error } = useQuery(SEE_PLAN, {
     fetchPolicy: "network-only"
   });
@@ -123,12 +136,15 @@ const MyCarousel = props => {
   const [carouselRef, setCarouselRef] = useState(() => createRef());
   const [activeSlide, setActiveSlide] = useState(SLIDER_1_FIRST_ITEM);
 
-  const { navigation, selectDate } = props;
+  const { navigation, selectDate, handleAddSchedule, togglePlanModal } = props;
 
   const confirm = item => {
-    console.log("SelectDate : ");
     const convertDate = moment(selectDate).format("YYYY년 MM월 DD일");
     const confirmText = `${convertDate} / ${item.planTitle}`;
+
+    const plans = [];
+    plans.push(item.id);
+
     Alert.alert(
       confirmText,
       "추가 하시겠습니까?",
@@ -136,7 +152,12 @@ const MyCarousel = props => {
         {
           text: "스케쥴 추가",
           style: "destructive",
-          onPress: () => console.log("OK Pressed")
+          onPress: () => {
+            setAddLoading(true);
+            handleAddSchedule(plans, selectDate).then(() => {
+              setAddLoading(false);
+            });
+          }
         },
         {
           text: "취소",
@@ -190,12 +211,15 @@ const MyCarousel = props => {
 
   return (
     <Container>
-      {loading ? (
+      {loading || AddLoading ? (
         <Loader />
       ) : (
         data &&
         data.seePlan && (
           <TempView>
+            <TextArea>
+              <Text>운동을 골라주세요 :D</Text>
+            </TextArea>
             <Pagination
               dotsLength={data.seePlan.length}
               activeDotIndex={activeSlide}
