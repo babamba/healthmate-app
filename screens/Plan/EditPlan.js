@@ -25,25 +25,8 @@ import Modal from "react-native-modal";
 import * as ImagePicker from "expo-image-picker";
 import * as Permissions from "expo-permissions";
 import ExerciseList from "../../components/Plan/ExerciseList";
-import { SEE_PLAN } from "../Tabs/Plan";
+import { SEE_PLAN, UPDATE_DELETE_PLAN } from "../Tabs/Plan";
 import Axios from "axios";
-
-export const CREATE_PLAN = gql`
-  mutation addPlan(
-    $planTitle: String!
-    $exerciseType: String!
-    $planImage: String!
-  ) {
-    addPlan(
-      planTitle: $planTitle
-      exerciseType: $exerciseType
-      planImage: $planImage
-    ) {
-      id
-      planTitle
-    }
-  }
-`;
 
 const ImageAreaSize = constants.width / 1.5;
 const ExerciseEmptyImageSize = constants.width / 9;
@@ -118,12 +101,6 @@ const ImageArea = styled.View`
   box-shadow: ${constants.bigBoxShadow};
 `;
 
-const ImageCover = styled.Image`
-  width: ${ImageAreaSize};
-  height: ${ImageAreaSize};
-  border-radius: ${Math.round(ImageAreaSize / 2)};
-  flex: 1;
-`;
 const Overlay = styled.View`
   width: ${ImageAreaSize};
   height: ${ImageAreaSize};
@@ -141,9 +118,34 @@ const EmptyImageArea = styled.View`
   justify-content: flex-end;
 `;
 
+const SelectImageArea = styled.View`
+  width: ${ImageAreaSize};
+  height: ${ImageAreaSize};
+  background-color: rgba(0, 0, 0, 0.1);
+  border-radius: ${Math.round(ImageAreaSize / 2)};
+`;
+
 const AddImageArea = styled.View`
   width: ${ImageAreaSize};
   height: ${ImageAreaSize};
+  position: absolute;
+  align-items: center;
+  justify-content: center;
+  bottom: 0px;
+  z-index: 3;
+`;
+
+const ImageCover = styled.Image`
+  width: ${ImageAreaSize};
+  height: ${ImageAreaSize};
+  border-radius: ${Math.round(ImageAreaSize / 2)};
+  flex: 1;
+`;
+
+const ReselectImageArea = styled.View`
+  width: ${ImageAreaSize};
+  height: ${ImageAreaSize};
+  border-radius: ${Math.round(ImageAreaSize / 2)};
   position: absolute;
   align-items: center;
   justify-content: center;
@@ -206,39 +208,50 @@ const ExerciseEmptyImage = styled.View`
   border-radius: ${Math.round(ExerciseEmptyImageSize / 2)};
 `;
 
-const SelectImageArea = styled.View`
-  width: ${ImageAreaSize};
-  height: ${ImageAreaSize};
-  background-color: rgba(0, 0, 0, 0.1);
-  border-radius: ${Math.round(ImageAreaSize / 2)};
-`;
-
-const ReselectImageArea = styled.View`
-  width: ${ImageAreaSize};
-  height: ${ImageAreaSize};
-  border-radius: ${Math.round(ImageAreaSize / 2)};
-  position: absolute;
-  align-items: center;
-  justify-content: center;
-  bottom: 0px;
-  z-index: 3;
-`;
-
 export default withNavigation(({ navigation }) => {
+  const planData = navigation.getParam("data");
+
   const scrollView = useRef();
+  const [initialData, setInitialData] = useState(planData);
+
   const [loading, setLoading] = useState(false);
-  const [pickedPhoto, setPickedPhoto] = useState(null);
-  const [pickedExercise, setPickedExercise] = useState();
+  const [pickedPhoto, setPickedPhoto] = useState(
+    planData.planImage ? { uri: planData.planImage } : null
+  );
+  const [pickedExercise, setPickedExercise] = useState(planData.exerciseType);
   const [hasCamaraPermissions, setHasCamaraPermissions] = useState(null);
   const [hasCamaraRollPermissions, setHasCamaraRollPermissions] = useState(
     null
   );
   const [visibleModal, setVisibleModal] = useState(false);
-  const planTitleInput = useInput("");
+  const planTitleInput = useInput(planData.planTitle);
 
-  const createPlan = useMutation(CREATE_PLAN, {
+  const editPlan = useMutation(UPDATE_DELETE_PLAN, {
     refetchQueries: () => [{ query: SEE_PLAN }]
   });
+
+  console.log("initialData : ", initialData);
+
+  // const handleUpdate = async planId => {
+  //   try {
+  //     console.log("handleDelete !", planId);
+  //     await updateDeletePlan({
+  //       variables: {
+  //         planId,
+  //         action: constants.Actions.DELETE
+  //       }
+  //     }).then(async result => {
+  //       if (result.data) {
+  //         AlertHelper.showDropAlert("success", "목록이 삭제 되었습니다 :)");
+  //       } else {
+  //         AlertHelper.showDropAlert("warning", "목록 삭제가 실패하였습니다 :(");
+  //       }
+  //     });
+  //   } catch (error) {
+  //     console.log(error);
+  //     AlertHelper.showDropAlert("warning", "에러", "실패");
+  //   }
+  // };
 
   const pickImage = async () => {
     console.log("pickedPhoto", pickedPhoto);
@@ -308,59 +321,76 @@ export default withNavigation(({ navigation }) => {
       planImage
     */
     const { value: planTitle } = planTitleInput;
+
+    console.log("planTitle : ", planTitle);
+    console.log("planTitle : ", pickedExercise.id);
+    console.log("planTitle : ", pickedPhoto.uri);
+
+    console.log("initialData : ", initialData.planTitle);
+    console.log("initialData : ", initialData.exerciseType.id);
+    console.log("initialData : ", initialData.planImage);
+
     if (planTitle === "") {
-      return AlertHelper.showDropAlert("warning", "제목을", "입력해주세요");
-    }
+      AlertHelper.showDropAlert("warn", "제목을", "입력해주세요");
+    } else if (
+      planTitle === initialData.planTitle &&
+      pickedExercise.id === initialData.exerciseType.id &&
+      pickedPhoto.uri === initialData.planImage
+    ) {
+      AlertHelper.showDropAlert("warn", "수정할 부분이 없습니다.");
+    } else {
+      const formData = new FormData();
+      //console.log("picked photo : ", pickedPhoto);
+      // const name = pickedPhoto.filename;
+      let filename = pickedPhoto.uri.split("/").pop();
+      const [, type] = filename.split(".");
 
-    const formData = new FormData();
-    //console.log("picked photo : ", pickedPhoto);
-    // const name = pickedPhoto.filename;
-    let filename = pickedPhoto.uri.split("/").pop();
-    const [, type] = filename.split(".");
+      console.log("picked photo : ", filename, " / ", type);
 
-    console.log("picked photo : ", filename, " / ", type);
-
-    formData.append("file", {
-      name: filename,
-      type: type.toLowerCase(),
-      uri: pickedPhoto.uri
-    });
-
-    try {
-      setLoading(true);
-      const {
-        data: { location }
-      } = await Axios.post("http://hellojw.net:9333/api/upload", formData, {
-        // } = await Axios.post("http://localhost:4000/api/upload", formData, {
-        headers: {
-          "content-type": "multipart/form-data"
-        }
+      formData.append("file", {
+        name: filename,
+        type: type.toLowerCase(),
+        uri: pickedPhoto.uri
       });
 
-      console.log("planImage : ", typeof location);
-      console.log("planTitle : ", typeof planTitleInput.value);
-      console.log("exerciseType : ", typeof pickedExercise.id);
+      try {
+        setLoading(true);
+        const {
+          data: { location }
+        } = await Axios.post("http://hellojw.net:9333/api/upload", formData, {
+          // } = await Axios.post("http://localhost:4000/api/upload", formData, {
+          headers: {
+            "content-type": "multipart/form-data"
+          }
+        });
 
-      const {
-        data: { addPlan }
-      } = await createPlan({
-        variables: {
-          planImage: location,
-          planTitle: planTitleInput.value,
-          exerciseType: pickedExercise.id
+        console.log("planImage : ", location);
+        console.log("planTitle : ", typeof planTitleInput.value);
+        console.log("exerciseType : ", typeof pickedExercise.id);
+
+        const {
+          data: { updatePlan }
+        } = await editPlan({
+          variables: {
+            planId: initialData.id,
+            planImage: location,
+            planTitle: planTitleInput.value,
+            exerciseType: pickedExercise.id,
+            action: constants.Actions.UPDATE
+          }
+        });
+
+        if (updatePlan) {
+          AlertHelper.showDropAlert("success", "운동계획이 수정되었습니다 :D");
+          navigation.navigate("TabNavigation");
         }
-      });
-
-      if (addPlan) {
-        AlertHelper.showDropAlert("success", "목록생성", "되었습니다");
-        navigation.navigate("AddActivity", { planId: addPlan.id });
+      } catch (e) {
+        console.log(e);
+        AlertHelper.showDropAlert("warn", "목록생성", "실패");
+        // navigation.navigate("Login", { email });
+      } finally {
+        setLoading(false);
       }
-    } catch (e) {
-      console.log(e);
-      AlertHelper.showDropAlert("warning", "목록생성", "실패");
-      // navigation.navigate("Login", { email });
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -389,12 +419,12 @@ export default withNavigation(({ navigation }) => {
         <View>
           <HeaderArea>
             <RowLeft>
-              <MainTitle title={"Add Plan"} fontSize={52} />
+              <MainTitle title={"Edit Plan"} fontSize={52} />
             </RowLeft>
             <RowRight>
               <BackButton
                 onPress={() => {
-                  navigation.goBack(null);
+                  navigation.navigate("TabNavigation");
                 }}
               >
                 <CloseArea>
@@ -532,42 +562,3 @@ const Modalstyle = StyleSheet.create({
     margin: 0
   }
 });
-
-/**
-   mutation{
-    addPlan(planTitle:"addPlan" , exerciseType:"cjxph889fa49z0b127q2v3w3a", planImage:"https://content.surfit.io/image/KYVg3/3a80G/20918408885d37adfe5cf5b.png"){
-      id
-      planTitle
-    }
-  }
-
-  # mutation{
-#   addSchedule(plans:["cjxpppaifhifl0b423hxqgwon"], exerciseDate:"2019-07-31T06:15:08.421Z"){
-#     id
-#     user{
-#       username
-#     }
-#     plan{
-#       id
-#       planTitle
-#     }
-#     exerciseDate
-#     isChecked
-#   }
-# }
-
-# {
-#   getSchedule{
-#     id
-#     plan{
-#       id
-#       planTitle
-#     }
-#     user{
-#       username
-#     }
-#     exerciseDate
-#     isChecked
-#   }
-# }
- */

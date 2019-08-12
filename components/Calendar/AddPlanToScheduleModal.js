@@ -73,6 +73,8 @@ export default ({
       style={Modalstyle.bottomModal}
       backdropColor={"grey"}
       backdropOpacity={0.6}
+      animationInTiming={600}
+      animationOutTiming={600}
       onBackButtonPress={() => togglePlanModal()}
       onBackdropPress={() => togglePlanModal()}
       onSwipeComplete={() => togglePlanModal()}

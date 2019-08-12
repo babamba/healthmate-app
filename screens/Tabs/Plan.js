@@ -40,7 +40,7 @@ export const SEE_PLAN = gql`
   }
 `;
 
-const UPDATE_DELETE_PLAN = gql`
+export const UPDATE_DELETE_PLAN = gql`
   mutation updatePlan(
     $planId: String!
     $planTitle: String
@@ -177,7 +177,8 @@ export default ({ navigation }) => {
       buttonIndex => {
         if (buttonIndex === 1) {
           /* destructive action */
-          console.log("플랜 수정");
+          console.log("플랜 수정 : ", data);
+          navigation.navigate("EditPlan", { data });
         } else if (buttonIndex === 2) {
           console.log("플랜 삭제");
           confirm(data);
