@@ -136,37 +136,78 @@ const MyCarousel = props => {
   const [carouselRef, setCarouselRef] = useState(() => createRef());
   const [activeSlide, setActiveSlide] = useState(SLIDER_1_FIRST_ITEM);
 
-  const { navigation, selectDate, handleAddSchedule, togglePlanModal } = props;
+  const {
+    navigation,
+    selectDate,
+    handleAddSchedule,
+    togglePlanModal,
+    addRequestType,
+    handleIncreaseSchedule,
+    scheduleId,
+    existAlreadyItem
+  } = props;
 
   const confirm = item => {
+    console.log("RequestType", addRequestType);
     const convertDate = moment(selectDate).format("YYYY년 MM월 DD일");
     const confirmText = `${convertDate} / ${item.planTitle}`;
+    if (addRequestType === "create") {
+      console.log("create schedule : ", item);
 
-    const plans = [];
-    plans.push(item.id);
+      const plans = [];
+      plans.push(item.id);
 
-    Alert.alert(
-      confirmText,
-      "추가 하시겠습니까?",
-      [
-        {
-          text: "스케쥴 추가",
-          style: "destructive",
-          onPress: () => {
-            setAddLoading(true);
-            handleAddSchedule(plans, selectDate).then(() => {
-              setAddLoading(false);
-            });
+      Alert.alert(
+        confirmText,
+        "추가 하시겠습니까?",
+        [
+          {
+            text: "스케쥴 추가",
+            style: "destructive",
+            onPress: () => {
+              setAddLoading(true);
+              handleAddSchedule(plans, selectDate).then(() => {
+                setAddLoading(false);
+              });
+            }
+          },
+          {
+            text: "취소",
+            onPress: () => console.log("Cancel Pressed"),
+            style: "cancel"
           }
-        },
-        {
-          text: "취소",
-          onPress: () => console.log("Cancel Pressed"),
-          style: "cancel"
-        }
-      ],
-      { cancelable: true }
-    );
+        ],
+        { cancelable: true }
+      );
+    } else if (addRequestType === "update") {
+      const { id: planId } = item;
+
+      console.log("increase schedule planId: ", planId);
+      console.log("increase schedule scheduleId: ", scheduleId);
+
+      Alert.alert(
+        confirmText,
+        "에 운동을 추가 하시겠습니까?",
+        [
+          {
+            text: "스케쥴 추가",
+            style: "destructive",
+            onPress: () => {
+              setAddLoading(true);
+              handleIncreaseSchedule(scheduleId, planId).then(() => {
+                setAddLoading(false);
+              });
+            }
+          },
+          {
+            text: "취소",
+            onPress: () => console.log("Cancel Pressed"),
+            style: "cancel"
+          }
+        ],
+        { cancelable: true }
+      );
+    }
   };
 
   const _renderItem = ({ item, index }, parallaxProps) => {

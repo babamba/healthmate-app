@@ -39,6 +39,13 @@ import {
   connectActionSheet
 } from "@expo/react-native-action-sheet";
 
+import {
+  LOCAL_SERVER,
+  LOCAL_SERVER_WS,
+  DEPLOY_SERVER,
+  DEPLOY_SERVER_WS
+} from "react-native-dotenv";
+
 export default function App() {
   const [loaded, setLoaded] = useState(false);
   const [client, setClient] = useState(null);
@@ -143,14 +150,13 @@ export default function App() {
       });
 
       const httpLink = new HttpLink({
-        //uri: "exp://10.50.1.226:19000"
-        //uri: "http://localhost:4000"
-        uri: "http://hellojw.net:9333"
+        //uri: LOCAL_SERVER
+        uri: DEPLOY_SERVER
       });
 
       const wsLink = new WebSocketLink({
-        //uri: `ws://localhost:4000/`,
-        uri: "ws://hellojw.net:9333",
+        //uri: LOCAL_SERVER_WS,
+        uri: DEPLOY_SERVER_WS,
         options: {
           connectionParams: {
             Bearer: token

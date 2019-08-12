@@ -50,7 +50,11 @@ export default ({
   togglePlanModal,
   visiblePlanModal,
   swipeDate,
-  handleAddSchedule
+  handleAddSchedule,
+  handleIncreaseSchedule,
+  addRequestType,
+  scheduleId,
+  existAlreadyItem
 }) => {
   // const [visibleModal, setVisibleModal] = useState(false);
   // const toggleModal = () => {
@@ -80,7 +84,11 @@ export default ({
           <AddPlanCarouselList
             selectDate={swipeDate}
             handleAddSchedule={handleAddSchedule}
+            handleIncreaseSchedule={handleIncreaseSchedule}
             togglePlanModal={togglePlanModal}
+            addRequestType={addRequestType}
+            scheduleId={scheduleId}
+            existAlreadyItem={existAlreadyItem}
           />
         </ContentArea>
       </ModalContent>

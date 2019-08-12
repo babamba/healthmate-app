@@ -135,6 +135,31 @@ export const DELETE_SCHEDULE = gql`
   }
 `;
 
+export const UPDATE_SCHEDULE = gql`
+  mutation updateSchedule($scheduleId: String!, $planId: String!) {
+    updateSchedule(scheduleId: $scheduleId, planId: $planId) {
+      id
+      plan {
+        id
+        planTitle
+        planImage
+        exerciseType {
+          id
+          title
+          image
+        }
+      }
+      user {
+        username
+      }
+      exerciseDate
+      isChecked
+      date
+      time
+    }
+  }
+`;
+
 export const ADD_SCHEDULE = gql`
   mutation addSchedule($plans: [String!]!, $exerciseDate: String!) {
     addSchedule(plans: $plans, exerciseDate: $exerciseDate) {
@@ -284,6 +309,8 @@ export default withNavigation(({ navigation }) => {
   let timeout;
   const agenda = useRef();
   const [swipeDate, setSwipeDate] = useState(null);
+  const [addType, setAddType] = useState();
+  const [updateScheduleId, setUpdateScheduleId] = useState();
   const [onInit, setInit] = useState(false);
   const [locked, setLocked] = useState(false);
   const [items, setItems] = useState({});
@@ -352,8 +379,22 @@ export default withNavigation(({ navigation }) => {
     refetchQueries: () => [{ query: SEE_SCHEDULE }]
   });
 
-  const togglePlanModal = () => {
+  const increaseSchedule = useMutation(UPDATE_SCHEDULE, {
+    refetchQueries: () => [{ query: SEE_SCHEDULE }]
+  });
+
+  const togglePlanModal = (addType, item) => {
     setVisiblePlanModal(!visiblePlanModal);
+    if (addType !== "") {
+      console.log("addType ? ", addType);
+      setAddType(addType);
+      if (addType === "update") {
+        console.log("update item : ", item);
+        setUpdateScheduleId(item.scheduleId);
+        console.log("updateScheduleId : ", updateScheduleId);
+      }
+    }
+
     console.log("toggle!");
   };
 
@@ -382,10 +423,16 @@ export default withNavigation(({ navigation }) => {
     {
       text: "운동 추가",
       type: "secondary",
-      onPress: () => togglePlanModal()
+      onPress: () => {
+        togglePlanModal("create");
+      }
       //onPress: () => console.log(itemRef.current.props._data)
     }
   ];
+
+  const existAlreadyItem = date => {
+    console.log(date);
+  };
 
   const renderEmptyDate = item => {
     //console.log("emprty item : ");
@@ -419,11 +466,19 @@ export default withNavigation(({ navigation }) => {
   };
 
   const renderItem = item => {
+    console.log("item ", item);
     const swipeoutRightBtns = [
       {
         text: "삭제",
         type: "delete",
         onPress: () => deleteConfirm(item)
+      }
+    ];
+    const swipeoutLeftBtns = [
+      {
+        text: "운동추가",
+        type: "delete",
+        onPress: () => togglePlanModal("update", item)
       }
     ];
     //console.log("item ", item);
@@ -438,7 +493,8 @@ export default withNavigation(({ navigation }) => {
           autoClose={true}
           rowID={item.rowIndex}
           right={swipeoutRightBtns}
-          // left={swipeoutLeftBtns}
+          left={swipeoutLeftBtns}
+          scroll={event => allowAddScroll(event, item.originDate)}
           backgroundColor={"white"}
           style={{
             marginVertical: 10,
@@ -580,6 +636,39 @@ export default withNavigation(({ navigation }) => {
       console.log("error : ", error);
     } finally {
       console.log("finally");
+    }
+  };
+
+  //increaseSchedule
+  const handleIncreaseSchedule = async (scheduleId, planId) => {
+    try {
+      const {
+        data: { updateSchedule }
+      } = await increaseSchedule({
+        variables: {
+          scheduleId,
+          planId
+        }
+      });
+
+      if (updateSchedule) {
+        console.log("toggle first");
+        togglePlanModal();
+        setTimeout(() => {
+          console.log("set");
+          filterData(updateSchedule).then(async result => {
+            let tempItem = { ...items, ...result };
+            await setItems(tempItem);
+            AlertHelper.showDropAlert(
+              "success",
+              "운동 스케줄이 등록되었습니다 :D"
+            );
+          });
+        }, 1000);
+      }
+    } catch (error) {
+      AlertHelper.showDropAlert("warning", "스케쥴 등록 실패 :(");
+      console.log("error : ", error);
     }
   };
 
@@ -762,6 +851,10 @@ export default withNavigation(({ navigation }) => {
         visiblePlanModal={visiblePlanModal}
         swipeDate={swipeDate}
         handleAddSchedule={handleAddSchedule}
+        handleIncreaseSchedule={handleIncreaseSchedule}
+        addRequestType={addType}
+        scheduleId={addType === "update" ? updateScheduleId : ""}
+        existAlreadyItem={existAlreadyItem}
       />
     </SafeAreaView>
   );
