@@ -4,7 +4,9 @@ import { withNavigation } from "react-navigation";
 import { Marker } from "react-native-maps";
 import constants from "../../constants";
 import styled from "styled-components";
+import PinImage from "./PinImage";
 
+const INACTIVE_PIN = require("../../assets/pin.png");
 const markerImageSize = constants.width / 12;
 const ImageContainer = styled.View`
   width: ${markerImageSize};
@@ -21,14 +23,16 @@ const ImageContainer = styled.View`
 const Markers = ({ marker }) => {
   // const Markers = ({ marker, press }) => {
   //console.log("marker =>", marker);
+
   return (
     <Marker
       key={marker.id}
-      id={marker.id}
       coordinate={{
         latitude: marker.location.latitude,
         longitude: marker.location.longitude
       }}
+      icon={{ uri: INACTIVE_PIN }}
+
       // pinColor={"red"}
       // description={marker.bio}
       // style={{
@@ -36,30 +40,9 @@ const Markers = ({ marker }) => {
       // }}
       // onPress={e => press(e, marker)}
     >
-      {/* <Image
-        source={{ uri: marker.avatar }}
-        resizeMode="contain"
-        style={{
-          width: markerImageSize,
-          height: markerImageSize,
-          borderRadius: markerImageSize / 2
-        }}
-      /> */}
-      {/* <ImageContainer>
-        
-      </ImageContainer> */}
+      {/* <PinImage uri={marker.avatar} /> */}
     </Marker>
   );
 };
-
-// PlanContentList.propTypes = {
-//   files: PropTypes.arrayOf(
-//     PropTypes.shape({
-//       id: PropTypes.string.isRequired,
-//       url: PropTypes.string.isRequired
-//     })
-//   ).isRequired,
-//   id: PropTypes.string.isRequired
-// };
 
 export default withNavigation(Markers);

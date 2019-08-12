@@ -11,12 +11,10 @@ import TouchableScale from "react-native-touchable-scale";
 const iconContainerWidth = constants.width / 10;
 
 const Container = styled.View`
-  padding-top: 6px;
   background-color: white;
   width: ${iconContainerWidth};
   height: ${iconContainerWidth};
   border-radius: ${Math.round(iconContainerWidth / 2)};
-  padding: 10px;
   justify-content: center;
   align-items: center;
 `;

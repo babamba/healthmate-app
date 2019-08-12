@@ -123,6 +123,7 @@ export default function App() {
         require("./assets/WeatherIcon/icons8-more-50.png"),
 
         require("./assets/Intro/1.jpg"),
+        require("./assets/pin.png"),
         require("./assets/Intro/2.jpeg"),
         require("./assets/Intro/3.jpeg"),
 
@@ -150,13 +151,13 @@ export default function App() {
       });
 
       const httpLink = new HttpLink({
-        uri: LOCAL_SERVER
-        //uri: DEPLOY_SERVER
+        //uri: LOCAL_SERVER
+        uri: DEPLOY_SERVER
       });
 
       const wsLink = new WebSocketLink({
-        uri: LOCAL_SERVER_WS,
-        //uri: DEPLOY_SERVER_WS,
+        //uri: LOCAL_SERVER_WS,
+        uri: DEPLOY_SERVER_WS,
         options: {
           connectionParams: {
             Bearer: token

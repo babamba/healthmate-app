@@ -43,7 +43,7 @@ const MapUserCarousel = props => {
           // }}
         > */}
         <View style={styles.item}>
-          <BlurView tint="light" intensity={80} style={styles.textContainer}>
+          <View style={[styles.textContainer, { backgroundColor: "white" }]}>
             <View style={styles.rightTextRow}>
               <Text style={styles.username} numberOfLines={2}>
                 {item.username}
@@ -52,7 +52,7 @@ const MapUserCarousel = props => {
                 {item.bio}
               </Text>
             </View>
-          </BlurView>
+          </View>
         </View>
         <View style={styles.imageContainer}>
           <Image
@@ -158,6 +158,7 @@ const styles = StyleSheet.create({
     paddingTop: 10
   },
   iconContainer: {
+    backgroundColor: "red",
     position: "absolute",
     width: iconContainerWidth,
     height: iconContainerWidth,
@@ -176,7 +177,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 5 },
     shadowRadius: 6,
 
-    elevation: 4
+    elevation: 10
   },
   rightTextRow: {
     width: carouselWidth - constants.width / 4 + 60,

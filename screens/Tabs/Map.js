@@ -52,7 +52,13 @@ const View = styled.View`
   flex: 1;
 `;
 
-const NotGrantText = styled.Text``;
+const NotGrantText = styled.Text`
+  color: black;
+  text-align: center;
+  font-size: 18px;
+  font-family: NanumBarunGothic;
+  margin-bottom: 8px;
+`;
 
 const MapContainer = styled.View({
   ...StyleSheet.absoluteFillObject
@@ -82,17 +88,24 @@ const IconContainer = styled.View`
 `;
 
 const AskButton = styled.TouchableOpacity`
-  width: ${constants.width / 2};
-  height: ${constants.width / 6};
+  width: ${constants.width / 3};
+  height: ${constants.width / 8};
   border: 1px solid grey;
+  border-radius: 20px;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
 `;
 
 const AskText = styled.Text`
-  font-size: 16px;
+  color: black;
+  text-align: center;
+  font-size: 18px;
+  font-family: NanumBarunGothic;
 `;
 
 const IconDivide = styled.View`
-  padding-right: 6px;
+  margin-right: 6px;
 `;
 
 const Icon = styled.View``;
@@ -150,6 +163,7 @@ const MapScreen = ({ navigation }) => {
 
   const askAsync = async () => {
     const { status } = await Permissions.askAsync(Permissions.LOCATION);
+    console.log(status);
     if (status === "granted") {
       setGrantedMap(true);
     }
@@ -182,48 +196,8 @@ const MapScreen = ({ navigation }) => {
     const {
       coords: { latitude: changeLat, longitude: changeLon }
     } = location;
-    // let tempState = { ...initialRegion };
-
-    // tempState = {
-    //   ...tempState,
-    //   coords: new AnimatedRegion({
-    //     latitude: changeLat,
-    //     longitude: changeLon,
-    //     longitudeDelta: LONGITUDE_DELTA,
-    //     latitudeDelta: LATITUDE_DELTA
-    //   })
-    // };
-    // console.log("ready : ", initialRegion);
     animateRegion(changeLat, changeLon);
     console.log("ready : ", initialRegion);
-    // let newLocationObj = {
-    //   ...location
-    // };
-
-    //console.log("location", location);
-    //console.log("newLocationObj", tempState);
-
-    // console.log("initialRegion", initialRegion.coords.timing);
-
-    // map.animateToRegion(newLocationObj, 1000 * 2);
-    // initialRegion.coords
-    //   .timing({ latitude, longitude, duration: 1000 })
-    //   .start();
-
-    //setRegion(tempState)
-
-    //setRegion({ coords: new AnimatedRegion({ ...location.coords }) })
-    // initialRegion.coords.timing().start();
-    // animateRegion(latitude, longitude).then(
-    //   setRegion({ coords: new AnimatedRegion({ ...location.coords }) })
-    // );
-
-    // console.log(newLocationObj);
-    //console.log("initialRegion", initialRegion.coords.timing);
-
-    // setRegion(prevState => {
-    //   return { ...prevState, coords: { latitude, longitude } };
-    // });
   };
 
   const animateRegion = (latitude, longitude) => {
@@ -353,38 +327,8 @@ const MapScreen = ({ navigation }) => {
 
   const handleMorePress = data => {
     console.log("press more button! ", data);
-    // const markerID = event.nativeEvent;
-    // console.log(event);
-    // console.log(markerID);
-
-    // let moveRegion = {
-    //   coords: {
-    //     latitude: markerID.coordinate.latitude,
-    //     longitude: markerID.coordinate.longitude
-    //   }
-    // };
-
-    // locationChanged(moveRegion);
     showActionSheet(data);
   };
-
-  // const handleMarkerPress = (event, marker) => {
-  //   console.log("press marker!");
-  //   const markerID = event.nativeEvent;
-  //   console.log(event);
-  //   console.log(markerID);
-  //   console.log("press marker data ? ", marker);
-
-  //   let moveRegion = {
-  //     coords: {
-  //       latitude: markerID.coordinate.latitude,
-  //       longitude: markerID.coordinate.longitude
-  //     }
-  //   };
-
-  //   locationChanged(moveRegion);
-  //   showActionSheet(marker);
-  // };
 
   const HandleMyLocation = async () => {
     console.log("currentRegion , ", currentRegion);
@@ -400,31 +344,6 @@ const MapScreen = ({ navigation }) => {
     const {
       coords: { latitude, longitude }
     } = initialRegion;
-
-    // let tempState = {
-    //   ...tempState,
-    //   coords: new AnimatedRegion({
-    //     latitude,
-    //     longitude,
-    //     longitudeDelta: LONGITUDE_DELTA,
-    //     latitudeDelta: LATITUDE_DELTA
-    //   })
-    // };
-
-    //
-    // setRegion(tempState);
-
-    // if (isZoomIn) {
-    //   //console.log("Zoom In : ");
-    //   await SET_LATITUDE_DELTA(LATITUDE_DELTA - 0.02);
-    //   await SET_LONGITUDE_DELTA(LONGITUDE_DELTA - 0.02);
-    // } else {
-    //   //console.log("Zoom Out : ");
-    //   await SET_LATITUDE_DELTA(LATITUDE_DELTA + 0.02);
-    //   await SET_LONGITUDE_DELTA(LONGITUDE_DELTA + 0.02);
-    // }
-
-    // console.log("Handle Zoom : ", LATITUDE_DELTA);
 
     animateZoom(latitude, longitude, isZoomIn);
   };
@@ -480,76 +399,72 @@ const MapScreen = ({ navigation }) => {
     >
       <MainTitle title={"Map"} />
       <View>
-        {grantedMap ? (
-          loading ? (
-            <Loader />
-          ) : (
-            data &&
-            data.getNearUser && (
-              <MapContainer>
-                <AnimatedMap
-                  ref={mapRef}
-                  provider={"google"}
-                  style={constants.commonStyle.map}
-                  showsUserLocation={true}
-                  showCompass={true}
-                  rotateEnabled={false}
-                  region={initialRegion.coords}
-                  onRegionChange={region => onRegionChange(region)}
-                  minZoomLevel={10}
-                  maxZoomLevel={20}
-                  zoomTapEnabled={false}
-                  onRegionChangeComplete={region =>
-                    onRegionChangeComplete(region)
-                  }
-                  initialRegion={initialRegion.coords}
-                  followsUserLocation={true}
-                  zoomEnabled={true}
-                  moveOnMarkerPress={true}
-                  onMapReady={() => onMapReady()}
-                  enableZoomControl={true}
-                >
-                  {mapReady &&
-                    nearUser.length > 0 &&
-                    nearUser.map(marker => {
-                      //console.log("nearUser marker : ", marker);
-                      return <Markers marker={marker} key={marker.id} />;
-                    })}
-                </AnimatedMap>
-                {/* <Icon name="add" style={styles.icon} size={20} /> */}
-                <IconContainer>
-                  <IconDivide>
-                    <MyLocation press={HandleMyLocation} size={20} />
-                  </IconDivide>
-                  <IconDivide>
-                    <ZoomIn press={HandleZoom} size={20} />
-                  </IconDivide>
-                  <IconDivide>
-                    <ZoomOut press={HandleZoom} size={20} />
-                  </IconDivide>
-                </IconContainer>
-                <ContentContainer>
-                  {mapReady ? (
-                    <CarouselItem
-                      data={rewriteProfile(nearUser)}
-                      onSnapUser={onSnapUser}
-                      // press={(event, marker) => handleMarkerPress(event, marker)}
-                      press={data => handleMorePress(data)}
-                    />
-                  ) : (
-                    <ActivityIndicator />
-                  )}
-                </ContentContainer>
-              </MapContainer>
-            )
+        {loading ? (
+          <Loader />
+        ) : grantedMap ? (
+          data &&
+          data.getNearUser && (
+            <MapContainer>
+              <AnimatedMap
+                ref={mapRef}
+                provider={"google"}
+                style={constants.commonStyle.map}
+                showsUserLocation={true}
+                showCompass={true}
+                rotateEnabled={false}
+                region={initialRegion.coords}
+                onRegionChange={region => onRegionChange(region)}
+                minZoomLevel={10}
+                maxZoomLevel={20}
+                zoomTapEnabled={false}
+                onRegionChangeComplete={region =>
+                  onRegionChangeComplete(region)
+                }
+                initialRegion={initialRegion.coords}
+                followsUserLocation={true}
+                zoomEnabled={true}
+                moveOnMarkerPress={true}
+                onMapReady={() => onMapReady()}
+                // enableZoomControl={true}
+              >
+                {mapReady &&
+                  nearUser.length > 0 &&
+                  nearUser.map(marker => {
+                    return <Markers marker={marker} key={marker.id} />;
+                  })}
+              </AnimatedMap>
+              {/* <Icon name="add" style={styles.icon} size={20} /> */}
+              <IconContainer>
+                <IconDivide>
+                  <MyLocation press={HandleMyLocation} size={20} />
+                </IconDivide>
+                <IconDivide>
+                  <ZoomIn press={HandleZoom} size={20} />
+                </IconDivide>
+                <IconDivide>
+                  <ZoomOut press={HandleZoom} size={20} />
+                </IconDivide>
+              </IconContainer>
+              <ContentContainer>
+                {mapReady ? (
+                  <CarouselItem
+                    data={rewriteProfile(nearUser)}
+                    onSnapUser={onSnapUser}
+                    // press={(event, marker) => handleMarkerPress(event, marker)}
+                    press={data => handleMorePress(data)}
+                  />
+                ) : (
+                  <ActivityIndicator />
+                )}
+              </ContentContainer>
+            </MapContainer>
           )
         ) : (
           <NotGrantContainer>
-            <NotGrantText>
-              지도 권한을 승인해 주셔야 사용 가능합니다.
-            </NotGrantText>
+            <NotGrantText>지도 권한을 승인해 주셔야</NotGrantText>
+            <NotGrantText>사용 가능합니다 :(</NotGrantText>
             <AskButton onPress={() => askAsync()}>
-              <AskText>권한 승인 하기</AskText>
+              <AskText>권한 승인</AskText>
             </AskButton>
           </NotGrantContainer>
         )}
