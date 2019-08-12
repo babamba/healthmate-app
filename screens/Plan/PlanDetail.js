@@ -22,6 +22,7 @@ import InputActivity from "../../components/Plan/InputActivity";
 import Modal from "react-native-modal";
 import { AlertHelper } from "../../components/DropDown/AlertHelper";
 import UpdateActivity from "../../components/Plan/UpdateActivity";
+import OverLayLoader from "../../components/OverlayLoader";
 
 // import * as MagicMove from "react-native-magic-move";
 // import * as Animatable from "react-native-animatable";
@@ -145,6 +146,7 @@ const Overlay = styled.View`
 // });
 
 export default ({ navigation }) => {
+  const [overlayLoader, setOverlayLoader] = useState(false);
   const [visibleInput, setVisibleInput] = useState(false);
   const [visibleEdit, setVisibleEdit] = useState(false);
   const [updateData, setUpdateData] = useState(null);
@@ -252,6 +254,7 @@ export default ({ navigation }) => {
     console.log("handleDelete !", activityId);
 
     try {
+      setOverlayLoader(true);
       const {
         data: { updateActivity }
       } = await updateDeleteActivity({
@@ -262,10 +265,12 @@ export default ({ navigation }) => {
       });
 
       if (updateActivity) {
+        setOverlayLoader(false);
         AlertHelper.showDropAlert("success", "목록이 삭제", "되었습니다");
       }
     } catch (error) {
       console.log(error);
+      setOverlayLoader(false);
       AlertHelper.showDropAlert("warning", "삭제", "실패");
     }
   };
@@ -292,6 +297,7 @@ export default ({ navigation }) => {
       style={constants.commonStyle.safeArea}
       forceInset={{ top: "always" }}
     >
+      {overlayLoader && <OverLayLoader />}
       <Container>
         <HeaderArea>
           <BackContainer>

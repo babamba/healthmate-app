@@ -36,7 +36,7 @@ const Container = styled.View`
 
 const Item = styled.View`
   margin-left: 14px;
-  width: ${constants.width - 100};
+  width: ${constants.width * 0.73};
   height: ${constants.height / 2};
   box-shadow: ${constants.boxShadow};
   padding-vertical: 10px;
@@ -81,21 +81,12 @@ const OverlayHeaderTextConatiner = styled.View`
   overflow: hidden;
   padding-horizontal: 16px;
   padding-vertical: 16px;
-  width: ${constants.width - 100};
+  width: ${constants.width * 0.73};
 `;
 
-const MoreContainer = styled.View`
-  position: absolute;
-  width: ${moreButtonWidth};
-  height: ${moreButtonWidth};
-  border-radius: ${moreButtonWidth / 2};
-  z-index: 3;
-  top: 0;
-  right: 0;
-  box-shadow: ${constants.bigBoxShadow};
-  background-color: white;
-  opacity: 0.8;
-`;
+// const MoreContainer = styled.View`
+
+// `;
 
 const MyCarousel = props => {
   //   const {
@@ -132,26 +123,37 @@ const MyCarousel = props => {
         delay={50 * (index * 3)}
         useNativeDriver={true}
       >
-        <MoreContainer>
-          <TouchableScale
-            activeScale={0.97}
-            onPress={() => {
-              showActionSheet(item);
-            }}
-            style={{
-              flex: 1,
-              justifyContent: "center",
-              alignItems: "center"
-            }}
-          >
-            <Feather name={"more-horizontal"} size={20} />
-          </TouchableScale>
-        </MoreContainer>
+        <TouchableScale
+          activeScale={0.96}
+          onPress={() => {
+            showActionSheet(item);
+          }}
+          style={{
+            // flex: 1,
+            justifyContent: "center",
+            alignItems: "center",
+            position: "absolute",
+            width: moreButtonWidth,
+            height: moreButtonWidth,
+            borderRadius: moreButtonWidth / 2,
+            zIndex: 3,
+            top: 0,
+            right: 0,
+            backgroundColor: "white",
+            opacity: 0.9,
+            shadowColor: "#000",
+            shadowOpacity: 0.25,
+            shadowOffset: { width: 0, height: 5 },
+            shadowRadius: 6,
+
+            elevation: 12
+          }}
+        >
+          <Feather name={"more-horizontal"} size={20} />
+        </TouchableScale>
 
         <TouchableScale
           activeScale={0.99}
-          // tension={80}
-          // friction={2}
           onPress={() => {
             navigation.navigate("PlanDetail", { planId: item.id });
           }}
@@ -201,7 +203,6 @@ const MyCarousel = props => {
         data={data}
         renderItem={data => _renderItem(data)}
         hasParallaxImages={false}
-        //    onSnapToItem={index => onSnapUser(index)}
         onSnapToItem={index => setActiveSlide(index)}
         enableMomentum={false}
         activeAnimationType={"spring"}
@@ -252,7 +253,7 @@ const styles = StyleSheet.create({
     // paddingHorizontal: 16,
     paddingHorizontal: 16,
     paddingVertical: 20,
-    width: constants.width - 100,
+    width: constants.width * 0.73,
     alignItems: "center",
     justifyContent: "center",
     overflow: "hidden"

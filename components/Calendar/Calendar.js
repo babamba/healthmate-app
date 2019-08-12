@@ -26,6 +26,7 @@ import Loader from "../Loader";
 import { AlertHelper } from "../../components/DropDown/AlertHelper";
 import TouchableScale from "react-native-touchable-scale";
 import AddPlanToScheduleModal from "./AddPlanToScheduleModal";
+import OverLayLoader from "../OverlayLoader";
 // import MaterialIcon from "../MaterialIcon";
 // import TouchableScale from "react-native-touchable-scale";
 
@@ -278,6 +279,7 @@ const PlanImage = styled.Image`
 const CloseArea = styled.View`
   /* background-color: #e8e8e8; */
   align-items: center;
+  justify-content: center;
 `;
 
 const CloseButton = styled.View``;
@@ -308,6 +310,7 @@ export default withNavigation(({ navigation }) => {
   let rewriteData = {};
   let timeout;
   const agenda = useRef();
+  const [overlayLoader, setOverlayLoader] = useState(false);
   const [swipeDate, setSwipeDate] = useState(null);
   const [addType, setAddType] = useState();
   const [updateScheduleId, setUpdateScheduleId] = useState();
@@ -598,6 +601,8 @@ export default withNavigation(({ navigation }) => {
 
   const handleDeleteSchedule = async (scheduleId, planId) => {
     try {
+      setOverlayLoader(true);
+
       const {
         data: { deleteSchedule }
       } = await removeSchedule({
@@ -608,33 +613,20 @@ export default withNavigation(({ navigation }) => {
       });
 
       if (deleteSchedule) {
-        //let tempItem = { ...items };
-        // let schedule = tempItem[deleteSchedule.date];
-        //tempItem.deleteSchedule.date;
-        //console.log();
-        // if (deleteSchedule.plan.length > 0) {
-        //   const result = await refreshRemainData(planId, schedule);
-        //   schedule = result;
-        // } else {
-        //   schedule = [];
-        // }
-
         console.log("deleteSchedule : ", deleteSchedule);
         filterData(deleteSchedule).then(async result => {
-          console.log("result", result);
           let tempItem = { ...items, ...result };
-          console.log("tempItem : ", tempItem);
           await setItems(tempItem);
+          setOverlayLoader(false);
           AlertHelper.showDropAlert("success", "스케줄이 삭제되었습니다 :D");
         });
-
-        // await setItems({ ...tempItem });
-        // AlertHelper.showDropAlert("success", "스케줄이 삭제되었습니다 :D");
       }
     } catch (error) {
+      setOverlayLoader(false);
       AlertHelper.showDropAlert("warning", "스케쥴 삭제 실패 :(");
       console.log("error : ", error);
     } finally {
+      setOverlayLoader(false);
       console.log("finally");
     }
   };
@@ -757,6 +749,7 @@ export default withNavigation(({ navigation }) => {
       style={constants.commonStyle.safeArea}
       forceInset={{ top: "always", bottom: "always" }}
     >
+      {overlayLoader && <OverLayLoader />}
       <TouchableOpacity
         onPress={() => {
           navigation.goBack(null);

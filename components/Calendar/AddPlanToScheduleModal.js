@@ -7,6 +7,7 @@ import NavIcon from "../../components/NavIcon";
 import Modal from "react-native-modal";
 import styles from "../../styles";
 import constants from "../../constants";
+import { SafeAreaView } from "react-navigation";
 import AddPlanCarouselList from "./AddPlanCarouselList";
 
 const TouchableOpacity = styled.TouchableOpacity``;
@@ -38,11 +39,12 @@ const ModalContent = styled.View`
   background-color: white;
   justify-content: center;
   align-items: center;
-  border-radius: 20px;
-  margin-top: ${constants.height / 3};
-  padding: 14px;
+  border-top-right-radius: 20px;
+  border-top-left-radius: 20px;
+  padding-top: 14px;
   flex: 1;
   width: ${constants.width};
+  height: ${constants.height / 1.5};
 `;
 
 export default ({
@@ -65,7 +67,6 @@ export default ({
   return (
     <Modal
       isVisible={visiblePlanModal}
-      avoidKeyboard={true}
       animationIn={"slideInUp"}
       animationOut={"slideOutDown"}
       deviceWidth={constants.width}
@@ -82,36 +83,25 @@ export default ({
       swipeThreshold={10}
     >
       <ModalContent>
-        <ContentArea>
-          <AddPlanCarouselList
-            selectDate={swipeDate}
-            handleAddSchedule={handleAddSchedule}
-            handleIncreaseSchedule={handleIncreaseSchedule}
-            togglePlanModal={togglePlanModal}
-            addRequestType={addRequestType}
-            scheduleId={scheduleId}
-            existAlreadyItem={existAlreadyItem}
-          />
-        </ContentArea>
+        <AddPlanCarouselList
+          selectDate={swipeDate}
+          handleAddSchedule={handleAddSchedule}
+          handleIncreaseSchedule={handleIncreaseSchedule}
+          togglePlanModal={togglePlanModal}
+          addRequestType={addRequestType}
+          scheduleId={scheduleId}
+          existAlreadyItem={existAlreadyItem}
+        />
       </ModalContent>
     </Modal>
   );
 };
 
 const Modalstyle = StyleSheet.create({
-  // modalContent: {
-  //   backgroundColor: "white",
-  //   justifyContent: "center",
-  //   alignItems: "center",
-  //   borderRadius: 20,
-  //   padding: 22,
-  //   marginTop: constants.height / 3
-  //   // marginVertical: 220,
-  //   // margin: -20
-  // },
   bottomModal: {
     justifyContent: "flex-end",
-    margin: 0
+    margin: 0,
+    paddingTop: constants.height / 4
   }
 });
 

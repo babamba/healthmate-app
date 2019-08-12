@@ -69,11 +69,12 @@ const Container = styled.View`
 
 const Header = styled.View`
   width: ${constants.width};
-  padding-top: 15px;
+  /* padding-top: 15px;
   padding-bottom: 20px;
-  padding-horizontal: 20px;
+  padding-horizontal: 20px; */
+  justify-content: center;
+  align-items: flex-start;
   flex-direction: row;
-  text-align: center;
   /* background-color: green;
   opacity: 0.2; */
   flex: 1;
@@ -92,7 +93,7 @@ const Footer = styled.View`
 
 const Content = styled.View`
   width: ${constants.width};
-  flex: 10;
+  flex: 6;
   /* background-color: blue;
   opacity: 0.2; */
   align-items: center;
@@ -231,11 +232,11 @@ export default ({ navigation }) => {
     >
       <Container>
         <Header>
-          <ScreenTitle>Planner </ScreenTitle>
+          {/* <ScreenTitle>Planner </ScreenTitle> */}
           {/* <FilpButtonArea>
             <OpenCalendarButton size={32} />
           </FilpButtonArea> */}
-          {/* <MainTitle title={"Planner"} fontSize={32} /> */}
+          <MainTitle title={"Planner"} fontSize={42} />
         </Header>
         <Content>
           {/* <ScrollView> */}

@@ -25,13 +25,8 @@ import { SEE_PLAN } from "../../screens/Tabs/Plan";
 import moment from "moment";
 
 import Loader from "../Loader";
-// import * as MagicMove from "react-native-magic-move";
 
-// const { width: screenWidth } = Dimensions.get("window");
-
-console.log(constants.width);
 const entryBorderRadius = 8;
-const moreButtonWidth = constants.width / 11.5;
 
 const TempView = styled.View`
   justify-content: center;
@@ -41,14 +36,11 @@ const Container = styled.View`
   justify-content: center;
   align-items: center;
   padding-vertical: 10px;
-  width: ${constants.width};
-  flex: 1;
-  z-index: 10;
 `;
 
 const Item = styled.View`
   margin-left: 14px;
-  width: ${constants.width - 100};
+  width: ${constants.width * 0.73};
   height: ${constants.height / 2};
   box-shadow: ${constants.boxShadow};
   padding-vertical: 10px;
@@ -87,20 +79,7 @@ const OverlayHeaderTextConatiner = styled.View`
   overflow: hidden;
   padding-horizontal: 16px;
   padding-vertical: 16px;
-  width: ${constants.width - 100};
-`;
-
-const MoreContainer = styled.View`
-  position: absolute;
-  top: 0;
-  right: 0;
-  background-color: white;
-  width: ${moreButtonWidth};
-  height: ${moreButtonWidth};
-  border-radius: ${moreButtonWidth / 2};
-  z-index: 3;
-  align-items: center;
-  justify-content: center;
+  width: ${constants.width * 0.73};
 `;
 
 const TextArea = styled.View`
@@ -219,14 +198,12 @@ const MyCarousel = props => {
         easing="ease-in-out"
         delay={50 * (index * 3)}
         useNativeDriver={true}
+        style={{ flex: 1 }}
       >
         <TouchableScale
           activeScale={0.99}
-          // tension={80}
-          // friction={2}
           onPress={() => {
             confirm(item);
-            // navigation.navigate("PlanDetail", { planId: item.id });
           }}
         >
           <Item>
@@ -251,13 +228,13 @@ const MyCarousel = props => {
   };
 
   return (
-    <Container>
+    <TempView>
       {loading || AddLoading ? (
         <Loader />
       ) : (
         data &&
         data.seePlan && (
-          <TempView>
+          <Container>
             <TextArea>
               <Text>운동을 골라주세요 :D</Text>
             </TextArea>
@@ -281,7 +258,6 @@ const MyCarousel = props => {
               data={data.seePlan}
               renderItem={data => _renderItem(data)}
               hasParallaxImages={false}
-              //    onSnapToItem={index => onSnapUser(index)}
               onSnapToItem={index => setActiveSlide(index)}
               enableMomentum={false}
               activeAnimationType={"spring"}
@@ -292,10 +268,10 @@ const MyCarousel = props => {
                 tension: 80
               }}
             />
-          </TempView>
+          </Container>
         )
       )}
-    </Container>
+    </TempView>
   );
 };
 
@@ -335,16 +311,11 @@ const styles = StyleSheet.create({
     // paddingHorizontal: 16,
     paddingHorizontal: 16,
     paddingVertical: 20,
-    width: constants.width - 100,
+    width: constants.width * 0.73,
     alignItems: "center",
     justifyContent: "center",
     overflow: "hidden"
   },
-  // overlay: {
-  //   ...StyleSheet.absoluteFillObject,
-  //   backgroundColor: "rgba(0,0,0,0.3)",
-  //   borderRadius: entryBorderRadius
-  // },
   title: {
     color: "white",
     fontSize: 36,

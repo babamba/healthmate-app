@@ -389,7 +389,7 @@ export default withNavigation(({ navigation }) => {
         <View>
           <HeaderArea>
             <RowLeft>
-              <MainTitle title={"Add Plan"} fontSize={52} />
+              <MainTitle title={"Add Plan"} fontSize={42} />
             </RowLeft>
             <RowRight>
               <BackButton
