@@ -14,10 +14,6 @@ const Conatiner = styled.View`
   border-radius: 10px;
   margin-left: 10px;
   margin-left: 10px;
-  /* shadow-opacity: 0.75;
-  shadow-radius: 5px;
-  shadow-color: #000;
-  shadow-offset: 0px 0px; */
 `;
 
 const TextContainer = styled.View`
@@ -73,8 +69,23 @@ const Row = styled.View`
 export const UPDATE_ROOM_MESSAGE = gql`
   subscription newMessage($roomId: String!) {
     newMessage(roomId: $roomId) {
-      text
       id
+      text
+      from {
+        id
+        username
+        avatar
+      }
+      to {
+        username
+      }
+      createdAt
+      user {
+        _id
+        name
+        avatar
+      }
+      _id
       room {
         lastMessage {
           text
@@ -91,8 +102,7 @@ const RoomList = ({
   lastMessage,
   person,
   messages,
-  me,
-  RootChatScreenRefetch
+  me
 }) => {
   // console.log("roomId : ", id);
   // console.log("navigation ", navigation);
@@ -100,6 +110,7 @@ const RoomList = ({
   // console.log("participants :", participants);
   // console.log("lastMessage :", lastMessage);
   //console.log("messages : ", messages);
+  const [message, setMessage] = useState(messages);
   const [lastMessages, setLastMessage] = useState(lastMessage[0].text);
   // const [roomUsers, setRoomUsers] = useState();
   let userlist = "";
@@ -126,25 +137,33 @@ const RoomList = ({
   const { data: updateMessage } = useSubscription(UPDATE_ROOM_MESSAGE, {
     variables: {
       roomId: id
-    },
-    onSubscriptionData: ({ client, subscriptionData }) => {
-      //console.log("onSubscriptionData", subscriptionData);
     }
+    // onSubscriptionData: ({ client, subscriptionData }) => {
+    // }
   });
 
+  // const { data: ReceiveMessage } = useSubscription(RECEIVE_MESSAGE, {
+  //   onSubscriptionData: ({ client, subscriptionData }) => {
+  //     console.log("onSubscriptionData", subscriptionData);
+  //     if (id === subscriptionData.data.ReceiveMessage.id) {
+  //       console.log("receive :", subscriptionData.data.ReceiveMessage);
+  //       setLastMessage(subscriptionData.data.ReceiveMessage.text);
+  //     }
+  //   }
+  // });
+
   const handleRoomList = () => {
-    if (updateMessage !== undefined) {
-      //console.log("handle room list : ", updateMessage);
-      if (updateMessage.newMessage !== undefined) {
-        //console.log("subscription :", data.newMessage);
-        //console.log("updateMessage ! ");
-        if (updateMessage.newMessage !== null) {
-          console.log("subscription updated : ", updateMessage.newMessage);
-          const { text } = updateMessage.newMessage;
-          setLastMessage(text);
-          RootChatScreenRefetch();
-        }
-      }
+    if (updateMessage !== undefined && updateMessage.newMessage) {
+      console.log(
+        "room List subscription updated : ",
+        updateMessage.newMessage
+      );
+      const { text } = updateMessage.newMessage;
+      setLastMessage(text);
+
+      console.log("state", message);
+      console.log("new ", updateMessage.newMessage);
+      setMessage([updateMessage.newMessage, ...message]);
     }
   };
 
@@ -153,8 +172,13 @@ const RoomList = ({
   }, [updateMessage]);
 
   useEffect(() => {
-    //console.log(lastMessage);
+    console.log("didmount", lastMessage);
+    setLastMessage(lastMessage[0].text);
   }, [lastMessage]);
+
+  // useEffect(() => {
+  //   setMessage(messages);
+  // }, [messages]);
 
   return (
     <Conatiner>
@@ -164,10 +188,10 @@ const RoomList = ({
         onPress={() =>
           navigation.navigate("ChatDetail", {
             roomId: id,
-            RootChatScreenRefetch,
-            messages,
+            message,
             me,
-            userlist
+            userlist,
+            setLastMessage
           })
         }
       >

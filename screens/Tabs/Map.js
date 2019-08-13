@@ -268,39 +268,10 @@ const MapScreen = ({ navigation }) => {
   }
 
   const onRegionChange = region => {
-    // console.log(region);
-    // setRegion({ coords: { latitude: region.latitude } });
-    // coords: {
-    //   accuracy: 5,
-    //   laltitude: 0,
-    //   laltitudeAccuracy: -1,
-    //   heading: -1,
-    //   latitude: 17.785834,
-    //   longitude: 32.406417,
-    //   latitudeDelta: LATITUDE_DELTA,
-    //   longitudeDelta: LONGITUDE_DELTA,
-    //   speed: -1
-    // },
+    console.log("onRegion Change !");
   };
 
   const showActionSheet = data => {
-    // ActionSheetIOS.showActionSheetWithOptions(
-    //   {
-    //     options: ["취소", "프로필 보기", "메시지 보내기"],
-    //     destructiveButtonIndex: 1,
-    //     cancelButtonIndex: 0
-    //   },
-    //   buttonIndex => {
-    //     if (buttonIndex === 1) {
-    //       /* destructive action */
-    //       console.log("프로필 네비게이션");
-    //       navigation.navigate("UserDetail", { username: user.id });
-    //     } else if (buttonIndex === 2) {
-    //       console.log("채팅 디테일 네비게이션");
-    //     }
-    //   }
-    // );
-
     actionSheet(
       {
         options: ["취소", "프로필 보기", "메시지 보내기"],

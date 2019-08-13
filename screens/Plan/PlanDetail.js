@@ -325,7 +325,7 @@ export default ({ navigation }) => {
         </HeaderArea>
       </Container>
 
-      <Scroll>
+      <Scroll overScrollMode={"always"}>
         {loading ? (
           <Loader />
         ) : (

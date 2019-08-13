@@ -13,10 +13,6 @@ const Conatiner = styled.View`
   padding-vertical: 8;
   border-radius: 14;
   margin-left: 18;
-  /* shadow-opacity: 0.75;
-  shadow-radius: 5px;
-  shadow-color: #000;
-  shadow-offset: 0px 0px; */
 `;
 
 const TextContainer = styled.View`

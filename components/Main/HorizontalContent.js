@@ -12,10 +12,6 @@ const testAlert = id => {
 const Conatiner = styled.View`
   margin-left: 10;
   margin-left: 10;
-  /* shadow-opacity: 0.75;
-  shadow-radius: 5px;
-  shadow-color: #000;
-  shadow-offset: 0px 0px; */
 `;
 
 const round_value = constants.width / 5;

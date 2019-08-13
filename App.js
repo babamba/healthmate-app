@@ -131,19 +131,6 @@ export default function App() {
       ]);
 
       const cache = new InMemoryCache();
-      // const cache = new InMemoryCache({
-      //   cacheRedirects: {
-      //     Query: {
-      //       book: (_, args) =>
-      //         toIdValue(
-      //           cache.config.dataIdFromObject({
-      //             __typename: "Book",
-      //             id: args.id
-      //           })
-      //         )
-      //     }
-      //   }
-      // });
 
       await persistCache({
         cache,
@@ -151,13 +138,13 @@ export default function App() {
       });
 
       const httpLink = new HttpLink({
-        //uri: LOCAL_SERVER
-        uri: DEPLOY_SERVER
+        uri: LOCAL_SERVER
+        //uri: DEPLOY_SERVER
       });
 
       const wsLink = new WebSocketLink({
-        //uri: LOCAL_SERVER_WS,
-        uri: DEPLOY_SERVER_WS,
+        uri: LOCAL_SERVER_WS,
+        //uri: DEPLOY_SERVER_WS,
         options: {
           connectionParams: {
             Bearer: token
@@ -177,154 +164,17 @@ export default function App() {
         };
       });
 
-      // const authMiddleware = new ApolloLink((operation, forward) => {
-      //   // operation.setContext({})
-      //   // console.log(authheader);
-      //   return forward(operation);
-      // });
-
-      // console.log(authMiddleware);
-
-      // const authMiddleware = new ApolloLink((operation, forward) => {
-      //   console.log("authMiddleware Bearer", token),
-      //     AsyncStorage.getItem("jwt").then(token => {
-      //       console.log("token : ", token);
-      //       return operation.setContext({
-      //         headers: {
-      //           Authorization: `Bearer ${token}`
-      //         }
-      //       });
-      //     });
-
-      //   // operation.setContext({
-      //   //   headers: {
-      //   //     Authorization: `Bearer ${token}`
-      //   //   }
-      //   // });
-      //   const { headers } = operation.getContext();
-      //   console.log("headers : ", headers);
-
-      //   return forward(operation);
-      // });
-
-      // const authHeader = operation =>
-      //   operation.setContext(
-      //     request =>
-      //       new Promise((success, fail) => {
-      //         getToken().then(
-      //           token => console.log("authHeader token : ", token),
-      //           success({ headers: { authorization: `Bearer ${token}` } })
-      //         );
-      //       })
-      //   );
-
-      // const authMiddleware = new ApolloLink((operation, forward) => {
-      //   console.log("authMiddleware Bearer", token),
-      //     operation.setContext(
-      //       request =>
-      //         new Promise((success, fail) => {
-      //           getToken().then(
-      //             token => console.log("authHeader token : ", token),
-      //             success({ headers: { Authorization: `Bearer ${token}` } })
-      //           );
-      //         })
-      //     );
-      //   console.log(operation.getContext());
-      //   return forward(operation);
-      // });
-
-      // const authMiddleware = new ApolloLink((operation, forward) => {
-      //   authHeader(operation);
-      //   return forward(operation);
-      // });
-      // const authMiddleware = new ApolloLink((operation, forward) => {
-      //   getToken().then(token => {
-      //     console.log("token", token);
-      //     console.log("operation", operation);
-      //     console.log("forward", forward);
-      //     operation.setContext({
-      //       headers: {
-      //         Authorization: `Bearer ${token}`
-      //       }
-      //     });
-      //   });
-      //   return forward(operation);
-      // });
-
-      // const authMiddleware = new ApolloLink((operation, forward) => {
-      //   getToken().then(token => {
-      //     console.log(token),
-      //       operation.setContext({
-      //         headers: {
-      //           Authorization: `Bearer ${token}`
-      //         }
-      //       });
-      //   });
-      //   return forward(operation);
-      // });
-
-      // const authMiddleware = setContext(operation =>
-      //   getToken().then(token => {
-      //     return {
-      //       // Make sure to actually set the headers here
-      //       headers: {
-      //         authorization: token || null
-      //       }
-      //     };
-      //   })
-      // );
-
       const combinedLinks = split(
         ({ query }) => {
           const { kind, operation } = getMainDefinition(query);
+          if (operation === "subscription") {
+            console.log("new subscription combinedLinks");
+          }
           return kind === "OperationDefinition" && operation === "subscription";
         },
         wsLink,
         httpLink
       );
-
-      // const request = async operation => {
-      //   const token = await AsyncStorage.getItem("jwt");
-      //   console.log("token : ", token);
-      //   operation.setContext({
-      //     headers: {
-      //       Authorization: `Bearer ${token}`
-      //     }
-      //   });
-      // };
-
-      // const requestLink = new ApolloLink(
-      //   (operation, forward) =>
-      //     new Observable(observer => {
-      //       let handle;
-      //       Promise.resolve(operation)
-      //         .then(oper => request(oper))
-      //         .then(() => {
-      //           handle = forward(operation).subscribe({
-      //             next: observer.next.bind(observer),
-      //             error: observer.error.bind(observer),
-      //             complete: observer.complete.bind(observer)
-      //           });
-      //         })
-      //         .catch(observer.error.bind(observer));
-
-      //       return () => {
-      //         if (handle) handle.unsubscribe();
-      //       };
-      //     })
-      // );
-
-      // const authLink = setContext((_, { headers }) => {
-      //   // get the authentication token from local storage if it exists
-      //   const token = localStorage.getItem('token');
-      //   // return the headers to the context so httpLink can read them
-      //   return {
-      //     headers: {
-      //       ...headers,
-      //       authorization: token ? `Bearer ${token}` : "",
-      //     }
-      //   }
-      // });
 
       const client = new ApolloClient({
         cache,
@@ -341,19 +191,6 @@ export default function App() {
           concat(authheader, combinedLinks)
         ])
       });
-
-      // const client = new ApolloClient({
-      //   cache,
-      //   request: async operation => {
-      //     const token = await AsyncStorage.getItem("jwt");
-      //     return operation.setContext({
-      //       headers: { Authorization: `Bearer ${token}` }
-      //     });
-      //   },
-      //   ...apolloClientOptions
-      // });
-
-      //await AsyncStorage.setItem("launched", "false");
 
       const isLoggedIn = await AsyncStorage.getItem("isLoggedIn");
       const isLaunched = await AsyncStorage.getItem("launched");

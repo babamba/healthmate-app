@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useIsLoggedIn, useIsLaunchedApp } from "../AuthContext";
-import { useQuery } from "react-apollo-hooks";
-import { View, Platform } from "react-native";
+import { useQuery, useSubscription } from "react-apollo-hooks";
+import { View, Platform, Alert } from "react-native";
 import gql from "graphql-tag";
 import AuthNavigation from "../navigation/AuthNavigation";
 import MainNavigation from "../navigation/MainNavigation";
@@ -15,12 +15,52 @@ import AppIntro from "../screens/Intro/Intro";
 import DropdownAlert from "react-native-dropdownalert";
 import { AlertHelper } from "./DropDown/AlertHelper";
 
+const RECEIVE_MESSAGE = gql`
+  subscription ReceiveMessage {
+    ReceiveMessage {
+      id
+      text
+      from {
+        username
+      }
+      room {
+        id
+        lastMessage {
+          text
+        }
+      }
+    }
+  }
+`;
+
 export default props => {
   const isLaunched = useIsLaunchedApp();
   const isLoggedIn = useIsLoggedIn();
   const actionSheet = props.showActionSheetWithOptions;
 
   //console.log("isLaunched : ", isLaunched);
+
+  const { data: ReceiveMessage } = useSubscription(RECEIVE_MESSAGE, {
+    onSubscriptionData: ({ client, subscriptionData }) => {
+      console.log("onSubscriptionData", subscriptionData);
+      room_refetch();
+      AlertHelper.showDropAlert(
+        "success",
+        `${subscriptionData.data.ReceiveMessage.from.username} : ${
+          subscriptionData.data.ReceiveMessage.text
+        }`
+      );
+    },
+    skip: !isLoggedIn
+  });
+
+  // const handleRoomQuery = roomId => {
+  //   const { data } = useQuery(SEE_ROOM, {
+  //     skip: !isLoggedIn,
+  //     variables: { roomId },
+  //     fetchPolicy: "network-only"
+  //   });
+  // };
 
   const {
     data: recom_data,
@@ -48,7 +88,8 @@ export default props => {
   const {
     data: room_data,
     loading: room_loading,
-    error: room_error
+    error: room_error,
+    refetch: room_refetch
   } = useQuery(SEE_ROOMS, {
     skip: !isLoggedIn,
     fetchPolicy: "network-only"

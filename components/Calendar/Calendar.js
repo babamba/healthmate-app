@@ -1,21 +1,14 @@
 import React, { useState, useEffect, useRef, createRef } from "react";
-import { TouchableOpacity, Alert, ActivityIndicator } from "react-native";
+import { TouchableOpacity, Alert } from "react-native";
 import styled from "styled-components";
 // import { Feather } from "@expo/vector-icons";
 import { withNavigation } from "react-navigation";
 import styles from "../../styles";
 import constants from "../../constants";
-import {
-  Calendar,
-  CalendarList,
-  Agenda,
-  LocaleConfig
-} from "react-native-calendars";
+import { Agenda, LocaleConfig } from "react-native-calendars";
 import moment from "moment";
 import * as Animatable from "react-native-animatable";
 import { SafeAreaView } from "react-navigation";
-import AddPlan from "../../components/Plan/AddPlanButton";
-import DeletePlan from "../Plan/DeletePlanButton";
 
 import Swipeout from "react-native-swipeout";
 import { Feather } from "@expo/vector-icons";
@@ -24,39 +17,23 @@ import gql from "graphql-tag";
 import { useQuery, useMutation } from "react-apollo-hooks";
 import Loader from "../Loader";
 import { AlertHelper } from "../../components/DropDown/AlertHelper";
-import TouchableScale from "react-native-touchable-scale";
 import AddPlanToScheduleModal from "./AddPlanToScheduleModal";
 import OverLayLoader from "../OverlayLoader";
-// import MaterialIcon from "../MaterialIcon";
-// import TouchableScale from "react-native-touchable-scale";
-
-// const iconContainerWidth = constants.width / 10;
-
-// const Container = styled.View`
-//   padding-top: 6px;
-//   background-color: white;
-//   width: ${iconContainerWidth};
-//   height: ${iconContainerWidth};
-//   border-radius: ${Math.round(iconContainerWidth / 2)};
-//   padding: 10px;
-//   justify-content: center;
-//   align-items: center;
-// `;
 
 LocaleConfig.locales["ko_KR"] = {
   monthNames: [
-    "1 월",
-    "2 월",
-    "3 월",
-    "4 월",
-    "7 월",
-    "6 월",
-    "7 월",
-    "8 월",
-    "9 월",
-    "10 월",
-    "11 월",
-    "12 월"
+    "1월",
+    "2월",
+    "3월",
+    "4월",
+    "7월",
+    "6월",
+    "7월",
+    "8월",
+    "9월",
+    "10월",
+    "11월",
+    "12월"
   ],
   monthNamesShort: [
     "1월",
@@ -310,6 +287,7 @@ export default withNavigation(({ navigation }) => {
   let rewriteData = {};
   let timeout;
   const agenda = useRef();
+  const swipe = createRef();
   const [overlayLoader, setOverlayLoader] = useState(false);
   const [swipeDate, setSwipeDate] = useState(null);
   const [addType, setAddType] = useState();
@@ -323,10 +301,8 @@ export default withNavigation(({ navigation }) => {
   const [visiblePlanModal, setVisiblePlanModal] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
 
-  const allowAddScroll = (event, item) => {
+  const allowScroll = (event, item) => {
     if (event) {
-      console.log("did open ", event);
-      console.log("add swipe item : ", item);
       setSwipeDate(item);
     }
   };
@@ -448,11 +424,13 @@ export default withNavigation(({ navigation }) => {
         useNativeDriver={true}
       >
         <Swipeout
+          ref={swipe}
+          sensitivity={1000}
           autoClose={true}
           right={emptyOutBtns}
           backgroundColor={"#c7c7c7"}
           //onOpen={sectionID => allowScroll(sectionID)}
-          scroll={event => allowAddScroll(event, item)}
+          scroll={event => allowScroll(event, item)}
           style={{
             marginVertical: 10,
             marginHorizontal: 10
@@ -469,7 +447,7 @@ export default withNavigation(({ navigation }) => {
   };
 
   const renderItem = item => {
-    console.log("item ", item);
+    //console.log("item ", item);
     const swipeoutRightBtns = [
       {
         text: "삭제",
@@ -489,15 +467,25 @@ export default withNavigation(({ navigation }) => {
       <AnimateView
         animation="fadeIn"
         easing="ease-in-out"
-        delay={100}
+        delay={200}
         useNativeDriver={true}
+        style={{
+          shadowColor: "#000",
+          shadowOpacity: 0.25,
+          shadowOffset: { width: 0, height: 5 },
+          shadowRadius: 6,
+
+          elevation: 12
+        }}
       >
         <Swipeout
           autoClose={true}
+          ref={swipe}
+          sensitivity={1000}
           rowID={item.rowIndex}
           right={swipeoutRightBtns}
           left={swipeoutLeftBtns}
-          scroll={event => allowAddScroll(event, item.originDate)}
+          scroll={event => allowScroll(event, item.originDate)}
           backgroundColor={"white"}
           style={{
             marginVertical: 10,
@@ -726,10 +714,7 @@ export default withNavigation(({ navigation }) => {
   };
 
   const rowHasChanged = (r1, r2) => {
-    // console.log("r1 : ", r1);
     // console.log("r2 : ", r2);
-    //console.log(agenda.current);
-    //console.log("rowHasChanged", r1, "/", r2);
     return r1.name !== r2.name;
   };
 
@@ -739,7 +724,7 @@ export default withNavigation(({ navigation }) => {
 
   const dayChange = day => {
     const { year, month, dateString } = day;
-    console.log(agenda.current.props);
+    //console.log(agenda.current.props);
     //console.log("dayChange : ", year, month, dateString);
     loadItems(day);
   };
@@ -780,7 +765,7 @@ export default withNavigation(({ navigation }) => {
             loadItemsForMonth={async day => {
               if (!onInit) {
                 //자동으로 60일전으로 다시 트리거되는 버그가 있어서 첫시작때만 실행되도록
-                console.log("trigger items loading on Init screen :", day);
+                //console.log("trigger items loading on Init screen :", day);
                 // filterProduct(data.getSchedule).then(() => {
                 //   loadItems(day);
                 // });
@@ -805,8 +790,32 @@ export default withNavigation(({ navigation }) => {
             // futureScrollRange={15}
             // pastScrollRange={15}
             // futureScrollRange={15}
-            // onScroll={() => console.log("scroll start")}
             // scrollingEnabled={swipeScrollEnabled}
+
+            // theme={{
+            //   backgroundColor: "#ffffff",
+            //   calendarBackground: "#ffffff",
+            //   textSectionTitleColor: "#b6c1cd",
+            //   selectedDayBackgroundColor: "#00adf5",
+            //   selectedDayTextColor: "#ffffff",
+            //   todayTextColor: "#00adf5",
+            //   dayTextColor: "#2d4150",
+            //   textDisabledColor: "#d9e1e8",
+            //   dotColor: "#00adf5",
+            //   selectedDotColor: "#ffffff",
+            //   arrowColor: "orange",
+            //   monthTextColor: "blue",
+            //   indicatorColor: "blue",
+            //   textDayFontFamily: "NanumBarunGothicLight",
+            //   textMonthFontFamily: "NanumBarunGothicLight",
+            //   textDayHeaderFontFamily: "NanumBarunGothicLight",
+            //   textDayFontWeight: "300",
+            //   textMonthFontWeight: "bold",
+            //   textDayHeaderFontWeight: "300",
+            //   textDayFontSize: 16,
+            //   textMonthFontSize: 16,
+            //   textDayHeaderFontSize: 16
+            // }}
 
             // markingType={'period'}
             // markedDates={{

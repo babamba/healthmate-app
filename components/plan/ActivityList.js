@@ -70,10 +70,6 @@ const Conatiner = styled.View`
   border-radius: 10;
   margin-left: 10;
   margin-left: 10;
-  /* shadow-opacity: 0.75;
-  shadow-radius: 5px;
-  shadow-color: #000;
-  shadow-offset: 0px 0px; */
 `;
 const Divider = styled.View`
   border: 1px solid lightgrey;
@@ -147,7 +143,9 @@ const ActivityList = ({
         backgroundColor={globalStyles.backgroundGreyColor}
         autoClose={true}
         _data={item}
+        sensitivity={1000}
         close={prevRowId !== currentRowId}
+        onClose={() => console.log("===close")}
         onOpen={(sectionID, rowID) => {
           console.log("currentRowId : ", currentRowId);
           console.log("prevRowId : ", prevRowId);

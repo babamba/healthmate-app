@@ -29,6 +29,12 @@ export const SEE_ROOMS = gql`
           username
         }
         createdAt
+        user {
+          _id
+          name
+          avatar
+        }
+        _id
       }
       lastMessage {
         text
@@ -90,7 +96,7 @@ const AddButton = styled.View`
 const Chat = () => {
   const [initialStarted, setInitialStarted] = useState(false);
 
-  const { data, loading, error, refetch } = useQuery(SEE_ROOMS, {
+  const { data, loading, error } = useQuery(SEE_ROOMS, {
     fetchPolicy: "network-only"
   });
 
@@ -134,13 +140,7 @@ const Chat = () => {
               : data &&
                 data.seeRooms &&
                 data.seeRooms.map((data, index) => {
-                  return (
-                    <RoomList
-                      key={index}
-                      {...data}
-                      RootChatScreenRefetch={refetch}
-                    />
-                  );
+                  return <RoomList key={index} {...data} />;
                 })}
 
             {/* {data &&

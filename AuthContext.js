@@ -2,7 +2,6 @@ import React, { createContext, useContext, useState } from "react";
 import { AsyncStorage } from "react-native";
 import { useApolloClient, useMutation } from "react-apollo-hooks";
 import { LOG_OUT } from "./screens/Auth/AuthQueries";
-import { SEE_ROOMS } from "./screens/Tabs/Chat";
 
 export const AuthContext = createContext();
 
@@ -35,6 +34,7 @@ export const AuthProvider = ({
 
       console.log("isLoggedIn : true ");
       setIsLoggedIn(true);
+
       console.log("login ");
     } catch (e) {
       console.log(e);
