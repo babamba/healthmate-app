@@ -368,7 +368,7 @@ const MapScreen = ({ navigation }) => {
       style={constants.commonStyle.safeArea}
       forceInset={{ top: "always" }}
     >
-      <MainTitle title={"Map"} />
+      <MainTitle title={"Map"} fontSize={42} />
       <View>
         {loading ? (
           <Loader />

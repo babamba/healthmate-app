@@ -32,7 +32,7 @@ export default ({ navigation }) => {
       style={constants.commonStyle.safeArea}
       forceInset={{ top: "always" }}
     >
-      <MainTitle title={"Profile"} />
+      <MainTitle title={"Profile"} fontSize={42} />
       <ScrollView>
         {loading ? <Loader /> : data && data.me && <UserProfile {...data.me} />}
       </ScrollView>

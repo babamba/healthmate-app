@@ -10,30 +10,7 @@ import constants from "../../constants";
 import { SafeAreaView } from "react-navigation";
 import AddPlanCarouselList from "./AddPlanCarouselList";
 
-const TouchableOpacity = styled.TouchableOpacity``;
 const View = styled.View``;
-
-const TextArea = styled.View`
-  padding-top: 20px;
-`;
-const Text = styled.Text`
-  padding-bottom: 16px;
-  color: black;
-  text-align: center;
-  font-size: 18px;
-  font-family: NanumBarunGothicLight;
-`;
-
-const ContentArea = styled.View`
-  flex: 1;
-`;
-
-// const DateText = styled.Text`
-//   color: black;
-//   text-align: center;
-//   font-size: 12px;
-//   font-family: NanumBarunGothicUltraLight;
-// `;
 
 const ModalContent = styled.View`
   background-color: white;
@@ -65,35 +42,37 @@ export default ({
   console.log("swipeDate : ", swipeDate);
 
   return (
-    <Modal
-      isVisible={visiblePlanModal}
-      animationIn={"slideInUp"}
-      animationOut={"slideOutDown"}
-      deviceWidth={constants.width}
-      deviceHeight={constants.height}
-      style={Modalstyle.bottomModal}
-      backdropColor={"grey"}
-      backdropOpacity={0.6}
-      animationInTiming={600}
-      animationOutTiming={600}
-      onBackButtonPress={() => togglePlanModal()}
-      onBackdropPress={() => togglePlanModal()}
-      onSwipeComplete={() => togglePlanModal()}
-      swipeDirection={["down"]}
-      swipeThreshold={10}
-    >
-      <ModalContent>
-        <AddPlanCarouselList
-          selectDate={swipeDate}
-          handleAddSchedule={handleAddSchedule}
-          handleIncreaseSchedule={handleIncreaseSchedule}
-          togglePlanModal={togglePlanModal}
-          addRequestType={addRequestType}
-          scheduleId={scheduleId}
-          existAlreadyItem={existAlreadyItem}
-        />
-      </ModalContent>
-    </Modal>
+    <View>
+      <Modal
+        isVisible={visiblePlanModal}
+        animationIn={"slideInUp"}
+        animationOut={"slideOutDown"}
+        deviceWidth={constants.width}
+        deviceHeight={constants.height}
+        style={Modalstyle.bottomModal}
+        backdropColor={"grey"}
+        backdropOpacity={0.6}
+        animationInTiming={600}
+        animationOutTiming={600}
+        onBackButtonPress={() => togglePlanModal()}
+        onBackdropPress={() => togglePlanModal()}
+        onSwipeComplete={() => togglePlanModal()}
+        swipeDirection={["down"]}
+        swipeThreshold={10}
+      >
+        <ModalContent>
+          <AddPlanCarouselList
+            selectDate={swipeDate}
+            handleAddSchedule={handleAddSchedule}
+            handleIncreaseSchedule={handleIncreaseSchedule}
+            togglePlanModal={togglePlanModal}
+            addRequestType={addRequestType}
+            scheduleId={scheduleId}
+            existAlreadyItem={existAlreadyItem}
+          />
+        </ModalContent>
+      </Modal>
+    </View>
   );
 };
 

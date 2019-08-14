@@ -7,6 +7,7 @@ import PropTypes from "prop-types";
 import styled from "styled-components";
 import constants from "../../constants";
 
+const avatarSize = constants.width / 8;
 const Conatiner = styled.View`
   flex: 1;
   padding-vertical: 8px;
@@ -24,11 +25,11 @@ const TextContainer = styled.View`
 
 const Image = styled.Image`
   flex:1;
-  width:40px;
-  height:40px;
+  width:${avatarSize};
+  height:${avatarSize};
   /* width: ${constants.width / 2.2};
   height: ${constants.height / 5}; */
-  border-radius: 15;
+  border-radius: ${avatarSize / 2};
 `;
 
 const ContentTItle = styled.Text`
@@ -36,14 +37,6 @@ const ContentTItle = styled.Text`
   text-align: left;
   font-weight: 600;
   font-size: 18px;
-  font-family: NotoSansKR_Regular;
-`;
-
-const Introduction = styled.Text`
-  color: black;
-  text-align: left;
-  font-weight: 600;
-  font-size: 13px;
   font-family: NotoSansKR_Regular;
 `;
 
@@ -61,9 +54,26 @@ const Column = styled.View`
 `;
 
 const Row = styled.View`
-  flex: 0.8;
+  flex: 1;
   flex-direction: row;
-  justify-content: flex-start;
+  padding-horizontal: 2px;
+`;
+
+const RowImageArea = styled.View`
+  width: ${avatarSize};
+  height: ${avatarSize};
+`;
+const RowTextArea = styled.View`
+  padding-left: 20px;
+  justify-content: center;
+`;
+
+const LastMessage = styled.Text`
+  color: black;
+  text-align: left;
+  font-size: 14px;
+  font-family: NanumBarunGothicLight;
+  overflow: hidden;
 `;
 
 export const UPDATE_ROOM_MESSAGE = gql`
@@ -197,12 +207,16 @@ const RoomList = ({
       >
         {/* <Image source={{ uri }} /> */}
         <TextContainer>
-          <Column>
-            {/* <ContentTItle /> */}
+          {/* <Column>
             <Image source={{ uri: person[0].avatar }} />
-          </Column>
+          </Column> */}
           <Row>
-            <Introduction>{lastMessages}</Introduction>
+            <RowImageArea>
+              <Image source={{ uri: person[0].avatar }} />
+            </RowImageArea>
+            <RowTextArea>
+              <LastMessage numberOfLines={1}>{lastMessages}</LastMessage>
+            </RowTextArea>
           </Row>
         </TextContainer>
       </TouchableOpacity>

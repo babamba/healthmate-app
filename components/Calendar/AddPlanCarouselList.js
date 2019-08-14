@@ -31,11 +31,11 @@ const entryBorderRadius = 8;
 const TempView = styled.View`
   justify-content: center;
   align-items: center;
+  padding-vertical: 10px;
 `;
 const Container = styled.View`
   justify-content: center;
   align-items: center;
-  padding-vertical: 10px;
 `;
 
 const Item = styled.View`
@@ -43,7 +43,6 @@ const Item = styled.View`
   width: ${constants.width * 0.73};
   height: ${constants.height / 2};
   box-shadow: ${constants.boxShadow};
-  padding-vertical: 10px;
 `;
 
 const ImageContainer = styled.View`
@@ -198,7 +197,6 @@ const MyCarousel = props => {
         easing="ease-in-out"
         delay={50 * (index * 3)}
         useNativeDriver={true}
-        style={{ flex: 1 }}
       >
         <TouchableScale
           activeScale={0.99}
@@ -305,12 +303,8 @@ const styles = StyleSheet.create({
   textContainer: {
     position: "absolute",
     bottom: 0,
-    // justifyContent: "center",
-    // paddingTop: 20 - entryBorderRadius,
-    // paddingBottom: 20,
-    // paddingHorizontal: 16,
-    paddingHorizontal: 16,
-    paddingVertical: 20,
+    // paddingHorizontal: 12,
+    // paddingVertical: 16,
     width: constants.width * 0.73,
     alignItems: "center",
     justifyContent: "center",

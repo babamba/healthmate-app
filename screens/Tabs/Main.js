@@ -131,7 +131,7 @@ export default () => {
       forceInset={{ top: "always" }}
     >
       <View>
-        <MainTitle title={"Main"} fontSize={52} isMain={true} />
+        <MainTitle title={"Main"} fontSize={42} isMain={true} />
 
         {/* <MainTitleArea>
           

@@ -127,7 +127,7 @@ const Chat = () => {
       style={constants.commonStyle.safeArea}
       forceInset={{ top: "always" }}
     >
-      <MainTitle title={"Direct Message"} fontSize={42} />
+      <MainTitle title={"Message"} fontSize={42} />
       <Container>
         <Content>
           <ScrollView>
