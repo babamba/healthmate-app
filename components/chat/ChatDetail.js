@@ -173,20 +173,25 @@ const ChatDetail = ({ navigation }) => {
         );
         const { newMessage } = newSubscription;
 
-        const newMessageText = newMessage.text;
-        //let postMessage = "";
-        const updateNewMessage = {
-          _id: newMessage._id,
-          text: newMessageText,
-          createdAt: newMessage.createdAt,
-          user: newMessage.user
-        };
-        //console.log("postMessage : ", postMessage);
-        // GiftedChat.append(messagesList, postMessage);
+        if (newMessage.from.id === userSelf.id) {
+          console.log("me send message");
+          return;
+        } else {
+          const newMessageText = newMessage.text;
+          //let postMessage = "";
+          const updateNewMessage = {
+            _id: newMessage._id,
+            text: newMessageText,
+            createdAt: newMessage.createdAt,
+            user: newMessage.user
+          };
+          //console.log("postMessage : ", postMessage);
+          // GiftedChat.append(messagesList, postMessage);
 
-        setParentLastMessage(newMessageText);
-        //GiftedChat.append(messagesList, postMessage);
-        setMessageList([updateNewMessage, ...messagesList]);
+          setParentLastMessage(newMessageText);
+          //GiftedChat.append(messagesList, postMessage);
+          setMessageList([updateNewMessage, ...messagesList]);
+        }
 
         // const { newMessage } = newSubscription;
         //GiftedChat.append(tempMessage);

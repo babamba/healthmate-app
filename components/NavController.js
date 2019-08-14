@@ -88,12 +88,14 @@ export default props => {
     onSubscriptionData: ({ client, subscriptionData }) => {
       console.log("onSubscriptionData", subscriptionData);
       room_refetch();
-      AlertHelper.showDropAlert(
-        "success",
-        `${subscriptionData.data.ReceiveMessage.from.username} : ${
-          subscriptionData.data.ReceiveMessage.text
-        }`
-      );
+      if (subscriptionData.data.ReceiveMessage.from.id !== userId) {
+        AlertHelper.showDropAlert(
+          "success",
+          `${subscriptionData.data.ReceiveMessage.from.username} : ${
+            subscriptionData.data.ReceiveMessage.text
+          }`
+        );
+      }
     },
     skip: !userId
   });
