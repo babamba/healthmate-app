@@ -142,13 +142,24 @@ export default function App() {
         //uri: DEPLOY_SERVER
       });
 
+      const connectionParams = async () => {
+        const token = await AsyncStorage.getItem("token");
+        return token
+          ? { headers: { Authorization: "Bearer " + token } }
+          : { headers: {} };
+      };
+
       const wsLink = new WebSocketLink({
         uri: LOCAL_SERVER_WS,
         //uri: DEPLOY_SERVER_WS,
         options: {
-          connectionParams: {
-            Bearer: token
-          },
+          // connectionParams: () =>
+          //   getToken().then(result => {
+          //     console.log("result : ", result);
+          //     return {
+          //       Authorization: result ? `Bearer ${result}` : ""
+          //     };
+          //   }),
           reconnect: true
         }
       });
