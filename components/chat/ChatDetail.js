@@ -157,11 +157,13 @@ const ChatDetail = ({ navigation }) => {
       roomId
     },
     onSubscriptionData: ({ client, subscriptionData }) => {
+      console.log("ChatDetail subscriptionData : ", subscriptionData);
       handleNewMessage();
     }
   });
 
   const handleNewMessage = async () => {
+    console.log("handleNewMessage : ", newSubscription);
     if (newSubscription !== undefined) {
       //console.log("newSubscription");
       if (newSubscription.newMessage !== null) {
@@ -169,6 +171,23 @@ const ChatDetail = ({ navigation }) => {
           "Chat detail subscription updated : "
           //newSubscription.newMessage
         );
+        const { newMessage } = newSubscription;
+
+        const newMessageText = newMessage.text;
+        //let postMessage = "";
+        const updateNewMessage = {
+          _id: newMessage._id,
+          text: newMessageText,
+          createdAt: newMessage.createdAt,
+          user: newMessage.user
+        };
+        //console.log("postMessage : ", postMessage);
+        // GiftedChat.append(messagesList, postMessage);
+
+        setParentLastMessage(newMessageText);
+        //GiftedChat.append(messagesList, postMessage);
+        setMessageList([updateNewMessage, ...messagesList]);
+
         // const { newMessage } = newSubscription;
         //GiftedChat.append(tempMessage);
 
@@ -380,8 +399,9 @@ const ChatDetail = ({ navigation }) => {
               _id: userSelf.id
             }}
             isAnimated={true}
-            quickReplyStyle={{ borderRadius: 4 }}
+            // quickReplyStyle={{ borderRadius: 4 }}
             keyboardShouldPersistTaps="never"
+            showAvatarForEveryMessage={true}
           />
         )
       )}

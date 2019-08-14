@@ -18,17 +18,28 @@ import { AlertHelper } from "./DropDown/AlertHelper";
 const RECEIVE_MESSAGE = gql`
   subscription ReceiveMessage($userId: String!) {
     ReceiveMessage(userId: $userId) {
-      id
       text
+      id
       from {
+        id
+        avatar
         username
       }
+      to {
+        username
+      }
+      createdAt
       room {
-        id
         lastMessage {
           text
         }
       }
+      user {
+        _id
+        name
+        avatar
+      }
+      _id
     }
   }
 `;
@@ -63,7 +74,7 @@ export default props => {
   });
 
   useEffect(() => {
-    if (me_data.me) {
+    if (isLoggedIn && me_data.me) {
       console.log("me", me_data.me.id);
       setUserId(me_data.me.id);
       //handleReceiveSub(me_data.me.id);
