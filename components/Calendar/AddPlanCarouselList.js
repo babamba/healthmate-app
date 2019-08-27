@@ -265,6 +265,9 @@ const MyCarousel = props => {
                 friction: 8,
                 tension: 80
               }}
+              swipeThreshold={1}
+              activeSlideOffset={3}
+              callbackOffsetMargin={20}
             />
           </Container>
         )

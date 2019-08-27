@@ -9,8 +9,6 @@ import Main from "../screens/Tabs/Main";
 import Plan from "../screens/Tabs/Plan";
 import Chat from "../screens/Tabs/Chat";
 
-import Test from "../screens/Test/Test";
-
 import Search from "../screens/Tabs/Search";
 import Notifications from "../screens/Tabs/Notifications";
 import Map from "../screens/Tabs/Map";
